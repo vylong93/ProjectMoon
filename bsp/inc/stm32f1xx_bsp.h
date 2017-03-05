@@ -1,14 +1,15 @@
 /**
  ****************************************************************************
- * @file	stm32f1xx_bsp.h
- * @author	Long Dang
- * @version	V1.0.0
- * @date	18 Dec 2016
- * @brief	This is Board Support Package header file for Project Moon.
+ * @file        stm32f1xx_bsp.h
+ * @author      Long Dang
+ * @version     V0.1
+ * @date        18-December-2016
+ * @copyright   LGPLv3
+ * @brief       This is Board Support Package header file for Project Moon.
  ****************************************************************************
  * @attention
  *
- * <h2><center>&copy; COPYRIGHT(c) 2017 PnL </center></h2>
+ * <h2><center>&trade; PnL - Programming and Leverage </center></h2>
  *
  * This file is part of Project Moon.
  *
@@ -32,6 +33,9 @@
 #ifndef STM32F1XX_BSP_H_
 #define STM32F1XX_BSP_H_
 
+/** @defgroup BSP Board Support Package
+ * @{
+ */
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>				/* uintX_t type */
 #include <stdbool.h>			/* BOOL type */
@@ -51,10 +55,13 @@
 /* Exported functions --------------------------------------------------------*/
 void bsp_init(void);
 
+/**
+ * @} BSP
+ */
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* STM32F1XX_BSP_H_ */
 
-/***************************** (C) COPYRIGHT 2017 PnL **********END OF FILE****/
+/********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

@@ -1,14 +1,15 @@
 /**
  ****************************************************************************
- * @file	stm32f1xx_bsp.c
- * @author	Long Dang
- * @version	V1.0.0
- * @date	18 Dec 2016
- * @brief	File provides set of firmware functions to manage for STM32F1xx.
+ * @file        stm32f1xx_bsp.c
+ * @author      Long Dang
+ * @version     V0.1
+ * @date        18-December-2016
+ * @copyright   LGPLv3
+ * @brief       This file provides set of board support package functions.
  ****************************************************************************
  * @attention
  *
- * <h2><center>&copy; COPYRIGHT(c) 2017 PnL </center></h2>
+ * <h2><center>&trade; PnL - Programming and Leverage </center></h2>
  *
  * This file is part of Project Moon.
  *
@@ -42,17 +43,16 @@ void SystemClock_Config(void);
 
 /* Private function prototypes -----------------------------------------------*/
 /**
- * @brief  System Clock Configuration
- *         The system Clock is configured as follow :
- *            System Clock source            = PLL (HSI)
- *            SYSCLK(Hz)                     = 64000000
- *            HCLK(Hz)                       = 64000000
- *            AHB Prescaler                  = 1
- *            APB1 Prescaler                 = 2
- *            APB2 Prescaler                 = 1
- *            PLLMUL                         = 16
- *            Flash Latency(WS)              = 2
- * @param  None
+ * @brief  System Clock Configuration.
+ *         The system Clock is configured as follow:
+ *         @arg System Clock source            = PLL (HSI)
+ *         @arg SYSCLK(Hz)                     = 64000000
+ *         @arg HCLK(Hz)                       = 64000000
+ *         @arg AHB Prescaler                  = 1
+ *         @arg APB1 Prescaler                 = 2
+ *         @arg APB2 Prescaler                 = 1
+ *         @arg PLLMUL                         = 16
+ *         @arg Flash Latency(WS)              = 2
  * @retval None
  */
 void SystemClock_Config(void)
@@ -98,11 +98,10 @@ void SystemClock_Config(void)
 
 /* Exported functions prototype ----------------------------------------------*/
 /**
- * @brief  Initialize Board Support Package as follow :
- *            Initialize STM32F103xB HAL library
- *            Configure the system clock
- *            Initialize LED port
- * @param  None
+ * @brief  Initialize Board Support Package as follow.
+ *         @arg Initialize STM32F103xB HAL library
+ *         @arg Configure the system clock
+ *         @arg Initialize LED port
  * @retval None
  */
 void bsp_init(void)
@@ -126,4 +125,4 @@ void bsp_init(void)
 	bsp_led_init(LED_RED);
 }
 
-/***************************** (C) COPYRIGHT 2017 PnL **********END OF FILE****/
+/********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

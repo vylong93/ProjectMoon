@@ -1,14 +1,15 @@
 /**
  ****************************************************************************
- * @file	main.h
- * @author	Long Dang
- * @version	1.0
- * @date	18 Dec 2016
- * @brief	Header for main.c module
+ * @file        main.h
+ * @author      Long Dang
+ * @version     V0.1
+ * @date        18-December-2016
+ * @copyright   LGPLv3
+ * @brief       Header for main.c module.
  ****************************************************************************
  * @attention
  *
- * <h2><center>&copy; COPYRIGHT(c) 2017 PnL </center></h2>
+ * <h2><center>&trade; PnL - Programming and Leverage </center></h2>
  *
  * This file is part of Project Moon.
  *
@@ -42,4 +43,4 @@
 
 #endif /* MAIN_H_ */
 
-/***************************** (C) COPYRIGHT 2017 PnL **********END OF FILE****/
+/********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

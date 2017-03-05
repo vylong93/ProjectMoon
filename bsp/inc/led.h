@@ -1,15 +1,16 @@
 /**
  ****************************************************************************
- * @file	led.h
- * @author	Long Dang
- * @version	0.1
- * @date	18 Dec 2016
- * @brief	Header file of LED APIs.
- * 			@note All the LEDs must be connected as Active low configuration.
+ * @file        led.h
+ * @author      Long Dang
+ * @version     V0.1
+ * @date        18-December-2016
+ * @copyright   LGPLv3
+ * @brief       Header file of LED APIs.
+ * @note        All the LEDs must be connected as Active low configuration.
  ****************************************************************************
  * @attention
  *
- * <h2><center>&copy; COPYRIGHT(c) 2017 PnL </center></h2>
+ * <h2><center>&trade; PnL - Programming and Leverage </center></h2>
  *
  * This file is part of Project Moon.
  *
@@ -32,12 +33,18 @@
 #ifndef LED_H_
 #define LED_H_
 
+/** @defgroup BSP Board Support Package
+ * @{
+ */
+/** @defgroup BSP-LED LED
+ * @{
+ */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_bsp.h"
 
 /* Exported types ------------------------------------------------------------*/
-/*! @enum An enum type for LED */
 /**
+ * @typedef Led_TypeDef
  * Each on board LED corresponding to one value of this enum type.
  */
 typedef enum
@@ -56,6 +63,12 @@ void bsp_led_on(Led_TypeDef Led);
 void bsp_led_off(Led_TypeDef Led);
 void bsp_led_toggle(Led_TypeDef Led);
 
+/**
+ * @} BSP-LED
+ */
+/**
+ * @} BSP
+ */
 #endif /* LED_H_ */
 
-/***************************** (C) COPYRIGHT 2017 PnL **********END OF FILE****/
+/********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

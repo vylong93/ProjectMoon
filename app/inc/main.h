@@ -1,10 +1,10 @@
 /**
  ****************************************************************************
- * @file	stm32f1xx_bsp.h
+ * @file	main.h
  * @author	Long Dang
- * @version	V1.0.0
+ * @version	1.0
  * @date	18 Dec 2016
- * @brief	This is Board Support Package header file for Project Moon.
+ * @brief	Header for main.c module
  ****************************************************************************
  * @attention
  *
@@ -27,34 +27,19 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef STM32F1XX_BSP_H_
-#define STM32F1XX_BSP_H_
+#ifndef MAIN_H_
+#define MAIN_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include <stdint.h>				/* uintX_t type */
-#include <stdbool.h>			/* BOOL type */
-#include "stm32f1xx_hal.h"		/* HAL library */
+#include "stm32f1xx_bsp.h"	/* BSP base APIs */
+#include "led.h"			/* BSP-LED APIs */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
-
 /* Exported macro ------------------------------------------------------------*/
-/**
- * @brief Delay function wrapper the HAL delay
- * @param  x value in milisecond
- * @retval None
- */
-#define bsp_delay_ms(x)		HAL_Delay(x)
-
 /* Exported functions --------------------------------------------------------*/
-void bsp_init(void);
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* STM32F1XX_BSP_H_ */
+#endif /* MAIN_H_ */
 
 /***************************** (C) COPYRIGHT 2017 PnL **********END OF FILE****/

@@ -29,7 +29,8 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include <stm32f1xx_bsp.h>
+#include "stm32f1xx_bsp.h"
+#include "led.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -120,6 +121,9 @@ void bsp_init(void)
 
 	/* Configure the system clock to 64 MHz */
 	SystemClock_Config();
+
+	/* Enable the LED0 */
+	bsp_led_init(LED_RED);
 }
 
 /***************************** (C) COPYRIGHT 2017 PnL **********END OF FILE****/

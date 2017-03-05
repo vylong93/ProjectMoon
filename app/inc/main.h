@@ -32,6 +32,31 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+/**
+ * @mainpage Welcome to Project Moon
+ *
+ * \section intro_sec Introduction
+ *
+ * Project Moon is an open source project that build up an MP3 Player with
+ * Recording function from scratch. All the sources code are opened under GNU LGPLv3 license.
+ * The hardware also freely open. The purpose of this project is to demonstrate in highly
+ * details guideline that show you how to build your own electronic device
+ * (ex. an MP3 Player with customizable feature).
+ *
+ * Additionally, this project is non-profit project and powered by PnL team which stand for
+ * Programming and Leverage. Currently, I'm the only member of this team - Long Dang.
+ *
+ * My credo:
+ * > "Let finding 'lý tưởng' and passion. Build your own tech, your style!"
+ *
+ * \section install_sec Installation
+ *
+ * \subsection step1 Step 1: TODO
+ *
+ * etc...
+ *
+ */
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_bsp.h"	/* BSP base APIs */
 #include "led.h"			/* BSP-LED APIs */

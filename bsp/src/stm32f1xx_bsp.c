@@ -32,6 +32,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_bsp.h"
 #include "led.h"
+#include "lcd.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -123,6 +124,9 @@ void bsp_init(void)
 
 	/* Enable the LED0 */
 	bsp_led_init(LED_RED);
+
+	/* Enable the LCD module */
+	bsp_lcd_init();
 }
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

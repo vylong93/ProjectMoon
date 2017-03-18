@@ -95,7 +95,6 @@ I2C_HandleTypeDef i2chandle_lcd; /*!< I2C handler for LCD declaration. */
 /* Exported functions prototype ----------------------------------------------*/
 /**
  * @brief  Configures peripherals to control the LCD module.
- * @param  None
  * @retval bool: Status of initialization
  *			@arg true: succeeded
  *			@arg false: failed
@@ -138,7 +137,6 @@ bool bsp_lcd_init(void)
 
 /**
  * @brief  Reset the LCD module by initialize sequence on LCD reset pin.
- * @param  None
  * @retval None
  */
 void bsp_lcd_reset(void)

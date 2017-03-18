@@ -137,7 +137,6 @@ static uint8_t g_ui8DisplayBuffer[DISPLAY_BUFFER_SIZE] = /*!< This is display bu
 /* Exported functions prototype ----------------------------------------------*/
 /**
  * @brief  Initialize the display driver to control the OLED LCD SSD1306.
- * @param  None
  * @retval None
  */
 void display_init(void)
@@ -194,7 +193,6 @@ void display_init(void)
 
 /**
  * @brief  Turn on the LCD display panel.
- * @param  None
  * @retval None
  */
 void display_turnOn(void)
@@ -204,7 +202,6 @@ void display_turnOn(void)
 
 /**
  * @brief  Turn off the LCD display panel.
- * @param  None
  * @retval None
  */
 void display_turnOff(void)
@@ -241,7 +238,6 @@ void display_setDim(bool bIsDim)
  * @note   This function will override the current display data which cause extra power cost.
  *         @arg Idea: For better approach, this function should support renew part of the display.
  *		   @arg Risk: Must consider the extra computation cost to determine the column and page to update.
- * @param  None
  * @retval None
  */
 void display_render(void)
@@ -258,6 +254,6 @@ void display_render(void)
 }
 
 /**
- * @) DRV_DISPLAY
+ * @} DRV_DISPLAY
  */
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

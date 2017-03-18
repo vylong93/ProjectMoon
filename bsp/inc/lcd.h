@@ -35,7 +35,7 @@
 /** @defgroup BSP Board Support Package
  * @{
  */
-/** @defgroup BSP-LCD LCD
+/** @defgroup BSP_LCD LCD
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ bool bsp_lcd_sendCommand(uint8_t ui8Command);
 bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint32_t ui32Size);
 
 /**
- * @} BSP-LCD
+ * @} BSP_LCD
  */
 /**
  * @} BSP

@@ -28,7 +28,7 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup BSP-LCD LCD
+/** @defgroup BSP_LCD LCD
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -219,6 +219,6 @@ bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint32_t ui32Size)
 }
 
 /**
- * @} BSP-LCD
+ * @} BSP_LCD
  */
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

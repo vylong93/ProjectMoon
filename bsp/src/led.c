@@ -29,7 +29,7 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup BSP-LED LED
+/** @defgroup BSP_LED LED
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -148,6 +148,6 @@ void bsp_led_toggle(Led_TypeDef Led)
 
 
 /**
- * @} BSP-LED
+ * @} BSP_LED
  */
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

@@ -188,6 +188,12 @@ bool bsp_lcd_sendCommand(uint8_t ui8Command)
 
 /**
  * @brief  Transmit SSD1306 data to LCD module.
+ * @note   The transmision data must begin with the Control byte: 0x40 to indicate the data is comming.
+ *			To reduce latency of copy buffer, this function don't prepare the transmision packet as bsp_lcd_sendCommand does.
+ *			FIXME: This is not the recommend way because it add more complexity to the upper layer to handle the package creation.
+ *			@arg: Idea 1: CPU copy is acceptable if the upper layer only update part of display.
+ *			@arg: Idea 2: implement DMA copy and LCD busy flag - non-blocking mechanism
+ *          @arg: Idea 3: allocate dynamic buffer and pass the data pointer to upper layer
  * @param  pui8Buffer: Data buffer pointer.
  * @param  ui32Size: Data buffer size in byte.
  * @retval bool: Transmission result
@@ -196,6 +202,11 @@ bool bsp_lcd_sendCommand(uint8_t ui8Command)
  */
 bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint32_t ui32Size)
 {
+	if (*pui8Buffer != 0x40)
+	{
+		return false;
+	}
+
 	/*  Before starting a new communication transfer, you need to check the current
 	 state of the peripheral; if it's busy you need to wait for the end of current
 	 transfer before starting a new one. */

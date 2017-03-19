@@ -35,6 +35,7 @@
 #include "stm32f1xx_bsp.h"
 #include "lcd.h"
 #include "display.h"
+#include <string.h> /* memset() */
 
 /* Private typedef -----------------------------------------------------------*/
 /**
@@ -130,6 +131,7 @@ static uint8_t g_ui8DisplayBuffer[DISPLAY_BUFFER_SIZE] = /*!< This is display bu
 0x03, 0x03, 0x03, 0x03, 0x03, 0x01, 0x00, 0x00, 0x00, 0x01, 0x03, 0x01, 0x00, 0x00, 0x00, 0x03,
 0x03, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
+static uint8_t *g_pui8DisplayDataBuffer = &g_ui8DisplayBuffer[1]; /*!< Pointer to the data region in the display buffer. Skip the control byte. */
 
 static uint8_t g_ui8LogoDisplay[DISPLAY_BUFFER_SIZE] = /*!< This is the project LOGO in display buffer format */
 {0x40 /* Control Byte - Co = Data */,
@@ -307,6 +309,37 @@ void display_render_logo(void)
 	bsp_lcd_sendCommand(3); /* Page end address for Height in 32pxl */
 
 	bsp_lcd_sendData((uint8_t *) g_ui8LogoDisplay, DISPLAY_BUFFER_SIZE);
+}
+
+/**
+ * @brief  Zero all the data in the display buffer to turn off all the pixels.
+ * @retval None
+ */
+void display_clearRenderBuffer(void)
+{
+	memset(g_pui8DisplayDataBuffer, 0, DISPLAY_DATA_SIZE);
+}
+
+/**
+ * @brief  Invert the display pixel role.
+ * 			@arg bit_0: on
+ * 			@arg bit_1: off
+ * @retval None
+ */
+void display_setInvertMode(void)
+{
+	bsp_lcd_sendCommand(SSD1306_INVERTDISPLAY);
+}
+
+/**
+ * @brief  Reset the display pixel role.
+ * 			@arg bit_0: off
+ * 			@arg bit_1: on
+ * @retval None
+ */
+void display_setNormalMode(void)
+{
+	bsp_lcd_sendCommand(SSD1306_NORMALDISPLAY);
 }
 
 /**

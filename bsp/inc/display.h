@@ -50,6 +50,9 @@ void display_turnOff(void);
 void display_setDim(bool bIsDim);
 void display_render(void);
 void display_render_logo(void);
+void display_clearRenderBuffer(void);
+void display_setInvertMode(void);
+void display_setNormalMode(void);
 
 /**
  * @} DRV_DISPLAY

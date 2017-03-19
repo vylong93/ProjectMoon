@@ -178,13 +178,14 @@ static uint8_t g_ui8LogoDisplay[DISPLAY_BUFFER_SIZE] = /*!< This is the project 
 /* Exported functions prototype ----------------------------------------------*/
 /**
  * @brief  Initialize the display driver to control the OLED LCD SSD1306.
+ * @note   Ffrm = Fosc / (D * K * MUX) = 370kHz / (1 * (1+15+50) * 32) =  370 / 2112 = 175 FPS (5.7ms)
  * @retval None
  */
 void display_init(void)
 {
 	bsp_lcd_sendCommand(SSD1306_DISPLAYOFF); /* 0xAE */
 	bsp_lcd_sendCommand(SSD1306_SETDISPLAYCLOCKDIV); /* 0xD5 */
-	bsp_lcd_sendCommand(0x80); /* The suggested ratio 0x80 */
+	bsp_lcd_sendCommand(0x80); /* The suggested ratio 0x80: Fosc=333+8*4.625(kHz), D=0+1 */
 
 	bsp_lcd_sendCommand(SSD1306_SETMULTIPLEX); /* 0xA8 */
 	bsp_lcd_sendCommand(SSD1306_LCDHEIGHT - 1);
@@ -195,34 +196,34 @@ void display_init(void)
 	bsp_lcd_sendCommand(SSD1306_CHARGEPUMP); /* 0x8D */
 	if (OLED_VCCTYPE == VCCTYPE_EXTERNAL)
 	{
-		bsp_lcd_sendCommand(0x10);
+		bsp_lcd_sendCommand(0x10); /* Disable charge pump */
 	}
 	else
 	{
-		bsp_lcd_sendCommand(0x14);
+		bsp_lcd_sendCommand(0x14); /* Enable charge pump during display on */
 	}
 	bsp_lcd_sendCommand(SSD1306_MEMORYMODE); /* 0x20 */
 	bsp_lcd_sendCommand(0x00); /* 0x00 act like ks0108 */
-	bsp_lcd_sendCommand(SSD1306_SEGREMAP | 0x1);
-	bsp_lcd_sendCommand(SSD1306_COMSCANDEC);
+	bsp_lcd_sendCommand(SSD1306_SEGREMAP | 0x1); /* Column address 127 is mapped to SEG0 */
+	bsp_lcd_sendCommand(SSD1306_COMSCANDEC); /* Re-mapped mode. Scan from COM[N-1] to COM0 */
 
 	/* For OLED LCD 128x32 */
 	bsp_lcd_sendCommand(SSD1306_SETCOMPINS); /* 0xDA */
-	bsp_lcd_sendCommand(0x02);
+	bsp_lcd_sendCommand(0x02); /* Sequential COM pin configuration */
 	bsp_lcd_sendCommand(SSD1306_SETCONTRAST); /* 0x81 */
 	bsp_lcd_sendCommand(0x8F);
 
 	bsp_lcd_sendCommand(SSD1306_SETPRECHARGE); /* 0xd9 */
 	if (OLED_VCCTYPE == VCCTYPE_EXTERNAL)
 	{
-		bsp_lcd_sendCommand(0x22);
+		bsp_lcd_sendCommand(0x22); /* Phase 2 period: 2 DCLKs, Phase 1 period: 2 DCLKs */
 	}
 	else
 	{
-		bsp_lcd_sendCommand(0xF1);
+		bsp_lcd_sendCommand(0xF1); /* Phase 2 period: 15 DCLKs, Phase 1 period: 1 DCLKs */
 	}
 	bsp_lcd_sendCommand(SSD1306_SETVCOMDETECT); /* 0xDB */
-	bsp_lcd_sendCommand(0x40);
+	bsp_lcd_sendCommand(0x40); /* VCOMH de-select level ~VCC */
 	bsp_lcd_sendCommand(SSD1306_DISPLAYALLON_RESUME); /* 0xA4 */
 	bsp_lcd_sendCommand(SSD1306_NORMALDISPLAY); /* 0xA6 */
 
@@ -340,6 +341,150 @@ void display_setInvertMode(void)
 void display_setNormalMode(void)
 {
 	bsp_lcd_sendCommand(SSD1306_NORMALDISPLAY);
+}
+
+/**
+ * @brief  Activate a up scroll.
+ * @note   SSD1306 have no continuous vertical scrolling is available.
+ * 		   This just a trick of reuse the Vertical and Right horizontal scroll
+ * 		   with out of range PAGE setup. The same effect with Vertical and Left horizontal scroll.
+ * @retval None
+ */
+void display_scrollUp(scroll_interval_t scrollInterval)
+{
+	bsp_lcd_sendCommand(SSD1306_DEACTIVATE_SCROLL);
+
+	bsp_lcd_sendCommand(SSD1306_SET_VERTICAL_SCROLL_AREA);
+	bsp_lcd_sendCommand(0); /* Set No. of rows in top fixed area */
+	bsp_lcd_sendCommand(SSD1306_LCDHEIGHT); /* Set No. of rows in scroll area */
+
+	bsp_lcd_sendCommand(SSD1306_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL);
+	bsp_lcd_sendCommand(0x00); /* Dummy byte */
+	bsp_lcd_sendCommand(4); /* Start page address - out of range 128x23 */
+	bsp_lcd_sendCommand(scrollInterval); /* Time interval between each scroll step */
+	bsp_lcd_sendCommand(4); /* Stop page address - out of range 128x23 */
+	bsp_lcd_sendCommand(1); /* Vertical scrolling offset */
+
+	bsp_lcd_sendCommand(SSD1306_ACTIVATE_SCROLL);
+}
+
+/**
+ * @brief  Activate a right handed scroll for rows start through stop.
+ * @param  pageStart: Start page address.
+ * @param  pageStop: Stop page address.
+ *          This parameter can be one of the following values:
+ *			@arg DISP_PAGE_0
+ *			@arg DISP_PAGE_1
+ *			@arg DISP_PAGE_2
+ *			@arg DISP_PAGE_3
+ * @retval None
+ */
+void display_scrollRight(display_page_t pageStart, display_page_t pageStop)
+{
+	bsp_lcd_sendCommand(SSD1306_DEACTIVATE_SCROLL);
+
+	bsp_lcd_sendCommand(SSD1306_RIGHT_HORIZONTAL_SCROLL);
+	bsp_lcd_sendCommand(0x00); /* Dummy byte */
+	bsp_lcd_sendCommand(pageStart); /* Start page address */
+	bsp_lcd_sendCommand(SCROLL_BY_2FPS); /* Time interval between each scroll step */
+	bsp_lcd_sendCommand(pageStop); /* End page address */
+	bsp_lcd_sendCommand(0x00); /* Dummy byte */
+	bsp_lcd_sendCommand(0xFF); /* Dummy byte */
+
+	bsp_lcd_sendCommand(SSD1306_ACTIVATE_SCROLL);
+}
+
+/**
+ * @brief  Activate a right handed scroll for rows start through stop.
+ * @param  pageStart: Start page address.
+ * @param  pageStop: Stop page address.
+ *          This parameter can be one of the following values:
+ *			@arg DISP_PAGE_0
+ *			@arg DISP_PAGE_1
+ *			@arg DISP_PAGE_2
+ *			@arg DISP_PAGE_3
+ * @retval None
+ */
+void display_scrollLeft(display_page_t pageStart, display_page_t pageStop)
+{
+	bsp_lcd_sendCommand(SSD1306_DEACTIVATE_SCROLL);
+
+	bsp_lcd_sendCommand(SSD1306_LEFT_HORIZONTAL_SCROLL);
+	bsp_lcd_sendCommand(0x00); /* Dummy byte */
+	bsp_lcd_sendCommand(pageStart); /* Start page address */
+	bsp_lcd_sendCommand(SCROLL_BY_2FPS); /* Time interval between each scroll step */
+	bsp_lcd_sendCommand(pageStop); /* Stop page address */
+	bsp_lcd_sendCommand(0x00); /* Dummy byte */
+	bsp_lcd_sendCommand(0xFF); /* Dummy byte */
+
+	bsp_lcd_sendCommand(SSD1306_ACTIVATE_SCROLL);
+}
+
+/**
+ * @brief  Activate a diagonal scroll for rows start through stop.
+ * @param  pageStart: Start page address.
+ * @param  pageStop: Stop page address.
+ *          This parameter can be one of the following values:
+ *			@arg DISP_PAGE_0
+ *			@arg DISP_PAGE_1
+ *			@arg DISP_PAGE_2
+ *			@arg DISP_PAGE_3
+ * @retval None
+ */
+void display_scrollDiagRight(display_page_t pageStart, display_page_t pageStop)
+{
+	bsp_lcd_sendCommand(SSD1306_DEACTIVATE_SCROLL);
+
+	bsp_lcd_sendCommand(SSD1306_SET_VERTICAL_SCROLL_AREA);
+	bsp_lcd_sendCommand(0); /* Set No. of rows in top fixed area */
+	bsp_lcd_sendCommand(SSD1306_LCDHEIGHT); /* Set No. of rows in scroll area */
+
+	bsp_lcd_sendCommand(SSD1306_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL);
+	bsp_lcd_sendCommand(0x00); /* Dummy byte */
+	bsp_lcd_sendCommand(pageStart); /* Start page address */
+	bsp_lcd_sendCommand(SCROLL_BY_5FPS); /* Time interval between each scroll step */
+	bsp_lcd_sendCommand(pageStop); /* Stop page address */
+	bsp_lcd_sendCommand(1); /* Vertical scrolling offset */
+
+	bsp_lcd_sendCommand(SSD1306_ACTIVATE_SCROLL);
+}
+
+/**
+ * @brief  Activate a diagonal scroll for rows start through stop.
+ * @param  pageStart: Start page address.
+ * @param  pageStop: Stop page address.
+ *          This parameter can be one of the following values:
+ *			@arg DISP_PAGE_0
+ *			@arg DISP_PAGE_1
+ *			@arg DISP_PAGE_2
+ *			@arg DISP_PAGE_3
+ * @retval None
+ */
+void display_scrollDiagLeft(display_page_t pageStart, display_page_t pageStop)
+{
+	bsp_lcd_sendCommand(SSD1306_DEACTIVATE_SCROLL);
+
+	bsp_lcd_sendCommand(SSD1306_SET_VERTICAL_SCROLL_AREA);
+	bsp_lcd_sendCommand(0); /* Set No. of rows in top fixed area */
+	bsp_lcd_sendCommand(SSD1306_LCDHEIGHT); /* Set No. of rows in scroll area */
+
+	bsp_lcd_sendCommand(SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL);
+	bsp_lcd_sendCommand(0x00); /* Dummy byte */
+	bsp_lcd_sendCommand(pageStart); /* Start page address */
+	bsp_lcd_sendCommand(SCROLL_BY_5FPS); /* Time interval between each scroll step */
+	bsp_lcd_sendCommand(pageStop); /* Stop page address */
+	bsp_lcd_sendCommand(1); /* Vertical scrolling offset */
+
+	bsp_lcd_sendCommand(SSD1306_ACTIVATE_SCROLL);
+}
+
+/**
+ * @brief  Stop rolling the display.
+ * @retval None
+ */
+void display_scrollStop(void)
+{
+	bsp_lcd_sendCommand(SSD1306_DEACTIVATE_SCROLL);
 }
 
 /**

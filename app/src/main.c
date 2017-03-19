@@ -35,9 +35,32 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
+#define TESTING /*!< Enable this flag to active the testing functions. */
 /* Private variables ---------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
+#ifdef TESTING
+/**
+ * @brief  Test the display driver.
+ * @note   Expectation:
+ * 			@arg LCD display project LOGO in one second at dim mode.
+ * 			@arg LCD display project LOGO in one second at normal contrast.
+ * 			@arg LCD turn off in one second.
+ * 			@arg LCD turn on and the project LOGO show back.
+ * @retval None
+ */
+void test_DisplayDriver(void)
+{
+	display_render_logo();
+	display_setDim(false);
+	bsp_delay_ms(1000);
+	display_setDim(true);
+	bsp_delay_ms(1000);
+	display_turnOff();
+	bsp_delay_ms(1000);
+	display_turnOn();
+}
+#endif
 /* Private functions ---------------------------------------------------------*/
 
 /******************************************************************************/
@@ -50,7 +73,9 @@
 int main(void)
 {
 	bsp_init();
-
+#ifdef TESTING
+	test_DisplayDriver();
+#endif
 	while (true)
 	{
 		bsp_led_toggle(LED_RED);

@@ -49,6 +49,7 @@ void display_turnOn(void);
 void display_turnOff(void);
 void display_setDim(bool bIsDim);
 void display_render(void);
+void display_render_logo(void);
 
 /**
  * @} DRV_DISPLAY

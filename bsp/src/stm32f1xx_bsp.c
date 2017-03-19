@@ -129,6 +129,8 @@ void bsp_init(void)
 	/* Enable the LCD module */
 	if (bsp_lcd_init())
 	{
+		/* Reset the LCD module to let VCC stable */
+		bsp_lcd_reset();
 		/* Enable the display driver */
 		display_init();
 	}

@@ -32,8 +32,6 @@
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f1xx_bsp.h"
-#include "lcd.h"
 #include "display.h"
 #include <string.h> /* memset() */
 
@@ -273,6 +271,15 @@ void display_setDim(bool bIsDim)
 	}
 	bsp_lcd_sendCommand(SSD1306_SETCONTRAST);
 	bsp_lcd_sendCommand(ui8ContrastValue);
+}
+
+/**
+ * @brief  Export the display buffer at data region to upper layer.
+ * @retval uint8_t*: Display buffer data pointer
+ */
+uint8_t* display_getRenderBufferPointer(void)
+{
+	return g_pui8DisplayDataBuffer;
 }
 
 /**

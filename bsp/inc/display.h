@@ -40,6 +40,8 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+#include "lcd.h"
+
 /* Exported types ------------------------------------------------------------*/
 /**
  * @typedef display_page_t
@@ -76,6 +78,7 @@ void display_init(void);
 void display_turnOn(void);
 void display_turnOff(void);
 void display_setDim(bool bIsDim);
+uint8_t* display_getRenderBufferPointer(void);
 void display_render(void);
 void display_render_logo(void);
 void display_clearRenderBuffer(void);

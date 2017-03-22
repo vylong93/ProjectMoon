@@ -47,9 +47,7 @@ typedef enum
 } vcctype_t;
 
 /* Private define ------------------------------------------------------------*/
-#define SSD1306_LCDWIDTH		(128) /*!< LCD width in pixel unit */
-#define SSD1306_LCDHEIGHT		(32) /*!< LCD height in pixel unit */
-#define DISPLAY_DATA_SIZE		(SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8) /*!< Unit in byte. Every 8 pixel in same column corresponding to one byte data (8-bit) */
+#define DISPLAY_DATA_SIZE		(DISPLAY_WIDTH * DISPLAY_HEIGHT / 8) /*!< Unit in byte. Every 8 pixel in same column corresponding to one byte data (8-bit) */
 
 /* Private macro -------------------------------------------------------------*/
 /* SSD1306 command list */
@@ -186,7 +184,7 @@ void display_init(void)
 	bsp_lcd_sendCommand(0x80); /* The suggested ratio 0x80: Fosc=333+8*4.625(kHz), D=0+1 */
 
 	bsp_lcd_sendCommand(SSD1306_SETMULTIPLEX); /* 0xA8 */
-	bsp_lcd_sendCommand(SSD1306_LCDHEIGHT - 1);
+	bsp_lcd_sendCommand(DISPLAY_HEIGHT - 1);
 
 	bsp_lcd_sendCommand(SSD1306_SETDISPLAYOFFSET); /* 0xD3 */
 	bsp_lcd_sendCommand(0); /* No Offset */
@@ -293,7 +291,7 @@ void display_render(void)
 {
 	bsp_lcd_sendCommand(SSD1306_COLUMNADDR);
 	bsp_lcd_sendCommand(0); /* Column start address (0 = reset) */
-	bsp_lcd_sendCommand(SSD1306_LCDWIDTH - 1); /* Column end address (127 = reset) */
+	bsp_lcd_sendCommand(DISPLAY_WIDTH - 1); /* Column end address (127 = reset) */
 
 	bsp_lcd_sendCommand(SSD1306_PAGEADDR);
 	bsp_lcd_sendCommand(0); /* Page start address (0 = reset) */
@@ -310,7 +308,7 @@ void display_render_logo(void)
 {
 	bsp_lcd_sendCommand(SSD1306_COLUMNADDR);
 	bsp_lcd_sendCommand(0); /* Column start address (0 = reset) */
-	bsp_lcd_sendCommand(SSD1306_LCDWIDTH - 1); /* Column end address (127 = reset) */
+	bsp_lcd_sendCommand(DISPLAY_WIDTH - 1); /* Column end address (127 = reset) */
 
 	bsp_lcd_sendCommand(SSD1306_PAGEADDR);
 	bsp_lcd_sendCommand(0); /* Page start address (0 = reset) */
@@ -352,6 +350,16 @@ void display_setNormalMode(void)
 
 /**
  * @brief  Activate a up scroll.
+ * @param  scrollInterval: Determine the scrolling speed.
+ *          This parameter can be one of the following values:
+ *			@arg SCROLL_BY_2FPS
+ *			@arg SCROLL_BY_3FPS
+ *			@arg SCROLL_BY_4FPS
+ *			@arg SCROLL_BY_5FPS
+ *			@arg SCROLL_BY_25FPS
+ *			@arg SCROLL_BY_64FPS
+ *			@arg SCROLL_BY_128FPS
+ *			@arg SCROLL_BY_256FPS
  * @note   SSD1306 have no continuous vertical scrolling is available.
  * 		   This just a trick of reuse the Vertical and Right horizontal scroll
  * 		   with out of range PAGE setup. The same effect with Vertical and Left horizontal scroll.
@@ -363,7 +371,7 @@ void display_scrollUp(scroll_interval_t scrollInterval)
 
 	bsp_lcd_sendCommand(SSD1306_SET_VERTICAL_SCROLL_AREA);
 	bsp_lcd_sendCommand(0); /* Set No. of rows in top fixed area */
-	bsp_lcd_sendCommand(SSD1306_LCDHEIGHT); /* Set No. of rows in scroll area */
+	bsp_lcd_sendCommand(DISPLAY_HEIGHT); /* Set No. of rows in scroll area */
 
 	bsp_lcd_sendCommand(SSD1306_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL);
 	bsp_lcd_sendCommand(0x00); /* Dummy byte */
@@ -444,7 +452,7 @@ void display_scrollDiagRight(display_page_t pageStart, display_page_t pageStop)
 
 	bsp_lcd_sendCommand(SSD1306_SET_VERTICAL_SCROLL_AREA);
 	bsp_lcd_sendCommand(0); /* Set No. of rows in top fixed area */
-	bsp_lcd_sendCommand(SSD1306_LCDHEIGHT); /* Set No. of rows in scroll area */
+	bsp_lcd_sendCommand(DISPLAY_HEIGHT); /* Set No. of rows in scroll area */
 
 	bsp_lcd_sendCommand(SSD1306_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL);
 	bsp_lcd_sendCommand(0x00); /* Dummy byte */
@@ -473,7 +481,7 @@ void display_scrollDiagLeft(display_page_t pageStart, display_page_t pageStop)
 
 	bsp_lcd_sendCommand(SSD1306_SET_VERTICAL_SCROLL_AREA);
 	bsp_lcd_sendCommand(0); /* Set No. of rows in top fixed area */
-	bsp_lcd_sendCommand(SSD1306_LCDHEIGHT); /* Set No. of rows in scroll area */
+	bsp_lcd_sendCommand(DISPLAY_HEIGHT); /* Set No. of rows in scroll area */
 
 	bsp_lcd_sendCommand(SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL);
 	bsp_lcd_sendCommand(0x00); /* Dummy byte */

@@ -72,6 +72,9 @@ typedef enum
 } scroll_interval_t;
 
 /* Exported constants --------------------------------------------------------*/
+#define DISPLAY_WIDTH		(128) /*!< LCD width in pixel unit */
+#define DISPLAY_HEIGHT		(32) /*!< LCD height in pixel unit */
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 void display_init(void);

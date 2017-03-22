@@ -190,6 +190,14 @@ void test_GraphicLibrary(void)
 	graphic_drawFastVLine(DISPLAY_WIDTH / 2 + 3, -10, -3, INVERSE);
 	display_render();
 	bsp_delay_ms(1000);
+
+	graphic_drawRect(2, 2, DISPLAY_WIDTH - 4, DISPLAY_HEIGHT - 4, WHITE);
+	display_render();
+	bsp_delay_ms(1000);
+
+	graphic_fillRect(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, INVERSE);
+	display_render();
+	bsp_delay_ms(1000);
 }
 #endif
 /* Private functions ---------------------------------------------------------*/

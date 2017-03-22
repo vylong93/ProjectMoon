@@ -133,6 +133,13 @@ void test_DisplayDriver(void)
  * 			@arg LCD display the bottom right pixel in one second.
  * 			@arg LCD display the bottom left pixel in one second.
  * 			@arg LCD display the top right pixel in one second.
+ * 			@arg LCD display the 1st horizontal line in one second.
+ * 			@arg LCD display not draw anything in one second.
+ * 			@arg LCD display the 2nd horizontal line in one second.
+ * 			@arg LCD display the 1st vertical line in one second.
+* 			@arg LCD display the 2nd vertical line in one second.
+* 			@arg LCD display the 3dr vertical line in one second.
+* 			@arg LCD display not draw anything in one second.
  * @retval None
  */
 void test_GraphicLibrary(void)
@@ -159,6 +166,30 @@ void test_GraphicLibrary(void)
 	display_render();
 	bsp_delay_ms(1000);
 
+	/* Normal-Boundary-Abnormal */
+	graphic_drawFastHLine(5, 5, DISPLAY_WIDTH / 2, WHITE);
+	display_render();
+	bsp_delay_ms(1000);
+	graphic_drawFastHLine(-1, -4, DISPLAY_WIDTH / 2, WHITE);
+	display_render();
+	bsp_delay_ms(1000);
+	graphic_drawFastHLine(-5, 7, DISPLAY_WIDTH / 2, WHITE);
+	display_render();
+	bsp_delay_ms(1000);
+
+	/* Normal-Boundary-Abnormal */
+	graphic_drawFastVLine(DISPLAY_WIDTH / 2, 2, DISPLAY_HEIGHT * 2 / 3, INVERSE);
+	display_render();
+	bsp_delay_ms(1000);
+	graphic_drawFastVLine(DISPLAY_WIDTH / 2 + 1, 2, DISPLAY_HEIGHT, INVERSE);
+	display_render();
+	bsp_delay_ms(1000);
+	graphic_drawFastVLine(DISPLAY_WIDTH / 2 + 2, -10, DISPLAY_HEIGHT, INVERSE);
+	display_render();
+	bsp_delay_ms(1000);
+	graphic_drawFastVLine(DISPLAY_WIDTH / 2 + 3, -10, -3, INVERSE);
+	display_render();
+	bsp_delay_ms(1000);
 }
 #endif
 /* Private functions ---------------------------------------------------------*/

@@ -59,6 +59,8 @@ typedef enum
 /* Exported functions --------------------------------------------------------*/
 void graphic_init(void);
 void graphic_drawPixel(int16_t x, int16_t y, pixel_color_t color);
+void graphic_drawFastHLine(int16_t x, int16_t y, int16_t w, pixel_color_t color);
+void graphic_drawFastVLine(int16_t x, int16_t __y, int16_t __h, pixel_color_t color);
 
 /**
  * @} LIB_GRAPHIC

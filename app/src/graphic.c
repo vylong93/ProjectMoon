@@ -32,16 +32,60 @@
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
-#include "display.h"
+#include "graphic.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+static uint8_t *g_pui8GraphicBuffer = NULL; /*!< Pointer to the display buffer of the Driver */
+
 /* Private functions declaration ---------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 
 /* Exported functions prototype ----------------------------------------------*/
+/**
+ * @brief  Acquire the graphic buffer from Display driver.
+ * @retval None
+ */
+void graphic_init(void) {
+	g_pui8GraphicBuffer = display_getRenderBufferPointer();
+}
+
+/**
+ * @brief  Draw one pixel to the Graphic buffer
+ * @param  x: Horizontal axis value of the 2D Cartesian coordinate.
+ * @param  y: Vertical axis inverted value of the 2D Cartesian coordinate.
+ * @param  color: Selected pixel state.
+ *          This parameter can be one of the following values:
+ *			@arg WHITE
+ *			@arg BLACK
+ *			@arg INVERSE
+ * @retval None
+ */
+void graphic_drawPixel(int16_t x, int16_t y, pixel_color_t color) {
+	if ((NULL == g_pui8GraphicBuffer)
+			|| (x < 0) || (x >= DISPLAY_WIDTH)
+			|| (y < 0) || (y >= DISPLAY_HEIGHT)) {
+		/* No need to draw anything */
+		return;
+	}
+
+	int32_t i32PageColumnIndex = x + (y / 8) * DISPLAY_WIDTH;
+	switch (color)
+	{
+	case WHITE:
+		g_pui8GraphicBuffer[i32PageColumnIndex] |= (1 << (y & 7));
+		break;
+	case BLACK:
+		g_pui8GraphicBuffer[i32PageColumnIndex] &= ~(1 << (y & 7));
+		break;
+	case INVERSE:
+		g_pui8GraphicBuffer[i32PageColumnIndex] ^= (1 << (y & 7));
+		break;
+	}
+}
+
 
 /**
  * @} LIB_GRAPHIC

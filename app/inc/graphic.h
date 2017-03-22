@@ -40,10 +40,25 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+#include "display.h"
+
 /* Exported types ------------------------------------------------------------*/
+/**
+ * @typedef pixel_color_t
+ * This type define the target pixel state for drawing in the Graphic buffer.
+ */
+typedef enum
+{
+	BLACK = 0, /*!< Pixel passive state: OFF */
+	WHITE = 1, /*!< Pixel active state: ON */
+	INVERSE = 2 /*!< Invert the current pixel state */
+} pixel_color_t;
+
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
+void graphic_init(void);
+void graphic_drawPixel(int16_t x, int16_t y, pixel_color_t color);
 
 /**
  * @} LIB_GRAPHIC

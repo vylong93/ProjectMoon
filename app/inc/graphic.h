@@ -63,6 +63,10 @@ void graphic_drawFastHLine(int16_t x, int16_t y, int16_t w,
 		pixel_color_t color);
 void graphic_drawFastVLine(int16_t x, int16_t __y, int16_t __h,
 		pixel_color_t color);
+void graphic_drawRect(int16_t x, int16_t y, int16_t w, int16_t h,
+		pixel_color_t color);
+void graphic_fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
+		pixel_color_t color);
 
 /**
  * @} LIB_GRAPHIC

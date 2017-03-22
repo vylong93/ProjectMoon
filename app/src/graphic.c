@@ -322,6 +322,50 @@ void graphic_drawFastVLine(int16_t x, int16_t __y, int16_t __h,
 }
 
 /**
+ * @brief  Draw rectangle shape to the Graphic buffer
+ * @param  x: Horizontal axis value of the 2D Cartesian coordinate.
+ * @param  y: Vertical axis inverted value of the 2D Cartesian coordinate.
+ * @param  w: Width of the rectangle in pixel unit.
+ * @param  h: Height of the rectangle in pixel unit.
+ * @param  color: Selected pixel state.
+ *          This parameter can be one of the following values:
+ *			@arg WHITE
+ *			@arg BLACK
+ *			@arg INVERSE
+ * @retval None
+ */
+void graphic_drawRect(int16_t x, int16_t y, int16_t w, int16_t h,
+		pixel_color_t color)
+{
+	graphic_drawFastHLine(x, y, w, color);
+	graphic_drawFastHLine(x, y + h - 1, w, color);
+	graphic_drawFastVLine(x, y, h, color);
+	graphic_drawFastVLine(x + w - 1, y, h, color);
+}
+
+/**
+ * @brief  Fill rectangle shape to the Graphic buffer
+ * @param  x: Horizontal axis value of the 2D Cartesian coordinate.
+ * @param  y: Vertical axis inverted value of the 2D Cartesian coordinate.
+ * @param  w: Width of the rectangle in pixel unit.
+ * @param  h: Height of the rectangle in pixel unit.
+ * @param  color: Selected pixel state.
+ *          This parameter can be one of the following values:
+ *			@arg WHITE
+ *			@arg BLACK
+ *			@arg INVERSE
+ * @retval None
+ */
+void graphic_fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
+		pixel_color_t color)
+{
+	for (int16_t i = x; i < x + w; i++)
+	{
+		graphic_drawFastVLine(i, y, h, color);
+	}
+}
+
+/**
  * @} LIB_GRAPHIC
  */
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

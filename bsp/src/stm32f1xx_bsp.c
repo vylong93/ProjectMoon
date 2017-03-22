@@ -34,6 +34,7 @@
 #include "led.h"
 #include "lcd.h"
 #include "display.h"
+#include "graphic.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -133,6 +134,8 @@ void bsp_init(void)
 		bsp_lcd_reset();
 		/* Enable the display driver */
 		display_init();
+		/* Initialize Graphic library */
+		graphic_init();
 	}
 }
 

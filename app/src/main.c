@@ -124,6 +124,42 @@ void test_DisplayDriver(void)
 	display_render_logo();
 	display_scrollStop();
 }
+
+/**
+ * @brief  Test the Graphic library.
+ * @note   Expectation:
+ * 			@arg LCD display the top left pixel in one second.
+ * 			@arg LCD display the middle pixel in one second.
+ * 			@arg LCD display the bottom right pixel in one second.
+ * 			@arg LCD display the bottom left pixel in one second.
+ * 			@arg LCD display the top right pixel in one second.
+ * @retval None
+ */
+void test_GraphicLibrary(void)
+{
+	display_clearRenderBuffer();
+
+	graphic_drawPixel(0, 0, WHITE);
+	display_render();
+	bsp_delay_ms(1000);
+
+	graphic_drawPixel(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, WHITE);
+	display_render();
+	bsp_delay_ms(1000);
+
+	graphic_drawPixel(DISPLAY_WIDTH - 1, DISPLAY_HEIGHT - 1, WHITE);
+	display_render();
+	bsp_delay_ms(1000);
+
+	graphic_drawPixel(0, DISPLAY_HEIGHT - 1, WHITE);
+	display_render();
+	bsp_delay_ms(1000);
+
+	graphic_drawPixel(DISPLAY_WIDTH - 1, 0, WHITE);
+	display_render();
+	bsp_delay_ms(1000);
+
+}
 #endif
 /* Private functions ---------------------------------------------------------*/
 
@@ -139,6 +175,7 @@ int main(void)
 	bsp_init();
 #ifdef TESTING
 	test_DisplayDriver();
+	test_GraphicLibrary();
 #endif
 	while (true)
 	{

@@ -61,6 +61,7 @@
 #include "stm32f1xx_bsp.h"	/* BSP base APIs */
 #include "led.h"			/* BSP-LED APIs */
 #include "display.h"		/* DRV_DISPLAY APIs */
+#include "graphic.h"		/* LIB_GRAPHIC APIs */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

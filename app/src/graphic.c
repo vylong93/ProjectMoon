@@ -48,7 +48,8 @@ static uint8_t *g_pui8GraphicBuffer = NULL; /*!< Pointer to the display buffer o
  * @brief  Acquire the graphic buffer from Display driver.
  * @retval None
  */
-void graphic_init(void) {
+void graphic_init(void)
+{
 	g_pui8GraphicBuffer = display_getRenderBufferPointer();
 }
 
@@ -63,10 +64,11 @@ void graphic_init(void) {
  *			@arg INVERSE
  * @retval None
  */
-void graphic_drawPixel(int16_t x, int16_t y, pixel_color_t color) {
-	if ((NULL == g_pui8GraphicBuffer)
-			|| (x < 0) || (x >= DISPLAY_WIDTH)
-			|| (y < 0) || (y >= DISPLAY_HEIGHT)) {
+void graphic_drawPixel(int16_t x, int16_t y, pixel_color_t color)
+{
+	if ((NULL == g_pui8GraphicBuffer) || (x < 0) || (x >= DISPLAY_WIDTH)
+			|| (y < 0) || (y >= DISPLAY_HEIGHT))
+	{
 		/* No need to draw anything */
 		return;
 	}

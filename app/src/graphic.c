@@ -52,7 +52,7 @@ static uint8_t *g_pui8GraphicBuffer = NULL; /*!< Pointer to the display buffer o
  */
 bool graphic_init(void)
 {
-	/* Enable the display driaver */
+	/* Enable the display driver */
 	if (!display_init())
 	{
 		return false;

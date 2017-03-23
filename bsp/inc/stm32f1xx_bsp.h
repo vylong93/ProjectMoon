@@ -53,7 +53,7 @@
 #define bsp_delay_ms(x)		HAL_Delay(x)
 
 /* Exported functions --------------------------------------------------------*/
-void bsp_init(void);
+bool bsp_init(void);
 
 /**
  * @} BSP

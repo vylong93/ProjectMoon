@@ -57,7 +57,7 @@ typedef enum
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-void graphic_init(void);
+bool graphic_init(void);
 void graphic_drawPixel(int16_t x, int16_t y, pixel_color_t color);
 void graphic_drawFastHLine(int16_t x, int16_t y, int16_t w,
 		pixel_color_t color);

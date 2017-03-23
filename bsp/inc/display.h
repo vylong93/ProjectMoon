@@ -77,7 +77,7 @@ typedef enum
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-void display_init(void);
+bool display_init(void);
 void display_turnOn(void);
 void display_turnOff(void);
 void display_setDim(bool bIsDim);

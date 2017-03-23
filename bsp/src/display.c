@@ -177,8 +177,16 @@ static uint8_t g_ui8LogoDisplay[DISPLAY_BUFFER_SIZE] = /*!< This is the project 
  * @note   Ffrm = Fosc / (D * K * MUX) = 370kHz / (1 * (1+15+50) * 32) =  370 / 2112 = 175 FPS (5.7ms)
  * @retval None
  */
-void display_init(void)
+bool display_init(void)
 {
+	/* Enable the LCD module */
+	if (!bsp_lcd_init())
+	{
+		return false;
+	}
+	/* Reset the LCD module to let VCC stable */
+	bsp_lcd_reset();
+
 	bsp_lcd_sendCommand(SSD1306_DISPLAYOFF); /* 0xAE */
 	bsp_lcd_sendCommand(SSD1306_SETDISPLAYCLOCKDIV); /* 0xD5 */
 	bsp_lcd_sendCommand(0x80); /* The suggested ratio 0x80: Fosc=333+8*4.625(kHz), D=0+1 */
@@ -227,6 +235,8 @@ void display_init(void)
 
 	/* Turn on OLED panel */
 	bsp_lcd_sendCommand(SSD1306_DISPLAYON);
+
+	return true;
 }
 
 /**

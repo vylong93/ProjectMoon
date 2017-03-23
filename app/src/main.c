@@ -211,7 +211,19 @@ void test_GraphicLibrary(void)
  */
 int main(void)
 {
-	bsp_init();
+	if (!bsp_init())
+	{
+		goto error;
+	}
+
+	/* Enable the LED0 */
+	bsp_led_init(LED_RED);
+
+	if (!graphic_init())
+	{
+		goto error;
+	}
+
 #ifdef TESTING
 	test_DisplayDriver();
 	test_GraphicLibrary();
@@ -221,6 +233,8 @@ int main(void)
 		bsp_led_toggle(LED_RED);
 		bsp_delay_ms(1000);
 	}
+	error: bsp_led_on(LED_RED);
+	while (true);
 }
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

@@ -31,10 +31,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_bsp.h"
-#include "led.h"
-#include "lcd.h"
-#include "display.h"
-#include "graphic.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -105,9 +101,11 @@ void SystemClock_Config(void)
  *         @arg Initialize STM32F103xB HAL library
  *         @arg Configure the system clock
  *         @arg Initialize LED port
- * @retval None
+ * @retval bool: Status of initialization
+ *			@arg true: succeeded
+ *			@arg false: failed
  */
-void bsp_init(void)
+bool bsp_init(void)
 {
 	/* STM32F103xB HAL library initialization:
 	 - Configure the Flash prefetch
@@ -124,19 +122,7 @@ void bsp_init(void)
 	/* Configure the system clock to 64 MHz */
 	SystemClock_Config();
 
-	/* Enable the LED0 */
-	bsp_led_init(LED_RED);
-
-	/* Enable the LCD module */
-	if (bsp_lcd_init())
-	{
-		/* Reset the LCD module to let VCC stable */
-		bsp_lcd_reset();
-		/* Enable the display driver */
-		display_init();
-		/* Initialize Graphic library */
-		graphic_init();
-	}
+	return true;
 }
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

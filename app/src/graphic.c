@@ -46,11 +46,20 @@ static uint8_t *g_pui8GraphicBuffer = NULL; /*!< Pointer to the display buffer o
 /* Exported functions prototype ----------------------------------------------*/
 /**
  * @brief  Acquire the graphic buffer from Display driver.
- * @retval None
+ * @retval bool: Status of initialization
+ *			@arg true: succeeded
+ *			@arg false: failed
  */
-void graphic_init(void)
+bool graphic_init(void)
 {
+	/* Enable the display driaver */
+	if (!display_init())
+	{
+		return false;
+	}
+	/* Get the display buffer pointer */
 	g_pui8GraphicBuffer = display_getRenderBufferPointer();
+	return true;
 }
 
 /**

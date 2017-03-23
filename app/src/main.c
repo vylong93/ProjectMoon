@@ -144,7 +144,7 @@ void test_DisplayDriver(void)
  */
 void test_GraphicLibrary(void)
 {
-	display_clearRenderBuffer();
+	graphic_clearRenderBuffer();
 
 	graphic_drawPixel(0, 0, WHITE);
 	display_render();

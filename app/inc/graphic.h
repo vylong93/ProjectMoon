@@ -56,6 +56,8 @@ typedef enum
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define	graphic_clearRenderBuffer()	display_clearRenderBuffer()
+
 /* Exported functions --------------------------------------------------------*/
 bool graphic_init(void);
 void graphic_drawPixel(int16_t x, int16_t y, pixel_color_t color);

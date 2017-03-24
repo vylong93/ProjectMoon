@@ -199,6 +199,42 @@ void test_GraphicLibrary(void)
 	display_render();
 	bsp_delay_ms(1000);
 }
+
+/**
+ * @brief  Test the Text library.
+ * @note   Expectation:
+ * 			@arg LCD display the small character 'a' in one second.
+ * 			@arg LCD display the big character '1' in one second.
+ * 			@arg LCD display part of the big test string in one second.
+ * 			@arg LCD display the test string in middle screen in one second.
+ * 			@arg LCD display the test string in right right corner in one second.
+ * @retval None
+ */
+void test_TextLibrary(void)
+{
+	char *pcTestString = "Long Dang";
+	graphic_clearRenderBuffer();
+
+	text_drawChar('a', 2, 2, 1);
+	display_render();
+	bsp_delay_ms(1000);
+
+	text_drawChar('1', 10, 2, 2);
+	display_render();
+	bsp_delay_ms(1000);
+
+	text_drawString(pcTestString, DISPLAY_WIDTH / 3, 8, 2, LEFT);
+	display_render();
+	bsp_delay_ms(1000);
+
+	text_drawString(pcTestString, DISPLAY_WIDTH / 2, 16, 1, CENTER);
+	display_render();
+	bsp_delay_ms(1000);
+
+	text_drawString(pcTestString, DISPLAY_WIDTH, 24, 1, RIGHT);
+	display_render();
+	bsp_delay_ms(1000);
+}
 #endif
 /* Private functions ---------------------------------------------------------*/
 
@@ -227,6 +263,7 @@ int main(void)
 #ifdef TESTING
 	test_DisplayDriver();
 	test_GraphicLibrary();
+	test_TextLibrary();
 #endif
 	while (true)
 	{

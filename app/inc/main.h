@@ -59,6 +59,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "led.h"			/* BSP-LED APIs */
+#include "text.h"			/* LIB_TEXT APIs */
 #include "graphic.h"		/* LIB_GRAPHIC APIs */
 
 /* Exported types ------------------------------------------------------------*/

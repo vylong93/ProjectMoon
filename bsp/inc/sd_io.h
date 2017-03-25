@@ -47,11 +47,12 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 bool bsp_sd_init(void);
+bool bsp_sd_isDetected(void);
 bool bsp_sd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size);
 bool bsp_sd_readByte(uint8_t * pui8Buffer, uint16_t ui16Size);
-bool bsp_sd_writeCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
+bool bsp_sd_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
 		uint8_t ui8ExpectedResponse);
-bool bsp_sd_writeSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg,
+bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg,
 		uint8_t ui8CRC, uint8_t ui8ExpectedResponse,
 		uint32_t *pui32TrailingResponse);
 

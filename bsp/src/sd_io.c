@@ -264,6 +264,22 @@ bool bsp_sd_init(void)
 }
 
 /**
+ * @brief  Detects if SD card is correctly plugged in the memory slot or not.
+ * @retval bool: Returns if SD is detected or not
+ *			@arg true: SD detected
+ *			@arg false: No SD found
+ */
+bool bsp_sd_isDetected(void)
+{
+	/* Check SD card detect pin */
+	if (HAL_GPIO_ReadPin(SD_DETECT_GPIO_PORT, SD_DETECT_PIN) != GPIO_PIN_RESET)
+	{
+		return false;
+	}
+	return true;
+}
+
+/**
  * @brief  Write a byte to the SD device.
  * @param  pui8Buffer: Pointer to the buffer data need to be send.
  * @param  ui16Size: Data buffer size in byte.
@@ -322,7 +338,7 @@ bool bsp_sd_readByte(uint8_t * pui8Buffer, uint16_t ui16Size)
  *			@arg true: succeeded
  *			@arg false: failed
  */
-bool bsp_sd_writeCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
+bool bsp_sd_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
 		uint8_t ui8ExpectedResponse)
 {
 	uint8_t pui8CommandPacket[SD_COMMAND_PACKET_SIZE] =
@@ -352,11 +368,11 @@ bool bsp_sd_writeCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
  *			@arg true: succeeded
  *			@arg false: failed
  */
-bool bsp_sd_writeSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg,
+bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg,
 		uint8_t ui8CRC, uint8_t ui8ExpectedResponse,
 		uint32_t *pui32TrailingResponse)
 {
-	if (bsp_sd_writeCommand(ui8Cmd, ui32Arg, ui8CRC, ui8ExpectedResponse))
+	if (bsp_sd_sendCommand(ui8Cmd, ui32Arg, ui8CRC, ui8ExpectedResponse))
 	{
 		if (SD_NO_RESPONSE_EXPECTED != ui8ExpectedResponse)
 		{

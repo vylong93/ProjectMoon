@@ -54,6 +54,17 @@ typedef enum
 	CENTER /*!< Align to the center */
 } text_align_t;
 
+/**
+ * @typedef text_speed_t
+ * This type define the delay interval between each display character in put string function.
+ */
+typedef enum
+{
+	FAST = 20, /*!< 20ms interval */
+	NORMAL = 35, /*!< 35ms interval */
+	SLOW = 75 /*!< 75ms interval */
+} text_speed_t;
+
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
@@ -66,6 +77,9 @@ int32_t text_drawChar(char c, int32_t i32CornerX, int32_t i32CornerY,
 		int32_t i32Size);
 int32_t text_drawString(const char *pcString, int32_t i32PositionX,
 		int32_t i32CornerY, int32_t i32Size, text_align_t align);
+void text_printString(const char *pcString);
+void text_printNumber(uint32_t ui32Value);
+void text_putString(const char *pcString, text_speed_t speed);
 
 /**
  * @} LIB_TEXT

@@ -39,6 +39,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 #define pgmReadByte(addr) (*(const unsigned char *)(addr)) /*!< Return byte data in the char pointer */
+#define NUMBER_OF_CHARACTER	(8) /*!< Number of character supported in print number function. Avoid to use dynamic memory to increase performance. */
 
 /* Private variables ---------------------------------------------------------*/
 int32_t g_i32CursorX = 0;
@@ -49,7 +50,43 @@ int32_t g_i32TextSize = 1;
 bool g_bWrapText = false;
 
 /* Private functions declaration ---------------------------------------------*/
+void text_write(char c);
+
 /* Private function prototypes -----------------------------------------------*/
+/**
+ * @brief  Push the character on screen at the current cursor position and update the cursor.
+ * 		   Wrap test will be consider to print the remain text in the next line or skip it.
+ * @param  c: Character in ASCII code.
+ * @retval None
+ */
+void text_write(char c)
+{
+	if ('\n' == c)
+	{
+		/* New line: just update cursor, no need to draw anything */
+		g_i32CursorY += (g_i32TextSize * FONT_HEIGHT);
+		g_i32CursorX = 0;
+	}
+	else if ('\r' == c)
+	{
+		/* skip */
+	}
+	else
+	{
+		g_i32CursorX += text_drawChar(c, g_i32CursorX, g_i32CursorY,
+				g_i32TextSize);
+		if (g_bWrapText
+				&& (g_i32CursorX > (DISPLAY_WIDTH - g_i32TextSize * FONT_WIDTH)))
+		{
+			g_i32CursorY += (g_i32TextSize * FONT_HEIGHT);
+			g_i32CursorX = 0;
+		}
+		else
+		{
+			/* skip */
+		}
+	}
+}
 
 /* Exported functions prototype ----------------------------------------------*/
 /**
@@ -234,6 +271,68 @@ int32_t text_drawString(const char *pcString, int32_t i32PositionX,
 	}
 
 	return (i32CornerX - i32LeftCornerX);
+}
+
+/**
+ * @brief  Print a string to the display at current cursor position.
+ * @param  pcString: Pointer to a character array in ASCII code.
+ * @retval None
+ */
+void text_printString(const char *pcString)
+{
+	while (*pcString)
+	{
+		text_write(*pcString);
+		++pcString;
+	}
+}
+
+/**
+ * @brief  Print a number in ASCII format to the display at current cursor position.
+ * @param  pcString: Pointer to a character array in ASCII code.
+ * @retval None
+ */
+void text_printNumber(uint32_t ui32Value)
+{
+	char pcString[NUMBER_OF_CHARACTER + 1 /* End string */] =
+	{ 0 };
+	int i;
+	do
+	{
+		/* Shift right all character number */
+		for (i = (NUMBER_OF_CHARACTER - 1); i > 0; i--)
+		{
+			pcString[i] = pcString[i - 1];
+		}
+		/* Get the current character */
+		pcString[0] = (ui32Value % 10) + '0';
+		ui32Value /= 10;
+	} while (ui32Value);
+
+	text_printString(pcString);
+}
+
+/**
+ * @brief  Print character by character of a string at current cursor position.
+ * @param  pcString: Pointer to a character array in ASCII code.
+ * @param  speed: Output text speed specification.
+ *          This parameter can be one of the following values:
+ *			@arg FAST
+ *			@arg NORMAL
+ *			@arg SLOW
+ * @retval None
+ */
+void text_putString(const char *pcString, text_speed_t speed)
+{
+	while (*pcString)
+	{
+		text_write(*pcString);
+		pcString++;
+		/* FIXME: Render request update entire screen that cause power waste here.
+		 Should only commit the difference part. */
+		graphic_render();
+		graphic_delay_ms(speed);
+	}
 }
 
 /**

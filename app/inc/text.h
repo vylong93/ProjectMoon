@@ -81,6 +81,8 @@ void text_printString(const char *pcString);
 void text_printNumber(uint32_t ui32Value);
 void text_putString(const char *pcString, text_speed_t speed);
 
+void text_showTrademarkAnimation(void);
+
 /**
  * @} LIB_TEXT
  */

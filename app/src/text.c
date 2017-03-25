@@ -336,6 +336,43 @@ void text_putString(const char *pcString, text_speed_t speed)
 }
 
 /**
+ * @brief  Project Trademark animation.
+ * @retval None
+ */
+void text_showTrademarkAnimation(void)
+{
+	char *pcString = "<< powered by PnL >>";
+	char *pcStringEmtpy = "                    ";
+	int32_t i32StringLength = 20;
+	int32_t i32CursorX = (DISPLAY_WIDTH - (i32StringLength * FONT_WIDTH)) / 2;
+	int32_t i32CursorY = 12;
+
+	graphic_clearRenderBuffer();
+	text_setTextSize(1);
+
+	/* Print in inverted color */
+	text_setCursor(i32CursorX, i32CursorY);
+	text_setTextColor(BLACK, WHITE);
+	text_putString(pcString, FAST);
+	graphic_delay_ms(1000);
+
+	/* Flash screen */
+	graphic_setInvertMode();
+	graphic_delay_ms(100);
+	graphic_setNormalMode();
+
+	/* Print in normal color */
+	text_setCursor(i32CursorX, i32CursorY);
+	text_setTextColor(WHITE, BLACK);
+	text_putString(pcString, NORMAL);
+	graphic_delay_ms(500);
+
+	/* Text out */
+	text_setCursor(i32CursorX, i32CursorY);
+	text_putString(pcStringEmtpy, SLOW);
+}
+
+/**
  * @} LIB_TEXT
  */
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

@@ -58,7 +58,7 @@ typedef enum
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 void text_setCursor(int32_t i32CursorX, int32_t i32CursorY);
-void text_setTextSize(uint32_t ui32TextSize);
+void text_setTextSize(int32_t i32TextSize);
 void text_setTextColor(pixel_color_t colorForeground,
 		pixel_color_t colorBackground);
 void text_setWrapText(bool bWrapText);

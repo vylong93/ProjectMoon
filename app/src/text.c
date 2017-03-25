@@ -45,7 +45,7 @@ int32_t g_i32CursorX = 0;
 int32_t g_i32CursorY = 0;
 pixel_color_t g_colorForeground = WHITE;
 pixel_color_t g_colorBackground = BLACK;
-uint32_t g_ui32TextSize = 1;
+int32_t g_i32TextSize = 1;
 bool g_bWrapText = false;
 
 /* Private functions declaration ---------------------------------------------*/
@@ -66,12 +66,12 @@ void text_setCursor(int32_t i32CursorX, int32_t i32CursorY)
 
 /**
  * @brief  Set the character size for drawing text.
- * @param  ui32TextSize: Text size value.
+ * @param  i32TextSize: Text size value.
  * @retval None
  */
-void text_setTextSize(uint32_t ui32TextSize)
+void text_setTextSize(int32_t i32TextSize)
 {
-	g_ui32TextSize = (ui32TextSize > 0) ? (ui32TextSize) : (1);
+	g_i32TextSize = (i32TextSize > 0) ? (i32TextSize) : (1);
 }
 
 /**

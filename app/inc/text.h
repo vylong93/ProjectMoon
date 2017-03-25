@@ -32,7 +32,7 @@
 #ifndef TEXT_H_
 #define TEXT_H_
 
-/** @defgroup LIB Library
+/** @defgroup LIB_GRAPHIC Graphic
  * @{
  */
 /** @defgroup LIB_TEXT Text
@@ -80,7 +80,7 @@ void text_putString(const char *pcString, text_speed_t speed);
 void text_showTrademarkAnimation(void);
 
 /**
- * @} LIB_TEXT
+ * @} LIB_GRAPHIC
  */
 /**
  * @} LIB

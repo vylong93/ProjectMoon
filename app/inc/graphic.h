@@ -59,6 +59,8 @@ typedef enum
 #define	graphic_clearRenderBuffer()	display_clearRenderBuffer() /*!< Wrapper display API */
 #define	graphic_render()			display_render() /*!< Wrapper display API */
 #define	graphic_delay_ms(x)			display_delay_ms(x) /*!< Wrapper display API */
+#define graphic_setInvertMode()		display_setInvertMode() /*!< Wrapper display API */
+#define graphic_setNormalMode()		display_setNormalMode() /*!< Wrapper display API */
 
 /* Exported functions --------------------------------------------------------*/
 bool graphic_init(void);

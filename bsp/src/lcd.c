@@ -276,9 +276,9 @@ bool bsp_lcd_init(void)
 void bsp_lcd_reset(void)
 {
 	LCD_RESn_DEACTIVE();
-	bsp_delay_ms(1); /* wait 1ms for VDD of LCD module stable */
+	bsp_lcd_delay_ms(1); /* wait 1ms for VDD of LCD module stable */
 	LCD_RESn_ACTIVE(); /* reset LCD module */
-	bsp_delay_ms(10); /* wait 10ms */
+	bsp_lcd_delay_ms(10); /* wait 10ms */
 	LCD_RESn_DEACTIVE(); /* bring the LCD module out of reset */
 }
 

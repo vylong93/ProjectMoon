@@ -50,7 +50,7 @@
 bool bsp_lcd_init(void);
 void bsp_lcd_reset(void);
 bool bsp_lcd_sendCommand(uint8_t ui8Command);
-bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint32_t ui32Size);
+bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size);
 
 /**
  * @} BSP_LCD

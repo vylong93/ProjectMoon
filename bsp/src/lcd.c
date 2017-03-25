@@ -327,12 +327,12 @@ bool bsp_lcd_sendCommand(uint8_t ui8Command)
  *			@arg: Idea 2: implement DMA copy and LCD busy flag - non-blocking mechanism
  *          @arg: Idea 3: allocate dynamic buffer and pass the data pointer to upper layer
  * @param  pui8Buffer: Data buffer pointer.
- * @param  ui32Size: Data buffer size in byte.
+ * @param  ui16Size: Data buffer size in byte.
  * @retval bool: Transmission result
  *			@arg true: completed
  *			@arg false: aborted
  */
-bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint32_t ui32Size)
+bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
 {
 	if (*pui8Buffer != 0x40)
 	{
@@ -349,7 +349,7 @@ bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint32_t ui32Size)
 
 	while (HAL_OK
 			!= HAL_I2C_Master_Transmit_DMA(&i2chandle_lcd, g_ui16SlaveAddress,
-					pui8Buffer, ui32Size))
+					pui8Buffer, ui16Size))
 	{
 		/* When Acknowledge failure occurs (Slave don't acknowledge its address)
 		 Master restarts communication. Transmission aborted when Timeout error occurs.*/

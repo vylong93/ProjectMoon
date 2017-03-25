@@ -175,7 +175,9 @@ static uint8_t g_ui8LogoDisplay[DISPLAY_BUFFER_SIZE] = /*!< This is the project 
 /**
  * @brief  Initialize the display driver to control the OLED LCD SSD1306.
  * @note   Ffrm = Fosc / (D * K * MUX) = 370kHz / (1 * (1+15+50) * 32) =  370 / 2112 = 175 FPS (5.7ms)
- * @retval None
+ * @retval bool: Initializing status
+ *			@arg true: succeeded
+ *			@arg false: failed
  */
 bool display_init(void)
 {

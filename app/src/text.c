@@ -50,97 +50,13 @@ int32_t g_i32TextSize = 1;
 bool g_bWrapText = false;
 
 /* Private functions declaration ---------------------------------------------*/
+int32_t text_drawChar(char c, int32_t i32CornerX, int32_t i32CornerY,
+		int32_t i32Size);
+int32_t text_drawString(const char *pcString, int32_t i32PositionX,
+		int32_t i32CornerY, int32_t i32Size, text_align_t align);
 void text_write(char c);
 
 /* Private function prototypes -----------------------------------------------*/
-/**
- * @brief  Push the character on screen at the current cursor position and update the cursor.
- * 		   Wrap test will be consider to print the remain text in the next line or skip it.
- * @param  c: Character in ASCII code.
- * @retval None
- */
-void text_write(char c)
-{
-	if ('\n' == c)
-	{
-		/* New line: just update cursor, no need to draw anything */
-		g_i32CursorY += (g_i32TextSize * FONT_HEIGHT);
-		g_i32CursorX = 0;
-	}
-	else if ('\r' == c)
-	{
-		/* skip */
-	}
-	else
-	{
-		g_i32CursorX += text_drawChar(c, g_i32CursorX, g_i32CursorY,
-				g_i32TextSize);
-		if (g_bWrapText
-				&& (g_i32CursorX > (DISPLAY_WIDTH - g_i32TextSize * FONT_WIDTH)))
-		{
-			g_i32CursorY += (g_i32TextSize * FONT_HEIGHT);
-			g_i32CursorX = 0;
-		}
-		else
-		{
-			/* skip */
-		}
-	}
-}
-
-/* Exported functions prototype ----------------------------------------------*/
-/**
- * @brief  Set the cursor position for drawing text.
- * @param  i32CursorX: Horizontal axis value of the 2D Cartesian coordinate.
- * @param  i32CursorY: Vertical axis inverted value of the 2D Cartesian coordinate.
- * @retval None
- */
-void text_setCursor(int32_t i32CursorX, int32_t i32CursorY)
-{
-	g_i32CursorX = i32CursorX;
-	g_i32CursorY = i32CursorY;
-}
-
-/**
- * @brief  Set the character size for drawing text.
- * @param  i32TextSize: Text size value.
- * @retval None
- */
-void text_setTextSize(int32_t i32TextSize)
-{
-	g_i32TextSize = (i32TextSize > 0) ? (i32TextSize) : (1);
-}
-
-/**
- * @brief  Set the foreground and background color of the character for drawing text.
- * @param  colorForeground: Foreground color value.
- * @param  colorBackground: Background color value.
- *          This parameter can be one of the following values:
- *			@arg WHITE
- *			@arg BLACK
- *			@arg INVERSE
- * @retval None
- */
-void text_setTextColor(pixel_color_t colorForeground,
-		pixel_color_t colorBackground)
-{
-	g_colorForeground = colorForeground;
-	g_colorBackground = colorBackground;
-}
-
-/**
- * @brief  Set enable/disable the wrap feature for drawing string.
- * @param  bWrapText: wrap text flag value.
- *          This parameter can be one of the following values:
- *			@arg true: wrap text when meet end of line.
- *			@arg false: do not wrap text.
- * @retval None
- */
-void text_setWrapText(bool bWrapText)
-{
-	g_bWrapText = bWrapText;
-}
-
 /**
  * @brief  Draw a character at specific position (top, left) with specific size.
  * @param  c: Character in ASCII code
@@ -271,6 +187,94 @@ int32_t text_drawString(const char *pcString, int32_t i32PositionX,
 	}
 
 	return (i32CornerX - i32LeftCornerX);
+}
+
+/**
+ * @brief  Push the character on screen at the current cursor position and update the cursor.
+ * 		   Wrap test will be consider to print the remain text in the next line or skip it.
+ * @param  c: Character in ASCII code.
+ * @retval None
+ */
+void text_write(char c)
+{
+	if ('\n' == c)
+	{
+		/* New line: just update cursor, no need to draw anything */
+		g_i32CursorY += (g_i32TextSize * FONT_HEIGHT);
+		g_i32CursorX = 0;
+	}
+	else if ('\r' == c)
+	{
+		/* skip */
+	}
+	else
+	{
+		g_i32CursorX += text_drawChar(c, g_i32CursorX, g_i32CursorY,
+				g_i32TextSize);
+		if (g_bWrapText
+				&& (g_i32CursorX > (DISPLAY_WIDTH - g_i32TextSize * FONT_WIDTH)))
+		{
+			g_i32CursorY += (g_i32TextSize * FONT_HEIGHT);
+			g_i32CursorX = 0;
+		}
+		else
+		{
+			/* skip */
+		}
+	}
+}
+
+/* Exported functions prototype ----------------------------------------------*/
+/**
+ * @brief  Set the cursor position for drawing text.
+ * @param  i32CursorX: Horizontal axis value of the 2D Cartesian coordinate.
+ * @param  i32CursorY: Vertical axis inverted value of the 2D Cartesian coordinate.
+ * @retval None
+ */
+void text_setCursor(int32_t i32CursorX, int32_t i32CursorY)
+{
+	g_i32CursorX = i32CursorX;
+	g_i32CursorY = i32CursorY;
+}
+
+/**
+ * @brief  Set the character size for drawing text.
+ * @param  i32TextSize: Text size value.
+ * @retval None
+ */
+void text_setTextSize(int32_t i32TextSize)
+{
+	g_i32TextSize = (i32TextSize > 0) ? (i32TextSize) : (1);
+}
+
+/**
+ * @brief  Set the foreground and background color of the character for drawing text.
+ * @param  colorForeground: Foreground color value.
+ * @param  colorBackground: Background color value.
+ *          This parameter can be one of the following values:
+ *			@arg WHITE
+ *			@arg BLACK
+ *			@arg INVERSE
+ * @retval None
+ */
+void text_setTextColor(pixel_color_t colorForeground,
+		pixel_color_t colorBackground)
+{
+	g_colorForeground = colorForeground;
+	g_colorBackground = colorBackground;
+}
+
+/**
+ * @brief  Set enable/disable the wrap feature for drawing string.
+ * @param  bWrapText: wrap text flag value.
+ *          This parameter can be one of the following values:
+ *			@arg true: wrap text when meet end of line.
+ *			@arg false: do not wrap text.
+ * @retval None
+ */
+void text_setWrapText(bool bWrapText)
+{
+	g_bWrapText = bWrapText;
 }
 
 /**

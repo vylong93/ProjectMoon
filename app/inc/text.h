@@ -73,10 +73,6 @@ void text_setTextSize(int32_t i32TextSize);
 void text_setTextColor(pixel_color_t colorForeground,
 		pixel_color_t colorBackground);
 void text_setWrapText(bool bWrapText);
-int32_t text_drawChar(char c, int32_t i32CornerX, int32_t i32CornerY,
-		int32_t i32Size);
-int32_t text_drawString(const char *pcString, int32_t i32PositionX,
-		int32_t i32CornerY, int32_t i32Size, text_align_t align);
 void text_printString(const char *pcString);
 void text_printNumber(uint32_t ui32Value);
 void text_putString(const char *pcString, text_speed_t speed);

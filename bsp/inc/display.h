@@ -76,6 +76,8 @@ typedef enum
 #define DISPLAY_HEIGHT		(32) /*!< LCD height in pixel unit */
 
 /* Exported macro ------------------------------------------------------------*/
+#define display_delay_ms(x) bsp_lcd_delay_ms(x) /*!< Wrapper LCD API */
+
 /* Exported functions --------------------------------------------------------*/
 bool display_init(void);
 void display_turnOn(void);

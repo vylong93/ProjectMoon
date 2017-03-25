@@ -205,11 +205,6 @@ void test_GraphicLibrary(void)
 /**
  * @brief  Test the Text library.
  * @note   Expectation:
- * 			@arg LCD display the small character 'a' in one second.
- * 			@arg LCD display the big character '1' in one second.
- * 			@arg LCD display part of the big test string in one second.
- * 			@arg LCD display the test string in middle screen in one second.
- * 			@arg LCD display the test string in right right corner in one second.
  * 			@arg LCD display clear in one second.
  * 			@arg LCD display alphabet in medium size in one second.
  * 			@arg LCD display string number order in big size in one second.
@@ -221,28 +216,6 @@ void test_GraphicLibrary(void)
 void test_TextLibrary(void)
 {
 	char *pcTestString = "Project Moon\n";
-	graphic_clearRenderBuffer();
-
-	text_drawChar('a', 2, 2, 1);
-	graphic_render();
-	graphic_delay_ms(1000);
-
-	text_drawChar('1', 10, 2, 2);
-	graphic_render();
-	graphic_delay_ms(1000);
-
-	text_drawString(pcTestString, DISPLAY_WIDTH / 3, 8, 2, LEFT);
-	graphic_render();
-	graphic_delay_ms(1000);
-
-	text_drawString(pcTestString, DISPLAY_WIDTH / 2, 16, 1, CENTER);
-	graphic_render();
-	graphic_delay_ms(1000);
-
-	text_drawString(pcTestString, DISPLAY_WIDTH, 24, 1, RIGHT);
-	graphic_render();
-	graphic_delay_ms(1000);
-
 	graphic_clearRenderBuffer();
 	graphic_render();
 	graphic_delay_ms(1000);
@@ -274,6 +247,8 @@ void test_TextLibrary(void)
 	text_putString(pcTestString, SLOW);
 	text_putString(pcTestString, NORMAL);
 	text_putString(pcTestString, FAST);
+
+	text_showTrademarkAnimation();
 }
 #endif
 /* Private functions ---------------------------------------------------------*/
@@ -305,6 +280,7 @@ int main(void)
 	test_GraphicLibrary();
 	test_TextLibrary();
 #endif
+
 	while (true)
 	{
 		bsp_led_toggle(LED_RED);

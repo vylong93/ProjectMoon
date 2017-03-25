@@ -72,55 +72,55 @@ void test_DisplayDriver(void)
 {
 	display_render_logo();
 	display_setDim(false);
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_setDim(true);
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_turnOff();
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_turnOn();
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_setInvertMode();
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_setNormalMode();
 	display_scrollLeft(DISP_PAGE_0, DISP_PAGE_3);
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_scrollRight(DISP_PAGE_0, DISP_PAGE_3);
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_scrollDiagLeft(DISP_PAGE_0, DISP_PAGE_3);
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_scrollDiagRight(DISP_PAGE_0, DISP_PAGE_3);
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_scrollStop();
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_render_logo();
 	display_scrollLeft(DISP_PAGE_1, DISP_PAGE_2);
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_render_logo();
 	display_scrollRight(DISP_PAGE_3, DISP_PAGE_3);
-	bsp_delay_ms(1000);
+	display_delay_ms(1000);
 	display_render_logo();
 	display_scrollDiagLeft(DISP_PAGE_2, DISP_PAGE_3);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_render_logo();
 	display_scrollDiagRight(DISP_PAGE_0, DISP_PAGE_1);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_render_logo();
 	display_scrollUp(SCROLL_BY_2FPS);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_scrollUp(SCROLL_BY_3FPS);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_scrollUp(SCROLL_BY_4FPS);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_scrollUp(SCROLL_BY_5FPS);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_scrollUp(SCROLL_BY_25FPS);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_scrollUp(SCROLL_BY_64FPS);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_scrollUp(SCROLL_BY_128FPS);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_scrollUp(SCROLL_BY_256FPS);
-	bsp_delay_ms(3000);
+	display_delay_ms(3000);
 	display_render_logo();
 	display_scrollStop();
 }
@@ -137,9 +137,9 @@ void test_DisplayDriver(void)
  * 			@arg LCD display not draw anything in one second.
  * 			@arg LCD display the 2nd horizontal line in one second.
  * 			@arg LCD display the 1st vertical line in one second.
-* 			@arg LCD display the 2nd vertical line in one second.
-* 			@arg LCD display the 3dr vertical line in one second.
-* 			@arg LCD display not draw anything in one second.
+ * 			@arg LCD display the 2nd vertical line in one second.
+ * 			@arg LCD display the 3dr vertical line in one second.
+ * 			@arg LCD display not draw anything in one second.
  * @retval None
  */
 void test_GraphicLibrary(void)
@@ -147,57 +147,59 @@ void test_GraphicLibrary(void)
 	graphic_clearRenderBuffer();
 
 	graphic_drawPixel(0, 0, WHITE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	graphic_drawPixel(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, WHITE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	graphic_drawPixel(DISPLAY_WIDTH - 1, DISPLAY_HEIGHT - 1, WHITE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	graphic_drawPixel(0, DISPLAY_HEIGHT - 1, WHITE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	graphic_drawPixel(DISPLAY_WIDTH - 1, 0, WHITE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	/* Normal-Boundary-Abnormal */
 	graphic_drawFastHLine(5, 5, DISPLAY_WIDTH / 2, WHITE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 	graphic_drawFastHLine(-1, -4, DISPLAY_WIDTH / 2, WHITE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 	graphic_drawFastHLine(-5, 7, DISPLAY_WIDTH / 2, WHITE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	/* Normal-Boundary-Abnormal */
-	graphic_drawFastVLine(DISPLAY_WIDTH / 2, 2, DISPLAY_HEIGHT * 2 / 3, INVERSE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_drawFastVLine(DISPLAY_WIDTH / 2, 2, DISPLAY_HEIGHT * 2 / 3,
+			INVERSE);
+	graphic_render();
+	graphic_delay_ms(1000);
 	graphic_drawFastVLine(DISPLAY_WIDTH / 2 + 1, 2, DISPLAY_HEIGHT, INVERSE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 	graphic_drawFastVLine(DISPLAY_WIDTH / 2 + 2, -10, DISPLAY_HEIGHT, INVERSE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 	graphic_drawFastVLine(DISPLAY_WIDTH / 2 + 3, -10, -3, INVERSE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	graphic_drawRect(2, 2, DISPLAY_WIDTH - 4, DISPLAY_HEIGHT - 4, WHITE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
-	graphic_fillRect(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, INVERSE);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_fillRect(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT / 4, DISPLAY_WIDTH / 2,
+	DISPLAY_HEIGHT / 2, INVERSE);
+	graphic_render();
+	graphic_delay_ms(1000);
 }
 
 /**
@@ -208,32 +210,70 @@ void test_GraphicLibrary(void)
  * 			@arg LCD display part of the big test string in one second.
  * 			@arg LCD display the test string in middle screen in one second.
  * 			@arg LCD display the test string in right right corner in one second.
+ * 			@arg LCD display clear in one second.
+ * 			@arg LCD display alphabet in medium size in one second.
+ * 			@arg LCD display string number order in big size in one second.
+ * 			@arg LCD display a test number in big size in one second.
+ * 			@arg LCD display clear in one second.
+ * 			@arg LCD display character by character of the test string in one second.
  * @retval None
  */
 void test_TextLibrary(void)
 {
-	char *pcTestString = "Long Dang";
+	char *pcTestString = "Project Moon\n";
 	graphic_clearRenderBuffer();
 
 	text_drawChar('a', 2, 2, 1);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	text_drawChar('1', 10, 2, 2);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	text_drawString(pcTestString, DISPLAY_WIDTH / 3, 8, 2, LEFT);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	text_drawString(pcTestString, DISPLAY_WIDTH / 2, 16, 1, CENTER);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
 
 	text_drawString(pcTestString, DISPLAY_WIDTH, 24, 1, RIGHT);
-	display_render();
-	bsp_delay_ms(1000);
+	graphic_render();
+	graphic_delay_ms(1000);
+
+	graphic_clearRenderBuffer();
+	graphic_render();
+	graphic_delay_ms(1000);
+
+	text_setWrapText(true);
+	text_setCursor(1, 1);
+	text_setTextSize(2);
+	text_printString("abcdefghijklmnopqrstuvxyw\n");
+	graphic_render();
+	graphic_delay_ms(1000);
+
+	text_setCursor(3, 3);
+	text_printString("0123456789\n");
+	graphic_render();
+	graphic_delay_ms(1000);
+
+	text_setCursor(0, 5);
+	text_setTextSize(3);
+	text_printNumber(97531);
+	graphic_render();
+	graphic_delay_ms(1000);
+
+	graphic_clearRenderBuffer();
+	graphic_render();
+	graphic_delay_ms(1000);
+
+	text_setCursor(0, 2);
+	text_setTextSize(1);
+	text_putString(pcTestString, SLOW);
+	text_putString(pcTestString, NORMAL);
+	text_putString(pcTestString, FAST);
 }
 #endif
 /* Private functions ---------------------------------------------------------*/

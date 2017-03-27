@@ -94,8 +94,6 @@ static SPI_HandleTypeDef spihandle_sd; /*!< SPI handler for SD declaration. */
 /* Private functions declaration ---------------------------------------------*/
 static void SPI_MspInit(SPI_HandleTypeDef *hspi);
 static void SPI_Error(void);
-static bool bsp_sd_waitResponse(const uint8_t ui8ExpectedResponse);
-static void bsp_sd_sendDummy(void);
 
 /* Private function prototypes -----------------------------------------------*/
 /**
@@ -150,45 +148,6 @@ static void SPI_Error(void)
 
 	/* Re-Initialize the SPI communication BUS */
 	bsp_sd_init();
-}
-
-/**
- * @brief  Wait response from the SD card
- * @param  ui8ExpectedResponse: Expected response from the SD card.
- * @retval bool: Status of the process
- *			@arg true: received expected response.
- *			@arg false: timeout
- */
-static bool bsp_sd_waitResponse(const uint8_t ui8ExpectedResponse)
-{
-	uint8_t ui8Response;
-	uint32_t ui32Timeout = 0xFFFF;
-
-	/* Try to get the expected response */
-	do
-	{
-		ui8Response = SD_DUMMY_BYTE;
-		bsp_sd_readByte(&ui8Response, 1);
-		--ui32Timeout;
-	} while ((ui8Response != ui8ExpectedResponse) && ui32Timeout);
-
-	/* Check if response is got or a timeout is happen */
-	if (0 == ui32Timeout)
-	{
-		return false;
-	}
-	return true;
-}
-
-/**
- * @brief  Send dummy byte with CS High
- * @retval None
- */
-static void bsp_sd_sendDummy(void)
-{
-	SD_CSn_DEACTIVE();
-	uint8_t ui8Dummy = SD_DUMMY_BYTE;
-	bsp_sd_sendData(&ui8Dummy, 1);
 }
 
 /* Exported functions prototype ----------------------------------------------*/
@@ -254,6 +213,7 @@ bool bsp_sd_init(void)
 	/* Put the SD device into SPI mode */
 	/* Send dummy byte 0xFF, 10 times with CS high */
 	/* Rise CS and MOSI for 80 clocks cycles */
+	SD_CSn_DEACTIVE();
 	int i = 10;
 	do
 	{
@@ -280,7 +240,7 @@ bool bsp_sd_isDetected(void)
 }
 
 /**
- * @brief  Write a byte to the SD device.
+ * @brief  Write a sequence of bytes to the SD device.
  * @param  pui8Buffer: Pointer to the buffer data need to be send.
  * @param  ui16Size: Data buffer size in byte.
  * @retval bool: Status of transmission
@@ -303,7 +263,7 @@ bool bsp_sd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
 }
 
 /**
- * @brief  Read a byte from the SD device.
+ * @brief  Read a sequence of bytes from the SD device.
  * @param  pui8Buffer: Pointer to the buffer to store the received data.
  * @param  ui16Size: Requested data size in byte.
  * @note   Each byte in the buffer will be send and replace by the received data.
@@ -312,7 +272,7 @@ bool bsp_sd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
  *			@arg true: succeeded
  *			@arg false: failed
  */
-bool bsp_sd_readByte(uint8_t * pui8Buffer, uint16_t ui16Size)
+bool bsp_sd_readData(uint8_t * pui8Buffer, uint16_t ui16Size)
 {
 	/* Get the received data */
 	HAL_StatusTypeDef status = HAL_SPI_TransmitReceive(&spihandle_sd,
@@ -382,10 +342,10 @@ bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg,
 			*(pui32TrailingResponse + 1) = SD_DUMMY_BYTE;
 			*pui32TrailingResponse = SD_DUMMY_BYTE;
 
-			bsp_sd_readByte((uint8_t *) (pui32TrailingResponse + 3), 1);
-			bsp_sd_readByte((uint8_t *) (pui32TrailingResponse + 2), 1);
-			bsp_sd_readByte((uint8_t *) (pui32TrailingResponse + 1), 1);
-			bsp_sd_readByte((uint8_t *) (pui32TrailingResponse), 1);
+			bsp_sd_readData((uint8_t *) (pui32TrailingResponse + 3), 1);
+			bsp_sd_readData((uint8_t *) (pui32TrailingResponse + 2), 1);
+			bsp_sd_readData((uint8_t *) (pui32TrailingResponse + 1), 1);
+			bsp_sd_readData((uint8_t *) (pui32TrailingResponse), 1);
 		}
 	}
 	else
@@ -395,6 +355,44 @@ bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg,
 
 	SD_CSn_DEACTIVE();
 	return true;
+}
+
+/**
+ * @brief  Wait response from the SD card
+ * @param  ui8ExpectedResponse: Expected response from the SD card.
+ * @retval bool: Status of the process
+ *			@arg true: received expected response.
+ *			@arg false: timeout
+ */
+bool bsp_sd_waitResponse(const uint8_t ui8ExpectedResponse)
+{
+	uint8_t ui8Response;
+	uint32_t ui32Timeout = 0xFFFF;
+
+	/* Try to get the expected response */
+	do
+	{
+		ui8Response = SD_DUMMY_BYTE;
+		bsp_sd_readData(&ui8Response, 1);
+		--ui32Timeout;
+	} while ((ui8Response != ui8ExpectedResponse) && ui32Timeout);
+
+	/* Check if response is got or a timeout is happen */
+	if (0 == ui32Timeout)
+	{
+		return false;
+	}
+	return true;
+}
+
+/**
+ * @brief  Send a dummy byte to SD device.
+ * @retval None
+ */
+void bsp_sd_sendDummy(void)
+{
+	uint8_t ui8Dummy = SD_DUMMY_BYTE;
+	bsp_sd_sendData(&ui8Dummy, 1);
 }
 
 /**

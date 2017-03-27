@@ -49,12 +49,14 @@
 bool bsp_sd_init(void);
 bool bsp_sd_isDetected(void);
 bool bsp_sd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size);
-bool bsp_sd_readByte(uint8_t * pui8Buffer, uint16_t ui16Size);
+bool bsp_sd_readData(uint8_t * pui8Buffer, uint16_t ui16Size);
 bool bsp_sd_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
 		uint8_t ui8ExpectedResponse);
 bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg,
 		uint8_t ui8CRC, uint8_t ui8ExpectedResponse,
 		uint32_t *pui32TrailingResponse);
+bool bsp_sd_waitResponse(const uint8_t ui8ExpectedResponse);
+void bsp_sd_sendDummy(void);
 
 /**
  * @} BSP_SDIO

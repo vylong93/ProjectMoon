@@ -133,10 +133,15 @@ static sd_response_t sd_getDataResponse(void);
  */
 static bool sd_goIdleState(void)
 {
+	bool bReturn = false;
 	/* Send CMD0 (SD_CMD_GO_IDLE_STATE) to put SD in SPI mode and
 	 Wait for In Idle State Response (R1 Format) equal to 0x01 */
-	if (!bsp_sd_sendCommand(SD_CMD_GO_IDLE_STATE, 0, SD_CRC_CMD_GO_IDLE_STATE,
-			SD_IN_IDLE_STATE))
+	bsp_sd_activate();
+	bReturn = bsp_sd_sendCommand(SD_CMD_GO_IDLE_STATE, 0,
+	SD_CRC_CMD_GO_IDLE_STATE, SD_IN_IDLE_STATE);
+	bsp_sd_deactivate();
+	bsp_sd_sendDummy();
+	if (false == bReturn)
 	{
 		/* No Idle State Response: return response failure */
 		return false;
@@ -144,17 +149,16 @@ static bool sd_goIdleState(void)
 
 	/*----------Activates the card initialization process-----------*/
 	/* Send CMD8 Wait for no error Response (R7 Format) Response 0x01 0x000001AA */
+	bsp_sd_activate();
 	uint32_t ui32TrailingResponse = 0;
-	if (!bsp_sd_sendSpecialCommand(SD_CMD_SEND_IF_COND, 0x000001AA,
-	SD_CRC_CMD_SEND_IF_COND, SD_IN_IDLE_STATE, &ui32TrailingResponse))
+	bReturn = bsp_sd_sendSpecialCommand(SD_CMD_SEND_IF_COND, 0x000001AA,
+	SD_CRC_CMD_SEND_IF_COND, SD_IN_IDLE_STATE, &ui32TrailingResponse);
+	bsp_sd_deactivate();
+	bsp_sd_sendDummy();
+	if ((false == bReturn) || (0x01AA != (ui32TrailingResponse & 0x0FFF)))
 	{
-		/* No Idle State Response: return response failure */
-		return false;
-	}
-
-	if (0x01AA != (ui32TrailingResponse & 0x0FFF))
-	{
-		/* Mismatch trailing response */
+		/* No Idle State Response: return response failure
+		 or Mismatch trailing response */
 		return false;
 	}
 
@@ -162,19 +166,31 @@ static bool sd_goIdleState(void)
 	 Wait for no error Response (R1 Format) equal to 0x00 */
 	while (true)
 	{
+		bsp_sd_activate();
 		bsp_sd_sendCommand(SD_CMD_APP_CMD, 0, SD_CRC_NOT_CARE,
 				SD_IN_IDLE_STATE); /* Response 0x01 */
-		if (bsp_sd_sendCommand(SD_CMD_APP_SEND_OP_COND, 0x40000000,
-		SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR))
+		bsp_sd_deactivate();
+		bsp_sd_sendDummy();
+
+		bsp_sd_activate();
+		bReturn = bsp_sd_sendCommand(SD_CMD_APP_SEND_OP_COND, 0x40000000,
+		SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR);
+		bsp_sd_deactivate();
+		bsp_sd_sendDummy();
+		if (true == bReturn)
 		{
 			break;
 		}
 	}
 
 	/* Send CMD58 */
+	bsp_sd_activate();
 	ui32TrailingResponse = 0;
-	if (!bsp_sd_sendSpecialCommand(SD_CMD_READ_OCR, 0, SD_CRC_NOT_CARE,
-			SD_RESPONSE_NO_ERROR, &ui32TrailingResponse))
+	bReturn = bsp_sd_sendSpecialCommand(SD_CMD_READ_OCR, 0, SD_CRC_NOT_CARE,
+			SD_RESPONSE_NO_ERROR, &ui32TrailingResponse);
+	bsp_sd_deactivate();
+	bsp_sd_sendDummy();
+	if (false == bReturn)
 	{
 		/* Error occur. Return response failure. Should not be here */
 		return false;
@@ -184,8 +200,12 @@ static bool sd_goIdleState(void)
 	if (0 == (ui32TrailingResponse & 0x40000000))
 	{
 		/* SD Ver.2 Byte address - Force block size to 512 bytes to work with FAT file system */
-		if (!bsp_sd_sendCommand(SD_CMD_SET_BLOCKLEN, SD_BLOCK_SIZE,
-		SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR))
+		bsp_sd_activate();
+		bReturn = bsp_sd_sendCommand(SD_CMD_SET_BLOCKLEN, SD_BLOCK_SIZE,
+		SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR);
+		bsp_sd_deactivate();
+		bsp_sd_sendDummy();
+		if (false == bReturn)
 		{
 			/* Error occur. Return response failure. Should not be here */
 			return false;
@@ -206,10 +226,12 @@ static bool sd_goIdleState(void)
  */
 static bool sd_getCSDRegister(sd_csd_t* pCsd)
 {
+	bool bReturn = false;
 	uint8_t pui8CsdResponseArray[SD_NUMBER_OF_CSD_RESPONSE_BYTE];
 
 	/* Send CMD9 (CSD register) or CMD10(CSD register) and
 	 * Wait for response in the R1 format (0x00 is no errors) */
+	bsp_sd_activate();
 	if (bsp_sd_sendCommand(SD_CMD_SEND_CSD, 0, SD_CRC_NOT_CARE,
 			SD_RESPONSE_NO_ERROR))
 	{
@@ -220,97 +242,97 @@ static bool sd_getCSDRegister(sd_csd_t* pCsd)
 			SD_NUMBER_OF_CSD_RESPONSE_BYTE);
 
 			/* Get CRC bytes (not really needed by us, but required by SD) */
-			bsp_sd_sendDummy();
-			bsp_sd_sendDummy();
-		}
-		else
-		{
-			/* Send dummy byte: 8 Clock pulses of delay */
-			bsp_sd_sendDummy();
-			return false;
+			uint8_t pui8CRCResponse[2];
+			bsp_sd_readData(pui8CRCResponse, 2);
+
+			bReturn = true;
 		}
 	}
+	bsp_sd_deactivate();
+
 	/* Send dummy byte: 8 Clock pulses of delay */
 	bsp_sd_sendDummy();
 
-	/* Byte 0 */
-	pCsd->CSDStruct = (pui8CsdResponseArray[0] & 0xC0) >> 6;
-	pCsd->SysSpecVersion = (pui8CsdResponseArray[0] & 0x3C) >> 2;
-	pCsd->Reserved1 = pui8CsdResponseArray[0] & 0x03;
+	if (true == bReturn)
+	{
+		/* Byte 0 */
+		pCsd->CSDStruct = (pui8CsdResponseArray[0] & 0xC0) >> 6;
+		pCsd->SysSpecVersion = (pui8CsdResponseArray[0] & 0x3C) >> 2;
+		pCsd->Reserved1 = pui8CsdResponseArray[0] & 0x03;
 
-	/* Byte 1 */
-	pCsd->TAAC = pui8CsdResponseArray[1];
+		/* Byte 1 */
+		pCsd->TAAC = pui8CsdResponseArray[1];
 
-	/* Byte 2 */
-	pCsd->NSAC = pui8CsdResponseArray[2];
+		/* Byte 2 */
+		pCsd->NSAC = pui8CsdResponseArray[2];
 
-	/* Byte 3 */
-	pCsd->MaxBusClkFrec = pui8CsdResponseArray[3];
+		/* Byte 3 */
+		pCsd->MaxBusClkFrec = pui8CsdResponseArray[3];
 
-	/* Byte 4 */
-	pCsd->CardComdClasses = pui8CsdResponseArray[4] << 4;
+		/* Byte 4 */
+		pCsd->CardComdClasses = pui8CsdResponseArray[4] << 4;
 
-	/* Byte 5 */
-	pCsd->CardComdClasses |= (pui8CsdResponseArray[5] & 0xF0) >> 4;
-	pCsd->RdBlockLen = pui8CsdResponseArray[5] & 0x0F;
+		/* Byte 5 */
+		pCsd->CardComdClasses |= (pui8CsdResponseArray[5] & 0xF0) >> 4;
+		pCsd->RdBlockLen = pui8CsdResponseArray[5] & 0x0F;
 
-	/* Byte 6 */
-	pCsd->PartBlockRead = (pui8CsdResponseArray[6] & 0x80) >> 7;
-	pCsd->WrBlockMisalign = (pui8CsdResponseArray[6] & 0x40) >> 6;
-	pCsd->RdBlockMisalign = (pui8CsdResponseArray[6] & 0x20) >> 5;
-	pCsd->DSRImpl = (pui8CsdResponseArray[6] & 0x10) >> 4;
-	pCsd->Reserved2 = 0; /*!< Reserved */
+		/* Byte 6 */
+		pCsd->PartBlockRead = (pui8CsdResponseArray[6] & 0x80) >> 7;
+		pCsd->WrBlockMisalign = (pui8CsdResponseArray[6] & 0x40) >> 6;
+		pCsd->RdBlockMisalign = (pui8CsdResponseArray[6] & 0x20) >> 5;
+		pCsd->DSRImpl = (pui8CsdResponseArray[6] & 0x10) >> 4;
+		pCsd->Reserved2 = 0; /*!< Reserved */
 
-	pCsd->DeviceSize = (pui8CsdResponseArray[6] & 0x03) << 10;
+		pCsd->DeviceSize = (pui8CsdResponseArray[6] & 0x03) << 10;
 
-	/* Byte 7 */
-	pCsd->DeviceSize |= (pui8CsdResponseArray[7]) << 2;
+		/* Byte 7 */
+		pCsd->DeviceSize |= (pui8CsdResponseArray[7]) << 2;
 
-	/* Byte 8 */
-	pCsd->DeviceSize |= (pui8CsdResponseArray[8] & 0xC0) >> 6;
+		/* Byte 8 */
+		pCsd->DeviceSize |= (pui8CsdResponseArray[8] & 0xC0) >> 6;
 
-	pCsd->MaxRdCurrentVDDMin = (pui8CsdResponseArray[8] & 0x38) >> 3;
-	pCsd->MaxRdCurrentVDDMax = (pui8CsdResponseArray[8] & 0x07);
+		pCsd->MaxRdCurrentVDDMin = (pui8CsdResponseArray[8] & 0x38) >> 3;
+		pCsd->MaxRdCurrentVDDMax = (pui8CsdResponseArray[8] & 0x07);
 
-	/* Byte 9 */
-	pCsd->MaxWrCurrentVDDMin = (pui8CsdResponseArray[9] & 0xE0) >> 5;
-	pCsd->MaxWrCurrentVDDMax = (pui8CsdResponseArray[9] & 0x1C) >> 2;
-	pCsd->DeviceSizeMul = (pui8CsdResponseArray[9] & 0x03) << 1;
-	/* Byte 10 */
-	pCsd->DeviceSizeMul |= (pui8CsdResponseArray[10] & 0x80) >> 7;
+		/* Byte 9 */
+		pCsd->MaxWrCurrentVDDMin = (pui8CsdResponseArray[9] & 0xE0) >> 5;
+		pCsd->MaxWrCurrentVDDMax = (pui8CsdResponseArray[9] & 0x1C) >> 2;
+		pCsd->DeviceSizeMul = (pui8CsdResponseArray[9] & 0x03) << 1;
+		/* Byte 10 */
+		pCsd->DeviceSizeMul |= (pui8CsdResponseArray[10] & 0x80) >> 7;
 
-	pCsd->EraseGrSize = (pui8CsdResponseArray[10] & 0x40) >> 6;
-	pCsd->EraseGrMul = (pui8CsdResponseArray[10] & 0x3F) << 1;
+		pCsd->EraseGrSize = (pui8CsdResponseArray[10] & 0x40) >> 6;
+		pCsd->EraseGrMul = (pui8CsdResponseArray[10] & 0x3F) << 1;
 
-	/* Byte 11 */
-	pCsd->EraseGrMul |= (pui8CsdResponseArray[11] & 0x80) >> 7;
-	pCsd->WrProtectGrSize = (pui8CsdResponseArray[11] & 0x7F);
+		/* Byte 11 */
+		pCsd->EraseGrMul |= (pui8CsdResponseArray[11] & 0x80) >> 7;
+		pCsd->WrProtectGrSize = (pui8CsdResponseArray[11] & 0x7F);
 
-	/* Byte 12 */
-	pCsd->WrProtectGrEnable = (pui8CsdResponseArray[12] & 0x80) >> 7;
-	pCsd->ManDeflECC = (pui8CsdResponseArray[12] & 0x60) >> 5;
-	pCsd->WrSpeedFact = (pui8CsdResponseArray[12] & 0x1C) >> 2;
-	pCsd->MaxWrBlockLen = (pui8CsdResponseArray[12] & 0x03) << 2;
+		/* Byte 12 */
+		pCsd->WrProtectGrEnable = (pui8CsdResponseArray[12] & 0x80) >> 7;
+		pCsd->ManDeflECC = (pui8CsdResponseArray[12] & 0x60) >> 5;
+		pCsd->WrSpeedFact = (pui8CsdResponseArray[12] & 0x1C) >> 2;
+		pCsd->MaxWrBlockLen = (pui8CsdResponseArray[12] & 0x03) << 2;
 
-	/* Byte 13 */
-	pCsd->MaxWrBlockLen |= (pui8CsdResponseArray[13] & 0xC0) >> 6;
-	pCsd->WriteBlockPaPartial = (pui8CsdResponseArray[13] & 0x20) >> 5;
-	pCsd->Reserved3 = 0;
-	pCsd->ContentProtectAppli = (pui8CsdResponseArray[13] & 0x01);
+		/* Byte 13 */
+		pCsd->MaxWrBlockLen |= (pui8CsdResponseArray[13] & 0xC0) >> 6;
+		pCsd->WriteBlockPaPartial = (pui8CsdResponseArray[13] & 0x20) >> 5;
+		pCsd->Reserved3 = 0;
+		pCsd->ContentProtectAppli = (pui8CsdResponseArray[13] & 0x01);
 
-	/* Byte 14 */
-	pCsd->FileFormatGrouop = (pui8CsdResponseArray[14] & 0x80) >> 7;
-	pCsd->CopyFlag = (pui8CsdResponseArray[14] & 0x40) >> 6;
-	pCsd->PermWrProtect = (pui8CsdResponseArray[14] & 0x20) >> 5;
-	pCsd->TempWrProtect = (pui8CsdResponseArray[14] & 0x10) >> 4;
-	pCsd->FileFormat = (pui8CsdResponseArray[14] & 0x0C) >> 2;
-	pCsd->ECC = (pui8CsdResponseArray[14] & 0x03);
+		/* Byte 14 */
+		pCsd->FileFormatGrouop = (pui8CsdResponseArray[14] & 0x80) >> 7;
+		pCsd->CopyFlag = (pui8CsdResponseArray[14] & 0x40) >> 6;
+		pCsd->PermWrProtect = (pui8CsdResponseArray[14] & 0x20) >> 5;
+		pCsd->TempWrProtect = (pui8CsdResponseArray[14] & 0x10) >> 4;
+		pCsd->FileFormat = (pui8CsdResponseArray[14] & 0x0C) >> 2;
+		pCsd->ECC = (pui8CsdResponseArray[14] & 0x03);
 
-	/* Byte 15 */
-	pCsd->CSD_CRC = (pui8CsdResponseArray[15] & 0xFE) >> 1;
-	pCsd->Reserved4 = 1;
-
-	return true;
+		/* Byte 15 */
+		pCsd->CSD_CRC = (pui8CsdResponseArray[15] & 0xFE) >> 1;
+		pCsd->Reserved4 = 1;
+	}
+	return bReturn;
 }
 
 /**
@@ -324,9 +346,11 @@ static bool sd_getCSDRegister(sd_csd_t* pCsd)
  */
 static bool sd_getCIDRegister(sd_cid_t* pCid)
 {
+	bool bReturn = false;
 	uint8_t pui8CidResponseArray[SD_NUMBER_OF_CID_RESPONSE_BYTE];
 
 	/* Send CMD10 (CID register) and Wait for response in the R1 format (0x00 is no errors) */
+	bsp_sd_activate();
 	if (bsp_sd_sendCommand(SD_CMD_SEND_CID, 0, SD_CRC_NOT_CARE,
 			SD_RESPONSE_NO_ERROR))
 	{
@@ -337,71 +361,70 @@ static bool sd_getCIDRegister(sd_cid_t* pCid)
 			SD_NUMBER_OF_CSD_RESPONSE_BYTE);
 
 			/* Get CRC bytes (not really needed by us, but required by SD) */
-			bsp_sd_sendDummy();
-			bsp_sd_sendDummy();
-		}
-		else
-		{
-			/* Send dummy byte: 8 Clock pulses of delay */
-			bsp_sd_sendDummy();
-			return false;
+			uint8_t pui8CRCResponse[2];
+			bsp_sd_readData(pui8CRCResponse, 2);
+
+			bReturn = true;
 		}
 	}
+	bsp_sd_deactivate();
 
 	/* Send dummy byte: 8 Clock pulses of delay */
 	bsp_sd_sendDummy();
 
-	/* Byte 0 */
-	pCid->ManufacturerID = pui8CidResponseArray[0];
+	if (true == bReturn)
+	{
+		/* Byte 0 */
+		pCid->ManufacturerID = pui8CidResponseArray[0];
 
-	/* Byte 1 */
-	pCid->OEM_AppliID = pui8CidResponseArray[1] << 8;
+		/* Byte 1 */
+		pCid->OEM_AppliID = pui8CidResponseArray[1] << 8;
 
-	/* Byte 2 */
-	pCid->OEM_AppliID |= pui8CidResponseArray[2];
+		/* Byte 2 */
+		pCid->OEM_AppliID |= pui8CidResponseArray[2];
 
-	/* Byte 3 */
-	pCid->ProdName1 = pui8CidResponseArray[3] << 24;
+		/* Byte 3 */
+		pCid->ProdName1 = pui8CidResponseArray[3] << 24;
 
-	/* Byte 4 */
-	pCid->ProdName1 |= pui8CidResponseArray[4] << 16;
+		/* Byte 4 */
+		pCid->ProdName1 |= pui8CidResponseArray[4] << 16;
 
-	/* Byte 5 */
-	pCid->ProdName1 |= pui8CidResponseArray[5] << 8;
+		/* Byte 5 */
+		pCid->ProdName1 |= pui8CidResponseArray[5] << 8;
 
-	/* Byte 6 */
-	pCid->ProdName1 |= pui8CidResponseArray[6];
+		/* Byte 6 */
+		pCid->ProdName1 |= pui8CidResponseArray[6];
 
-	/* Byte 7 */
-	pCid->ProdName2 = pui8CidResponseArray[7];
+		/* Byte 7 */
+		pCid->ProdName2 = pui8CidResponseArray[7];
 
-	/* Byte 8 */
-	pCid->ProdRev = pui8CidResponseArray[8];
+		/* Byte 8 */
+		pCid->ProdRev = pui8CidResponseArray[8];
 
-	/* Byte 9 */
-	pCid->ProdSN = pui8CidResponseArray[9] << 24;
+		/* Byte 9 */
+		pCid->ProdSN = pui8CidResponseArray[9] << 24;
 
-	/* Byte 10 */
-	pCid->ProdSN |= pui8CidResponseArray[10] << 16;
+		/* Byte 10 */
+		pCid->ProdSN |= pui8CidResponseArray[10] << 16;
 
-	/* Byte 11 */
-	pCid->ProdSN |= pui8CidResponseArray[11] << 8;
+		/* Byte 11 */
+		pCid->ProdSN |= pui8CidResponseArray[11] << 8;
 
-	/* Byte 12 */
-	pCid->ProdSN |= pui8CidResponseArray[12];
+		/* Byte 12 */
+		pCid->ProdSN |= pui8CidResponseArray[12];
 
-	/* Byte 13 */
-	pCid->Reserved1 |= (pui8CidResponseArray[13] & 0xF0) >> 4;
-	pCid->ManufactDate = (pui8CidResponseArray[13] & 0x0F) << 8;
+		/* Byte 13 */
+		pCid->Reserved1 |= (pui8CidResponseArray[13] & 0xF0) >> 4;
+		pCid->ManufactDate = (pui8CidResponseArray[13] & 0x0F) << 8;
 
-	/* Byte 14 */
-	pCid->ManufactDate |= pui8CidResponseArray[14];
+		/* Byte 14 */
+		pCid->ManufactDate |= pui8CidResponseArray[14];
 
-	/* Byte 15 */
-	pCid->CID_CRC = (pui8CidResponseArray[15] & 0xFE) >> 1;
-	pCid->Reserved2 = 1;
-
-	return true;
+		/* Byte 15 */
+		pCid->CID_CRC = (pui8CidResponseArray[15] & 0xFE) >> 1;
+		pCid->Reserved2 = 1;
+	}
+	return bReturn;
 }
 
 /**
@@ -532,30 +555,39 @@ bool sd_getCardInfo(sd_card_info_t *pCardInfo)
 bool sd_readBlocks(uint32_t* pui32Data, uint64_t ui64ReadAddr,
 		uint16_t ui16BlockSize, uint32_t ui32NumberOfBlocks)
 {
-	bool bReturnValue = false;
+	bool bReturn = false;
 	uint32_t ui32Offset = 0;
 	uint8_t *pui8Data = (uint8_t *) pui32Data;
 
 	/* Send CMD16 (SD_CMD_SET_BLOCKLEN) to set the size of the block and
 	 Check if the SD acknowledged the set block length command: R1 response (0x00: no errors) */
-	if (!bsp_sd_sendCommand(SD_CMD_SET_BLOCKLEN, (uint32_t) ui16BlockSize,
-	SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR))
+	bsp_sd_activate();
+	bReturn = bsp_sd_sendCommand(SD_CMD_SET_BLOCKLEN, (uint32_t) ui16BlockSize,
+	SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR);
+	if (false == bReturn)
 	{
+		bsp_sd_deactivate();
+		bsp_sd_sendDummy();
 		return false;
 	}
 
 	/* Data transfer */
 	while (ui32NumberOfBlocks--)
 	{
+		bsp_sd_deactivate();
 		/* Send dummy byte: 8 Clock pulses of delay */
 		bsp_sd_sendDummy();
 
 		/* Send CMD17 (SD_CMD_READ_SINGLE_BLOCK) to read one block */
 		/* Check if the SD acknowledged the read block command: R1 response (0x00: no errors) */
-		if (!bsp_sd_sendCommand(SD_CMD_READ_SINGLE_BLOCK,
+		bsp_sd_activate();
+		bReturn = bsp_sd_sendCommand(SD_CMD_READ_SINGLE_BLOCK,
 				ui64ReadAddr + ui32Offset,
-				SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR))
+				SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR);
+		if (false == bReturn)
 		{
+			bsp_sd_deactivate();
+			bsp_sd_sendDummy();
 			return false;
 		}
 
@@ -569,23 +601,24 @@ bool sd_readBlocks(uint32_t* pui32Data, uint64_t ui64ReadAddr,
 			ui32Offset += ui16BlockSize;
 
 			/* get CRC bytes (not really needed by us, but required by SD) */
-			bsp_sd_sendDummy();
-			bsp_sd_sendDummy();
+			uint8_t pui8CRCResponse[2];
+			bsp_sd_readData(pui8CRCResponse, 2);
 
 			/* Set response value to success */
-			bReturnValue = true;
+			bReturn = true;
 		}
 		else
 		{
 			/* Set response value to failure */
-			bReturnValue = false;
+			bReturn = false;
 		}
 	}
 
+	bsp_sd_deactivate();
 	/* Send dummy byte: 8 Clock pulses of delay */
 	bsp_sd_sendDummy();
 
-	return bReturnValue;
+	return bReturn;
 }
 
 /**
@@ -601,13 +634,14 @@ bool sd_readBlocks(uint32_t* pui32Data, uint64_t ui64ReadAddr,
 bool sd_writeBlocks(uint32_t* pui32Data, uint64_t ui64WriteAddr,
 		uint16_t ui16BlockSize, uint32_t ui32NumberOfBlocks)
 {
-	uint8_t bReturnValue = false;
+	uint8_t bReturn = false;
 	uint32_t ui32Offset = 0;
 	uint8_t *pui8Data = (uint8_t *) pui32Data;
 
 	uint8_t ui8StartData = SD_START_DATA_SINGLE_BLOCK_WRITE;
 
 	/* Data transfer */
+	bsp_sd_activate();
 	while (ui32NumberOfBlocks--)
 	{
 		/* Send CMD24 (SD_CMD_WRITE_SINGLE_BLOCK) to write blocks  and
@@ -616,6 +650,8 @@ bool sd_writeBlocks(uint32_t* pui32Data, uint64_t ui64WriteAddr,
 				(uint32_t) (ui64WriteAddr + ui32Offset), SD_CRC_NOT_CARE,
 				SD_RESPONSE_NO_ERROR))
 		{
+			bsp_sd_deactivate();
+			bsp_sd_sendDummy();
 			return false;
 		}
 
@@ -632,26 +668,27 @@ bool sd_writeBlocks(uint32_t* pui32Data, uint64_t ui64WriteAddr,
 		ui32Offset += ui16BlockSize;
 
 		/* Put CRC bytes (not really needed by us, but required by SD) */
-		bsp_sd_sendDummy();
-		bsp_sd_sendDummy();
+		uint8_t pui8CRCResponse[2];
+		bsp_sd_readData(pui8CRCResponse, 2);
 
 		/* Read data response */
 		if (SD_DATA_OK == sd_getDataResponse())
 		{
 			/* Set response value to success */
-			bReturnValue = true;
+			bReturn = true;
 		}
 		else
 		{
 			/* Set response value to failure */
-			bReturnValue = false;
+			bReturn = false;
 		}
 	}
+	bsp_sd_deactivate();
 
 	/* Send dummy byte: 8 Clock pulses of delay to initiate internal write */
 	bsp_sd_sendDummy();
 
-	return bReturnValue;
+	return bReturn;
 }
 
 /**

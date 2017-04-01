@@ -57,6 +57,8 @@ bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg,
 		uint32_t *pui32TrailingResponse);
 bool bsp_sd_waitResponse(const uint8_t ui8ExpectedResponse);
 void bsp_sd_sendDummy(void);
+void bsp_sd_activate(void);
+void bsp_sd_deactivate(void);
 
 /**
  * @} BSP_SDIO

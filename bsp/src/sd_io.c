@@ -306,15 +306,15 @@ bool bsp_sd_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
 			(uint8_t) (ui32Arg >> 24), (uint8_t) (ui32Arg >> 16),
 			(uint8_t) (ui32Arg >> 8), (uint8_t) (ui32Arg), ui8CRC };
 
-	SD_CSn_ACTIVE();
-	bsp_sd_sendData(pui8CommandPacket, SD_COMMAND_PACKET_SIZE);
-	if (SD_NO_RESPONSE_EXPECTED != ui8ExpectedResponse)
+	if (bsp_sd_sendData(pui8CommandPacket, SD_COMMAND_PACKET_SIZE))
 	{
-		return bsp_sd_waitResponse(ui8ExpectedResponse);
+		if (SD_NO_RESPONSE_EXPECTED != ui8ExpectedResponse)
+		{
+			return bsp_sd_waitResponse(ui8ExpectedResponse);
+		}
+		return true;
 	}
-
-	SD_CSn_DEACTIVE();
-	return true;
+	return false;
 }
 
 /**
@@ -328,33 +328,28 @@ bool bsp_sd_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
  *			@arg true: succeeded
  *			@arg false: failed
  */
-bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg,
-		uint8_t ui8CRC, uint8_t ui8ExpectedResponse,
-		uint32_t *pui32TrailingResponse)
+bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
+		uint8_t ui8ExpectedResponse, uint32_t *pui32TrailingResponse)
 {
 	if (bsp_sd_sendCommand(ui8Cmd, ui32Arg, ui8CRC, ui8ExpectedResponse))
 	{
 		if (SD_NO_RESPONSE_EXPECTED != ui8ExpectedResponse)
 		{
+			uint8_t *pui8TrailingByte = (uint8_t *) pui32TrailingResponse;
 			/* Read more 4 trailing byte of R7 response */
-			*(pui32TrailingResponse + 3) = SD_DUMMY_BYTE;
-			*(pui32TrailingResponse + 2) = SD_DUMMY_BYTE;
-			*(pui32TrailingResponse + 1) = SD_DUMMY_BYTE;
-			*pui32TrailingResponse = SD_DUMMY_BYTE;
+			*(pui8TrailingByte + 3) = SD_DUMMY_BYTE;
+			*(pui8TrailingByte + 2) = SD_DUMMY_BYTE;
+			*(pui8TrailingByte + 1) = SD_DUMMY_BYTE;
+			*pui8TrailingByte = SD_DUMMY_BYTE;
 
-			bsp_sd_readData((uint8_t *) (pui32TrailingResponse + 3), 1);
-			bsp_sd_readData((uint8_t *) (pui32TrailingResponse + 2), 1);
-			bsp_sd_readData((uint8_t *) (pui32TrailingResponse + 1), 1);
-			bsp_sd_readData((uint8_t *) (pui32TrailingResponse), 1);
+			bsp_sd_readData((uint8_t *) (pui8TrailingByte + 3), 1);
+			bsp_sd_readData((uint8_t *) (pui8TrailingByte + 2), 1);
+			bsp_sd_readData((uint8_t *) (pui8TrailingByte + 1), 1);
+			bsp_sd_readData((uint8_t *) (pui8TrailingByte), 1);
 		}
+		return true;
 	}
-	else
-	{
-		return false;
-	}
-
-	SD_CSn_DEACTIVE();
-	return true;
+	return false;
 }
 
 /**
@@ -393,6 +388,24 @@ void bsp_sd_sendDummy(void)
 {
 	uint8_t ui8Dummy = SD_DUMMY_BYTE;
 	bsp_sd_sendData(&ui8Dummy, 1);
+}
+
+/**
+ * @brief  Activate the SD communication
+ * @retval None
+ */
+void bsp_sd_activate(void)
+{
+	SD_CSn_ACTIVE();
+}
+
+/**
+ * @brief  Send a dummy byte to SD device.
+ * @retval None
+ */
+void bsp_sd_deactivate(void)
+{
+	SD_CSn_DEACTIVE();
 }
 
 /**

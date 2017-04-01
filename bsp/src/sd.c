@@ -242,8 +242,8 @@ static bool sd_getCSDRegister(sd_csd_t* pCsd)
 			SD_NUMBER_OF_CSD_RESPONSE_BYTE);
 
 			/* Get CRC bytes (not really needed by us, but required by SD) */
-			uint8_t pui8CRCResponse[2];
-			bsp_sd_readData(pui8CRCResponse, 2);
+			bsp_sd_sendDummy();
+			bsp_sd_sendDummy();
 
 			bReturn = true;
 		}
@@ -361,8 +361,8 @@ static bool sd_getCIDRegister(sd_cid_t* pCid)
 			SD_NUMBER_OF_CSD_RESPONSE_BYTE);
 
 			/* Get CRC bytes (not really needed by us, but required by SD) */
-			uint8_t pui8CRCResponse[2];
-			bsp_sd_readData(pui8CRCResponse, 2);
+			bsp_sd_sendDummy();
+			bsp_sd_sendDummy();
 
 			bReturn = true;
 		}
@@ -601,8 +601,8 @@ bool sd_readBlocks(uint32_t* pui32Data, uint64_t ui64ReadAddr,
 			ui32Offset += ui16BlockSize;
 
 			/* get CRC bytes (not really needed by us, but required by SD) */
-			uint8_t pui8CRCResponse[2];
-			bsp_sd_readData(pui8CRCResponse, 2);
+			bsp_sd_sendDummy();
+			bsp_sd_sendDummy();
 
 			/* Set response value to success */
 			bReturn = true;

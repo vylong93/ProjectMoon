@@ -274,16 +274,26 @@ bool bsp_sd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
  */
 bool bsp_sd_readData(uint8_t * pui8Buffer, uint16_t ui16Size)
 {
-	/* Get the received data */
-	HAL_StatusTypeDef status = HAL_SPI_TransmitReceive(&spihandle_sd,
-			pui8Buffer, pui8Buffer, ui16Size, SPIx_TIMEOUT_MAX);
-
-	/* Check the communication status */
-	if (HAL_OK != status)
+	/* NOTE: HAL_SPI_TransmitReceive require transmit data pointer same size with received data.
+	 * We should prepare the same data size with fill by 0xFF to use this HAL function.
+	 * This is memory wasting before each transaction size could up to 512-byte or higher.
+	 * TODO: implement new API: HAL_SPI_Recieve without Transmit data required */
+	HAL_StatusTypeDef status = HAL_OK;
+	uint32_t ui32TransmisionDummyValue = 0xFFFFFFFF;
+	uint32_t ui32DataCounter = 0;
+	while (ui16Size--)
 	{
-		/* Execute user timeout callback */
-		SPI_Error();
-		return false;
+		/* Read single byte at a time */
+		status = HAL_SPI_TransmitReceive(&spihandle_sd, (uint8_t*) &ui32TransmisionDummyValue,
+				(uint8_t*) (pui8Buffer + ui32DataCounter), 1, SPIx_TIMEOUT_MAX);
+		++ui32DataCounter;
+		/* Check the communication status */
+		if (HAL_OK != status)
+		{
+			/* Execute user timeout callback */
+			SPI_Error();
+			return false;
+		}
 	}
 	return true;
 }

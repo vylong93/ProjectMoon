@@ -130,6 +130,8 @@ typedef enum
 } sd_hardware_status_t;
 
 /* Exported constants --------------------------------------------------------*/
+#define SD_BLOCK_SIZE				(0x200) /*!< Block size 512 bytes work with FatFS */
+
 /* Exported macro ------------------------------------------------------------*/
 #define sd_isDetected()	bsp_sd_isDetected() /*!< Wrapper SDIO API */
 

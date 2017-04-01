@@ -111,7 +111,6 @@ typedef enum
 #define SD_CRC_CMD_SEND_IF_COND		(0x87)
 #define SD_CRC_NOT_CARE				(0xFF)
 
-#define SD_BLOCK_SIZE				(0x200) /*!< Block size 512 bytes work with FatFS */
 #define SD_NUMBER_OF_CSD_RESPONSE_BYTE	(16)
 #define SD_NUMBER_OF_CID_RESPONSE_BYTE	(16)
 

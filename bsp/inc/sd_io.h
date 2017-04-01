@@ -5,7 +5,7 @@
  * @version     V0.1
  * @date        25-March-2017
  * @copyright   LGPLv3
- * @brief       This is the header of the SD I/O controler.
+ * @brief       This is the header of the SD I/O controller.
  ****************************************************************************
  * @attention
  *
@@ -15,7 +15,7 @@
  *
  *   Project Moon is free embedded software: you can redistribute it and/or
  *   modify it under the terms of the GNU Lesser General Public License as
- *   published by the Free Software Foundation, either version 3 of thescratch
+ *   published by the Free Software Foundation, either version 3 of the
  *   License, or (at your option) any later version.
  *
  *   Project Moon is distributed in the hope that it will be useful,

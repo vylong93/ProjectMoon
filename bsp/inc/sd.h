@@ -45,10 +45,10 @@
 
 /* Exported types ------------------------------------------------------------*/
 /**
- * @typedef sd_csd_t
+ * @struct _sd_csd_t
  * This type define the Card Specific Data: CSD Register
  */
-typedef struct
+typedef struct _sd_csd_t
 {
 	uint8_t CSDStruct; /*!< CSD structure */
 	uint8_t SysSpecVersion; /*!< System specification version */
@@ -90,10 +90,10 @@ typedef struct
 } sd_csd_t;
 
 /**
- * @typedef sd_cid_t
+ * @struct _sd_cid_t
  * This type define the Card Identification Data: CID Register
  */
-typedef struct
+typedef struct _sd_cid_t
 {
 	uint8_t ManufacturerID; /*!< ManufacturerID */
 	uint16_t OEM_AppliID; /*!< OEM/Application ID */
@@ -108,10 +108,10 @@ typedef struct
 } sd_cid_t;
 
 /**
- * @typedef sd_card_info_t
+ * @struct _sd_card_info_t
  * This type define the SD Card information.
  */
-typedef struct
+typedef struct _sd_card_info_t
 {
 	sd_csd_t Csd;
 	sd_cid_t Cid;

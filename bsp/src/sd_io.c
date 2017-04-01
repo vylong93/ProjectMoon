@@ -293,7 +293,7 @@ bool bsp_sd_readData(uint8_t * pui8Buffer, uint16_t ui16Size)
  * @param  ui8Cmd: The user expected command to send to SD device.
  * @param  ui32Arg: The command argument.
  * @param  ui8CRC: The CRC value of the command packet.
- * @param  ui8Response: Expected response from the SD device.
+ * @param  ui8ExpectedResponse: Expected response from the SD device.
  * @retval bool: Status of transmission
  *			@arg true: succeeded
  *			@arg false: failed
@@ -322,7 +322,7 @@ bool bsp_sd_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
  * @param  ui8Cmd: The user expected command to send to SD device.
  * @param  ui32Arg: The command argument.
  * @param  ui8CRC: The CRC value of the command packet.
- * @param  ui8Response: Expected response from the SD device.
+ * @param  ui8ExpectedResponse: Expected response from the SD device.
  * @param  pui32TrailingResponse: Additional 4 trailing byte buffer pointer of R7 response.
  * @retval bool: Status of transmission
  *			@arg true: succeeded

@@ -293,7 +293,7 @@ void text_printString(const char *pcString)
 
 /**
  * @brief  Print a number in ASCII format to the display at current cursor position.
- * @param  pcString: Pointer to a character array in ASCII code.
+ * @param  ui32Value: The target integer value need to be printed.
  * @retval None
  */
 void text_printNumber(uint32_t ui32Value)

@@ -37,7 +37,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /**
- * @typedef sd_info_t
+ * @typedef sd_response_t
  * This type define the SD command response and Data response.
  */
 typedef enum

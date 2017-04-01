@@ -86,8 +86,10 @@ diskio_drivers_t g_diskIODrivers =
 { 0 },
 { 0 } }; /*!< Global Disk IO Drivers */
 
+generic_diskio_driver_t g_sdDiskIODriver = { 0 }; /*!< SD Disk IO Drivers */
+
 /* Private functions declaration ---------------------------------------------*/
-static void mapDiskIODriverOfSD(generic_diskio_driver_t *pDiskDriver);
+static void mapDiskIODriverOfSD(generic_diskio_driver_t **ppDiskDriver);
 
 /* Private function prototypes -----------------------------------------------*/
 /**
@@ -95,17 +97,19 @@ static void mapDiskIODriverOfSD(generic_diskio_driver_t *pDiskDriver);
  * @param  pDiskDriver: Disk IO driver pointer
  * @retval None
  */
-void mapDiskIODriverOfSD(generic_diskio_driver_t *pDiskDriver)
+void mapDiskIODriverOfSD(generic_diskio_driver_t **ppDiskDriver)
 {
-	pDiskDriver->disk_initialize = sd_diskio_initialize;
-	pDiskDriver->disk_status = sd_diskio_status;
-	pDiskDriver->disk_read = sd_diskio_read;
+	g_sdDiskIODriver.disk_initialize = sd_diskio_initialize;
+	g_sdDiskIODriver.disk_status = sd_diskio_status;
+	g_sdDiskIODriver.disk_read = sd_diskio_read;
 #if _USE_WRITE == 1
-	pDiskDriver->disk_write = sd_diskio_write;
+	g_sdDiskIODriver.disk_write = sd_diskio_write;
 #endif /* _USE_WRITE == 1 */
 #if _USE_IOCTL == 1
-	pDiskDriver->disk_ioctl = sd_diskio_ioctl;
+	g_sdDiskIODriver.disk_ioctl = sd_diskio_ioctl;
 #endif /* _USE_IOCTL == 1 */
+
+	*ppDiskDriver = &g_sdDiskIODriver;
 }
 
 /* Exported functions prototype ----------------------------------------------*/
@@ -124,7 +128,7 @@ DSTATUS disk_initialize(BYTE pdrv)
 		if (0 == pdrv)
 		{
 			/* Disk "0:/" is the SD device -> Mapping to the SD DiskIO Driver */
-			mapDiskIODriverOfSD(g_diskIODrivers.pDiskDriver[pdrv]);
+			mapDiskIODriverOfSD(&g_diskIODrivers.pDiskDriver[pdrv]);
 		}
 		else
 		{

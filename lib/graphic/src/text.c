@@ -55,7 +55,7 @@ bool g_bWrapText = false;
 /* Private functions declaration ---------------------------------------------*/
 int32_t text_drawChar(char c, int32_t i32CornerX, int32_t i32CornerY,
 		int32_t i32Size);
-int32_t text_drawString(const char *pcString, int32_t i32PositionX,
+int32_t text_drawString(char *pcString, int32_t i32PositionX,
 		int32_t i32CornerY, int32_t i32Size, text_align_t align);
 void text_write(char c);
 
@@ -145,7 +145,7 @@ int32_t text_drawChar(char c, int32_t i32CornerX, int32_t i32CornerY,
  * @retval int32_t: Return the number of column cost by drawing the entire string.
  * 					This value is useful for adjust the cursor Y position.
  */
-int32_t text_drawString(const char *pcString, int32_t i32PositionX,
+int32_t text_drawString(char *pcString, int32_t i32PositionX,
 		int32_t i32CornerY, int32_t i32Size, text_align_t align)
 {
 	char *pcPointer = pcString;

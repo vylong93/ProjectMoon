@@ -28,7 +28,10 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup LIB_GRAPHIC Graphic
+/** @addtogroup LIB_GFX
+ * @{
+ */
+/** @defgroup LIB_GFX_PRIVATE Graphic (Private)
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -374,7 +377,6 @@ void graphic_fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 	}
 }
 
-/**
- * @} LIB_GRAPHIC
- */
+/**@}LIB_GFX_PRIVATE*/
+/**@}LIB_GFX*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

@@ -28,7 +28,9 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-
+/** @addtogroup BSP
+ * @{
+ */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_bsp.h"
 
@@ -125,4 +127,5 @@ bool bsp_init(void)
 	return true;
 }
 
+/**@}BSP*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

@@ -5,10 +5,7 @@
 #ifndef _DISKIO_DEFINED
 #define _DISKIO_DEFINED
 
-/** @defgroup LIB Library
- * @{
- */
-/** @defgroup LIB_DISKIO Disk IO Driver for FatFS
+/** @addtogroup LIB_FATFS_DISKIO
  * @{
  */
 
@@ -84,10 +81,5 @@ DWORD get_fattime (void);
 }
 #endif
 
-/**
- * @} LIB_DISKIO
- */
-/**
- * @} LIB
- */
+/**@}LIB_FATFS_DISKIO*/
 #endif

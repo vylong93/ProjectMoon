@@ -28,7 +28,10 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup LIB_DISKIO_SD SD Disk IO Driver
+/** @addtogroup LIB_FATFS_DISKIO_SD
+ * @{
+ */
+/** @defgroup LIB_FATFS_DISKIO_SD_PRIVATE SD Disk I/O (Private)
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -183,7 +186,6 @@ DRESULT sd_diskio_ioctl(BYTE lun, BYTE cmd, void *buff)
 }
 #endif  /* _USE_IOCTL == 1 */
 
-/**
- * @} LIB_DISKIO_SD
- */
+/**@}LIB_FATFS_DISKIO_SD_PRIVATE*/
+/**@}LIB_FATFS_DISKIO_SD*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

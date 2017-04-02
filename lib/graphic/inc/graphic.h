@@ -32,10 +32,7 @@
 #ifndef GRAPHIC_H_
 #define GRAPHIC_H_
 
-/** @defgroup LIB Library
- * @{
- */
-/** @defgroup LIB_GRAPHIC Graphic
+/** @addtogroup LIB_GFX
  * @{
  */
 
@@ -74,12 +71,7 @@ void graphic_drawRect(int16_t x, int16_t y, int16_t w, int16_t h,
 void graphic_fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 		pixel_color_t color);
 
-/**
- * @} LIB_GRAPHIC
- */
-/**
- * @} LIB
- */
+/**@}LIB_GFX*/
 #endif /* GRAPHIC_H_ */
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

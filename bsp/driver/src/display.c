@@ -28,7 +28,10 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup DRV_DISPLAY Display
+/** @addtogroup BSP_DRV_DISP
+ * @{
+ */
+/** @defgroup BSP_DRV_DISP_PRIVATE Display (Private)
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -89,7 +92,7 @@ static const vcctype_t OLED_VCCTYPE = VCCTYPE_SWITCHCAP; /*!< This variable sele
 
 /* FIXME: implement the best idea note in bsp_lcd_sendCommand to make the code cleaner: no magic number '1' here */
 #define DISPLAY_BUFFER_SIZE	(1 + DISPLAY_DATA_SIZE)
-static uint8_t g_ui8DisplayBuffer[DISPLAY_BUFFER_SIZE] = /*!< This is display buffer for the LCD and the format is <control byte 0x40> <data> */
+static uint8_t g_ui8DisplayBuffer[DISPLAY_BUFFER_SIZE] = /*!< This is display buffer for the LCD and the format is: [control byte 0x40][data] */
 {0x40 /* Control Byte - Co = Data */,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -514,7 +517,6 @@ void display_scrollStop(void)
 	bsp_lcd_sendCommand(SSD1306_DEACTIVATE_SCROLL);
 }
 
-/**
- * @} DRV_DISPLAY
- */
+/**@}BSP_DRV_DISP_PRIVATE*/
+/**@}BSP_DRV_DISP*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

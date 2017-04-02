@@ -1,4 +1,7 @@
 #ifndef FONT5X7
+/** @addtogroup LIB_GFX_TXT_PRIVATE
+ * @{
+ */
 #define FONT5X7
 
 #define FONT_WIDTH	(6)
@@ -261,4 +264,5 @@ static const unsigned char g_FontTable[] = { /*!< Standard ASCII 5x7 font */
 	0x00, 0x3C, 0x3C, 0x3C, 0x3C,
 	0x00, 0x00, 0x00, 0x00, 0x00
 };
+/**@}LIB_GFX_TXT_PRIVATE*/
 #endif // FONT5X7

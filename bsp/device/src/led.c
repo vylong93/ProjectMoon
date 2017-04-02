@@ -29,7 +29,10 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup BSP_LED LED
+/** @addtogroup BSP_DEVICE_LED
+ * @{
+ */
+/** @defgroup BSP_DEVICE_LED_PRIVATE LED (Private)
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -146,8 +149,6 @@ void bsp_led_toggle(Led_TypeDef Led)
 	HAL_GPIO_TogglePin(LED_PORT[Led], LED_PIN[Led]);
 }
 
-
-/**
- * @} BSP_LED
- */
+/**@}BSP_DEVICE_LED_PRIVATE*/
+/**@}BSP_DEVICE_LED*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

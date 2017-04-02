@@ -33,10 +33,7 @@
 #ifndef SD_H_
 #define SD_H_
 
-/** @defgroup DRV Board driver
- * @{
- */
-/** @defgroup DRV_SD SD
+/** @addtogroup BSP_DRV_SD
  * @{
  */
 
@@ -144,12 +141,7 @@ bool sd_readBlocks(uint32_t* pui32Data, uint64_t ui64ReadAddr,
 bool sd_writeBlocks(uint32_t* pui32Data, uint64_t ui64WriteAddr,
 		uint16_t ui16BlockSize, uint32_t ui32NumberOfBlocks);
 
-/**
- * @} DRV_SD
- */
-/**
- * @} DRV
- */
+/**@}BSP_DRV_SD*/
 #endif /* SD_H_ */
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

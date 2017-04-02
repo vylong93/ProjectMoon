@@ -29,7 +29,10 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup DRV_SD SD
+/** @addtogroup BSP_DRV_SD
+ * @{
+ */
+/** @defgroup BSP_DRV_SD_PRIVATE SD (Private)
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -691,7 +694,6 @@ bool sd_writeBlocks(uint32_t* pui32Data, uint64_t ui64WriteAddr,
 	return bReturn;
 }
 
-/**
- * @} DRV_SD
- */
+/**@}BSP_DRV_SD_PRIVATE*/
+/**@}BSP_DRV_SD*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

@@ -32,6 +32,48 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+/** @defgroup MAIN Application
+ * @{
+ */
+/** @defgroup LIB Library
+ * @{
+ */
+	/** @defgroup LIB_GFX Graphic
+	 * @{
+	 */
+		/** @defgroup LIB_GFX_TXT Text */
+	/**@}LIB_GFX*/
+
+	/** @defgroup LIB_FATFS FAT file system
+	 * @{
+	 */
+		/** @defgroup LIB_FATFS_DISKIO Disk I/O
+		 * @{
+		 */
+			/** @defgroup LIB_FATFS_DISKIO_SD SD Disk I/O */
+		/**@}LIB_FATFS_DISKIO*/
+	/**@}LIB_FATFS*/
+/**@}LIB*/
+
+/** @defgroup BSP Board Support Package
+ * @{
+ */
+	/** @defgroup BSP_DRV Driver
+	 * @{
+	 */
+		/** @defgroup BSP_DRV_DISP Display */
+		/** @defgroup BSP_DRV_SD SD */
+	/**@}BSP_DRV*/
+
+	/** @defgroup BSP_DEVICE Device-Peripheral
+	 * @{
+	 */
+		/** @defgroup BSP_DEVICE_LED LED */
+		/** @defgroup BSP_DEVICE_LCD LCD */
+		/** @defgroup BSP_DEVICE_SDIO SD I/O */
+	/**@}BSP_DEVICE*/
+/**@}BSP*/
+
 /**
  * @mainpage Welcome to Project Moon
  *
@@ -68,6 +110,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 
+/**@}MAIN*/
 #endif /* MAIN_H_ */
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

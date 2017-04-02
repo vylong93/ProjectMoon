@@ -28,7 +28,10 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup LIB_TEXT Text
+/** @addtogroup LIB_GFX_TXT
+ * @{
+ */
+/** @defgroup LIB_GFX_TXT_PRIVATE Text (Private)
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -376,7 +379,6 @@ void text_showTrademarkAnimation(void)
 	text_putString(pcStringEmtpy, SLOW);
 }
 
-/**
- * @} LIB_TEXT
- */
+/**@}LIB_GFX_TXT_PRIVATE*/
+/**@}LIB_GFX_TXT*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

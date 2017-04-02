@@ -32,10 +32,7 @@
 #ifndef SD_DISKIO_H_
 #define SD_DISKIO_H_
 
-/** @defgroup LIB_DISKIO Disk IO Driver for FatFS
- * @{
- */
-/** @defgroup LIB_DISKIO_SD SD Disk IO Driver
+/** @addtogroup LIB_FATFS_DISKIO_SD
  * @{
  */
 
@@ -56,12 +53,7 @@ DRESULT sd_diskio_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count);
 DRESULT sd_diskio_ioctl(BYTE lun, BYTE cmd, void *buff);
 #endif  /* _USE_IOCTL == 1 */
 
-/**
- * @} LIB_DISKIO_SD
- */
-/**
- * @} LIB_DISKIO
- */
+/**@}LIB_FATFS_DISKIO_SD*/
 #endif /* SD_DISKIO_H_ */
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

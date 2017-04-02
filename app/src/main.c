@@ -28,7 +28,9 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-
+/** @addtogroup MAIN
+ * @{
+ */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
@@ -391,4 +393,5 @@ int main(void)
 	while (true);
 }
 
+/**@}MAIN*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

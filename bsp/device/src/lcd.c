@@ -28,7 +28,10 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup BSP_LCD LCD
+/** @addtogroup BSP_DEVICE_LCD
+ * @{
+ */
+/** @defgroup BSP_DEVICE_LCD_PRIVATE LCD (Private)
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -361,7 +364,6 @@ bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
 	return true;
 }
 
-/**
- * @} BSP_LCD
- */
+/**@}BSP_DEVICE_LCD_PRIVATE*/
+/**@}BSP_DEVICE_LCD*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

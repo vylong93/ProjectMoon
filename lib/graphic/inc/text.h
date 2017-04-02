@@ -32,10 +32,7 @@
 #ifndef TEXT_H_
 #define TEXT_H_
 
-/** @defgroup LIB_GRAPHIC Graphic
- * @{
- */
-/** @defgroup LIB_TEXT Text
+/** @addtogroup LIB_GFX_TXT
  * @{
  */
 
@@ -79,12 +76,7 @@ void text_putString(const char *pcString, text_speed_t speed);
 
 void text_showTrademarkAnimation(void);
 
-/**
- * @} LIB_GRAPHIC
- */
-/**
- * @} LIB
- */
+/**@}LIB_GFX_TXT*/
 #endif /* TEXT_H_ */
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

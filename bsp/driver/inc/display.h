@@ -32,13 +32,9 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-/** @defgroup DRV Board driver
+/** @addtogroup BSP_DRV_DISP
  * @{
  */
-/** @defgroup DRV_DISPLAY Display
- * @{
- */
-
 /* Includes ------------------------------------------------------------------*/
 #include "lcd.h"
 
@@ -96,12 +92,7 @@ void display_scrollDiagRight(display_page_t pageStart, display_page_t pageStop);
 void display_scrollDiagLeft(display_page_t pageStart, display_page_t pageStop);
 void display_scrollStop(void);
 
-/**
- * @} DRV_DISPLAY
- */
-/**
- * @} DRV
- */
 #endif /* DISPLAY_H_ */
 
+/**@}BSP_DRV_DISP*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

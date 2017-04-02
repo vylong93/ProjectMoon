@@ -33,12 +33,10 @@
 #ifndef LED_H_
 #define LED_H_
 
-/** @defgroup BSP Board Support Package
+/** @addtogroup BSP_DEVICE_LED
  * @{
  */
-/** @defgroup BSP_LED LED
- * @{
- */
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_bsp.h"
 
@@ -63,12 +61,7 @@ void bsp_led_on(Led_TypeDef Led);
 void bsp_led_off(Led_TypeDef Led);
 void bsp_led_toggle(Led_TypeDef Led);
 
-/**
- * @} BSP_LED
- */
-/**
- * @} BSP
- */
+/**@}BSP_DEVICE_LED*/
 #endif /* LED_H_ */
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

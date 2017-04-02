@@ -28,7 +28,10 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup BSP_SDIO SD I/O
+/** @addtogroup BSP_DEVICE_SDIO
+ * @{
+ */
+/** @defgroup BSP_DEVICE_SDIO_PRIVATE SDIO (Private)
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -418,7 +421,6 @@ void bsp_sd_deactivate(void)
 	SD_CSn_DEACTIVE();
 }
 
-/**
- * @} BSP_SDIO
- */
+/**@}BSP_DEVICE_SDIO_PRIVATE*/
+/**@}BSP_DEVICE_SDIO*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

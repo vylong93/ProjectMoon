@@ -32,12 +32,10 @@
 #ifndef LCD_H_
 #define LCD_H_
 
-/** @defgroup BSP Board Support Package
+/** @addtogroup BSP_DEVICE_LCD
  * @{
  */
-/** @defgroup BSP_LCD LCD
- * @{
- */
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_bsp.h"
 
@@ -52,12 +50,7 @@ void bsp_lcd_reset(void);
 bool bsp_lcd_sendCommand(uint8_t ui8Command);
 bool bsp_lcd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size);
 
-/**
- * @} BSP_LCD
- */
-/**
- * @} BSP
- */
+/**@}BSP_DEVICE_LCD*/
 #endif /* LCD_H_ */
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

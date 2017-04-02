@@ -33,9 +33,10 @@
 #ifndef STM32F1XX_BSP_H_
 #define STM32F1XX_BSP_H_
 
-/** @defgroup BSP Board Support Package
+/** @addtogroup BSP
  * @{
  */
+
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>				/* uintX_t type */
 #include <stdbool.h>			/* BOOL type */
@@ -55,13 +56,7 @@
 /* Exported functions --------------------------------------------------------*/
 bool bsp_init(void);
 
-/**
- * @} BSP
- */
-#ifdef __cplusplus
-}
-#endif
-
+/**@}BSP*/
 #endif /* STM32F1XX_BSP_H_ */
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

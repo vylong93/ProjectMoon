@@ -39,7 +39,10 @@
  *   If not, see <http://www.gnu.org/licenses>.
  ****************************************************************************
  */
-/** @defgroup LIB_DISKIO Disk IO Driver for FatFS
+/** @addtogroup LIB_FATFS_DISKIO
+ * @{
+ */
+/** @defgroup LIB_FATFS_DISKIO_PRIVATE Disk I/O (Private)
  * @{
  */
 /* Includes ------------------------------------------------------------------*/
@@ -94,7 +97,7 @@ static void mapDiskIODriverOfSD(generic_diskio_driver_t **ppDiskDriver);
 /* Private function prototypes -----------------------------------------------*/
 /**
  * @brief  Map the SD Disk IO Driver.
- * @param  pDiskDriver: Disk IO driver pointer
+ * @param  ppDiskDriver: Disk IO driver pointer
  * @retval None
  */
 void mapDiskIODriverOfSD(generic_diskio_driver_t **ppDiskDriver)
@@ -267,7 +270,6 @@ __weak DWORD get_fattime(void)
 	return 0;
 }
 
-/**
- * @} LIB_DISKIO
- */
+/**@}LIB_FATFS_DISKIO_PRIVATE*/
+/**@}LIB_FATFS_DISKIO*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

@@ -32,10 +32,7 @@
 #ifndef SDIO_H_
 #define SDIO_H_
 
-/** @defgroup BSP Board Support Package
- * @{
- */
-/** @defgroup BSP_SDIO SD I/O
+/** @addtogroup BSP_DEVICE_SDIO
  * @{
  */
 
@@ -60,12 +57,7 @@ void bsp_sd_sendDummy(void);
 void bsp_sd_activate(void);
 void bsp_sd_deactivate(void);
 
-/**
- * @} BSP_SDIO
- */
-/**
- * @} LIB
- */
+/**@}BSP_DEVICE_SDIO*/
 #endif /* SDIO_H_ */
 
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

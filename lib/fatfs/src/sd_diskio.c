@@ -139,6 +139,7 @@ DRESULT sd_diskio_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
  */
 DRESULT sd_diskio_ioctl(BYTE lun, BYTE cmd, void *buff)
 {
+	UNUSED(lun);
 	DRESULT diskResult = RES_ERROR;
 	sd_card_info_t CardInfo;
 
@@ -156,7 +157,8 @@ DRESULT sd_diskio_ioctl(BYTE lun, BYTE cmd, void *buff)
 
 		/* Get number of sectors on the disk (DWORD) */
 	case GET_SECTOR_COUNT:
-		if (sd_getCardInfo(&CardInfo)) {
+		if (sd_getCardInfo(&CardInfo))
+		{
 			*(DWORD*) buff = CardInfo.CardCapacity / SD_BLOCK_SIZE;
 			diskResult = RES_OK;
 		}

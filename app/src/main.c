@@ -36,7 +36,10 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 #define TESTING /*!< Enable this flag to active the testing functions. */
+
 /* Private variables ---------------------------------------------------------*/
+static FATFS g_fatfsSDCard;
+static char g_pcFsMountPoint[4] = "0:/";
 
 /* Private function prototypes -----------------------------------------------*/
 #ifdef TESTING
@@ -250,6 +253,103 @@ void test_TextLibrary(void)
 
 	text_showTrademarkAnimation();
 }
+
+/**
+ * @brief  Test the FatFS APIs.
+ * @note   Expectation:
+ * 			@arg LCD report f_mount: GOOD.
+ * 			@arg LCD report writing file: DONE.
+ * 			@arg LCD report reading back: DONE.
+ * 			@arg LCD print back the file content: Read: file-content.
+ * 			@arg LCD report unmount: OK.
+ * @retval None
+ */
+void test_FatFileSystem(void)
+{
+	/* Clear screen  */
+	graphic_clearRenderBuffer();
+	graphic_render();
+	text_setWrapText(false);
+	text_setCursor(0, 0);
+	text_setTextSize(1);
+
+	/* Mount */
+	text_putString("f_mount: ", FAST);
+	if (f_mount(&g_fatfsSDCard, (TCHAR const*) g_pcFsMountPoint, 0) != FR_OK)
+	{
+		text_putString("Bad!!!\n", FAST);
+		return;
+	}
+	else
+	{
+		text_putString("GOOD\n", FAST);
+	}
+
+	/* Create and Open a new text file object with write access */
+	FIL file;     /* File object */
+	const char *pcFileName = "MOON.TXT";
+
+	text_putString("writing file: ", FAST);
+	if(f_open(&file, (TCHAR *)pcFileName, FA_CREATE_ALWAYS | FA_WRITE) != FR_OK)
+	{
+		text_putString("open failed!!!\n", FAST);
+		goto unmount;
+	}
+
+	FRESULT res;                                          /* FatFs function common result code */
+	uint32_t byteswritten, bytesread;                     /* File write/read counts */
+	uint8_t wtext[] = "This is Project Moon testing file with FatFs module."; /* File write buffer */
+	uint8_t rtext[100] = { 0} ;                           /* File read buffer */
+
+	res = f_write(&file, wtext, sizeof(wtext), (void *)&byteswritten);
+	if (f_close(&file) != FR_OK )
+	{
+		text_putString("close failed\n", FAST);
+		goto unmount;
+	}
+	if((byteswritten == 0) || (res != FR_OK))
+	{
+		text_putString("error\n", FAST);
+		goto unmount;
+	}
+	text_putString("DONE\n", FAST);
+
+	/* Open the text file object with read access */
+	text_putString("reading back: ", FAST);
+	if(f_open(&file, (TCHAR *)pcFileName, FA_READ) != FR_OK)
+	{
+		text_putString("open failed\n", FAST);
+		goto unmount;
+	}
+	res = f_read(&file, rtext, sizeof(rtext), (UINT*)&bytesread);
+	if((bytesread == 0) || (res != FR_OK))
+	{
+		text_putString("error\n", FAST);
+		goto unmount;
+	}
+	f_close(&file);
+	text_putString("DONE\n", FAST);
+
+	graphic_delay_ms(1000);
+	graphic_clearRenderBuffer();
+	text_setWrapText(true);
+	text_setCursor(0, 0);
+	text_putString("Read: ", FAST);
+	text_putString((char *)rtext, FAST);
+	text_putString("\n", FAST);
+
+unmount:
+	/* Unmount */
+	text_putString("unmount: ", FAST);
+	if (f_mount(NULL, (TCHAR const*) g_pcFsMountPoint, 0) != FR_OK)
+	{
+		text_putString("Bad!!!\n", FAST);
+	}
+	else
+	{
+		text_putString("OK\n", FAST);
+	}
+}
 #endif
 /* Private functions ---------------------------------------------------------*/
 
@@ -279,6 +379,7 @@ int main(void)
 	test_DisplayDriver();
 	test_GraphicLibrary();
 	test_TextLibrary();
+	test_FatFileSystem();
 #endif
 
 	while (true)

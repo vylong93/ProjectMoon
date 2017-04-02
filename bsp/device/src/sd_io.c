@@ -65,9 +65,7 @@
  You may modify these timeout values depending on CPU frequency and application
  conditions (interrupts routines ...). */
 #define SPIx_TIMEOUT_MAX                   (1000)
-/**
- * @} BSP_SPI_PERIPHERALS
- */
+/**@}BSP_SPI_PERIPHERALS*/
 
 /* SD Control Interface pins */
 #define SD_CSn_PIN                               GPIO_PIN_8        /* PA.08*/
@@ -91,6 +89,9 @@
 #define SD_DUMMY_BYTE				(0xFF) /*!< Dummy byte of SPI data */
 #define SD_NO_RESPONSE_EXPECTED  	(0x80) /*!< Indicate sending non-response SD command */
 
+/** @addtogroup BSP_SPI_PERIPHERALS
+ * @{
+ */
 /* Private variables ---------------------------------------------------------*/
 static SPI_HandleTypeDef spihandle_sd; /*!< SPI handler for SD declaration. */
 
@@ -152,6 +153,7 @@ static void SPI_Error(void)
 	/* Re-Initialize the SPI communication BUS */
 	bsp_sdio_init();
 }
+/**@}BSP_SPI_PERIPHERALS*/
 
 /* Exported functions prototype ----------------------------------------------*/
 /**

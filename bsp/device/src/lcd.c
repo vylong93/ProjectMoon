@@ -70,9 +70,7 @@
 #define I2Cx_DMA_RX_IRQn                DMA1_Channel7_IRQn
 #define I2Cx_DMA_TX_IRQHandler          DMA1_Channel6_IRQHandler
 #define I2Cx_DMA_RX_IRQHandler          DMA1_Channel7_IRQHandler
-/**
- * @} BSP-LCD-PERIPHERALS
- */
+/**@}BSP-LCD-PERIPHERALS*/
 
 /* Definition for LCD reset Pin */
 #define LCD_RESn_PIN                    GPIO_PIN_8
@@ -86,6 +84,9 @@
 #define LCD_I2C_DEVICE_ADDRESS		(0x3C)	/*!< 0b011110[SA0][RW] - 0x3C or 0x3D */
 #define LCD_COMMAND_PACKET_SIZE		(2)		/*!< Size in byte of LCD command packet. */
 
+/** @addtogroup BSP-LCD-PERIPHERALS
+ * @{
+ */
 /* Private variables ---------------------------------------------------------*/
 static uint16_t g_ui16SlaveAddress = (uint16_t) (LCD_I2C_DEVICE_ADDRESS << 1); /*!< I2C Address of LCD device. */
 static I2C_HandleTypeDef i2chandle_lcd; /*!< I2C handler for LCD declaration. */
@@ -226,6 +227,7 @@ void I2Cx_DMA_TX_IRQHandler(void)
 {
 	HAL_DMA_IRQHandler(i2chandle_lcd.hdmatx);
 }
+/**@}BSP-LCD-PERIPHERALS*/
 
 /* Exported variables --------------------------------------------------------*/
 

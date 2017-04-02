@@ -150,7 +150,7 @@ static void SPI_Error(void)
 	HAL_SPI_DeInit(&spihandle_sd);
 
 	/* Re-Initialize the SPI communication BUS */
-	bsp_sd_init();
+	bsp_sdio_init();
 }
 
 /* Exported functions prototype ----------------------------------------------*/
@@ -160,7 +160,7 @@ static void SPI_Error(void)
  *			@arg true: succeeded
  *			@arg false: failed
  */
-bool bsp_sd_init(void)
+bool bsp_sdio_init(void)
 {
 	/* SPI baudrate is set to 8 MHz maximum (PCLK2/SPI_BaudRatePrescaler = 64/8 = 8 MHz)
 	 to verify these constraints:
@@ -220,7 +220,7 @@ bool bsp_sd_init(void)
 	int i = 10;
 	do
 	{
-		bsp_sd_sendDummy();
+		bsp_sdio_sendDummy();
 	} while (--i);
 
 	return true;
@@ -232,7 +232,7 @@ bool bsp_sd_init(void)
  *			@arg true: SD detected
  *			@arg false: No SD found
  */
-bool bsp_sd_isDetected(void)
+bool bsp_sdio_isDetected(void)
 {
 	/* Check SD card detect pin */
 	if (HAL_GPIO_ReadPin(SD_DETECT_GPIO_PORT, SD_DETECT_PIN) != GPIO_PIN_RESET)
@@ -250,7 +250,7 @@ bool bsp_sd_isDetected(void)
  *			@arg true: succeeded
  *			@arg false: failed
  */
-bool bsp_sd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
+bool bsp_sdio_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
 {
 	HAL_StatusTypeDef status = HAL_SPI_Transmit(&spihandle_sd, pui8Buffer,
 			ui16Size, SPIx_TIMEOUT_MAX);
@@ -275,7 +275,7 @@ bool bsp_sd_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
  *			@arg true: succeeded
  *			@arg false: failed
  */
-bool bsp_sd_readData(uint8_t * pui8Buffer, uint16_t ui16Size)
+bool bsp_sdio_readData(uint8_t * pui8Buffer, uint16_t ui16Size)
 {
 	/* NOTE: HAL_SPI_TransmitReceive require transmit data pointer same size with received data.
 	 * We should prepare the same data size with fill by 0xFF to use this HAL function.
@@ -311,7 +311,7 @@ bool bsp_sd_readData(uint8_t * pui8Buffer, uint16_t ui16Size)
  *			@arg true: succeeded
  *			@arg false: failed
  */
-bool bsp_sd_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
+bool bsp_sdio_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
 		uint8_t ui8ExpectedResponse)
 {
 	uint8_t pui8CommandPacket[SD_COMMAND_PACKET_SIZE] =
@@ -319,11 +319,11 @@ bool bsp_sd_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
 			(uint8_t) (ui32Arg >> 24), (uint8_t) (ui32Arg >> 16),
 			(uint8_t) (ui32Arg >> 8), (uint8_t) (ui32Arg), ui8CRC };
 
-	if (bsp_sd_sendData(pui8CommandPacket, SD_COMMAND_PACKET_SIZE))
+	if (bsp_sdio_sendData(pui8CommandPacket, SD_COMMAND_PACKET_SIZE))
 	{
 		if (SD_NO_RESPONSE_EXPECTED != ui8ExpectedResponse)
 		{
-			return bsp_sd_waitResponse(ui8ExpectedResponse);
+			return bsp_sdio_waitResponse(ui8ExpectedResponse);
 		}
 		return true;
 	}
@@ -341,10 +341,10 @@ bool bsp_sd_sendCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
  *			@arg true: succeeded
  *			@arg false: failed
  */
-bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
+bool bsp_sdio_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
 		uint8_t ui8ExpectedResponse, uint32_t *pui32TrailingResponse)
 {
-	if (bsp_sd_sendCommand(ui8Cmd, ui32Arg, ui8CRC, ui8ExpectedResponse))
+	if (bsp_sdio_sendCommand(ui8Cmd, ui32Arg, ui8CRC, ui8ExpectedResponse))
 	{
 		if (SD_NO_RESPONSE_EXPECTED != ui8ExpectedResponse)
 		{
@@ -355,10 +355,10 @@ bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
 			*(pui8TrailingByte + 1) = SD_DUMMY_BYTE;
 			*pui8TrailingByte = SD_DUMMY_BYTE;
 
-			bsp_sd_readData((uint8_t *) (pui8TrailingByte + 3), 1);
-			bsp_sd_readData((uint8_t *) (pui8TrailingByte + 2), 1);
-			bsp_sd_readData((uint8_t *) (pui8TrailingByte + 1), 1);
-			bsp_sd_readData((uint8_t *) (pui8TrailingByte), 1);
+			bsp_sdio_readData((uint8_t *) (pui8TrailingByte + 3), 1);
+			bsp_sdio_readData((uint8_t *) (pui8TrailingByte + 2), 1);
+			bsp_sdio_readData((uint8_t *) (pui8TrailingByte + 1), 1);
+			bsp_sdio_readData((uint8_t *) (pui8TrailingByte), 1);
 		}
 		return true;
 	}
@@ -372,7 +372,7 @@ bool bsp_sd_sendSpecialCommand(uint8_t ui8Cmd, uint32_t ui32Arg, uint8_t ui8CRC,
  *			@arg true: received expected response.
  *			@arg false: timeout
  */
-bool bsp_sd_waitResponse(const uint8_t ui8ExpectedResponse)
+bool bsp_sdio_waitResponse(const uint8_t ui8ExpectedResponse)
 {
 	uint8_t ui8Response;
 	uint32_t ui32Timeout = 0xFFFF;
@@ -381,7 +381,7 @@ bool bsp_sd_waitResponse(const uint8_t ui8ExpectedResponse)
 	do
 	{
 		ui8Response = SD_DUMMY_BYTE;
-		bsp_sd_readData(&ui8Response, 1);
+		bsp_sdio_readData(&ui8Response, 1);
 		--ui32Timeout;
 	} while ((ui8Response != ui8ExpectedResponse) && ui32Timeout);
 
@@ -397,17 +397,17 @@ bool bsp_sd_waitResponse(const uint8_t ui8ExpectedResponse)
  * @brief  Send a dummy byte to SD device.
  * @retval None
  */
-void bsp_sd_sendDummy(void)
+void bsp_sdio_sendDummy(void)
 {
 	uint8_t ui8Dummy = SD_DUMMY_BYTE;
-	bsp_sd_sendData(&ui8Dummy, 1);
+	bsp_sdio_sendData(&ui8Dummy, 1);
 }
 
 /**
  * @brief  Activate the SD communication
  * @retval None
  */
-void bsp_sd_activate(void)
+void bsp_sdio_activate(void)
 {
 	SD_CSn_ACTIVE();
 }
@@ -416,7 +416,7 @@ void bsp_sd_activate(void)
  * @brief  Send a dummy byte to SD device.
  * @retval None
  */
-void bsp_sd_deactivate(void)
+void bsp_sdio_deactivate(void)
 {
 	SD_CSn_DEACTIVE();
 }

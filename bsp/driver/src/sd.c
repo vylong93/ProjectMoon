@@ -139,11 +139,11 @@ static bool sd_goIdleState(void)
 	bool bReturn = false;
 	/* Send CMD0 (SD_CMD_GO_IDLE_STATE) to put SD in SPI mode and
 	 Wait for In Idle State Response (R1 Format) equal to 0x01 */
-	bsp_sd_activate();
-	bReturn = bsp_sd_sendCommand(SD_CMD_GO_IDLE_STATE, 0,
+	bsp_sdio_activate();
+	bReturn = bsp_sdio_sendCommand(SD_CMD_GO_IDLE_STATE, 0,
 	SD_CRC_CMD_GO_IDLE_STATE, SD_IN_IDLE_STATE);
-	bsp_sd_deactivate();
-	bsp_sd_sendDummy();
+	bsp_sdio_deactivate();
+	bsp_sdio_sendDummy();
 	if (false == bReturn)
 	{
 		/* No Idle State Response: return response failure */
@@ -152,12 +152,12 @@ static bool sd_goIdleState(void)
 
 	/*----------Activates the card initialization process-----------*/
 	/* Send CMD8 Wait for no error Response (R7 Format) Response 0x01 0x000001AA */
-	bsp_sd_activate();
+	bsp_sdio_activate();
 	uint32_t ui32TrailingResponse = 0;
-	bReturn = bsp_sd_sendSpecialCommand(SD_CMD_SEND_IF_COND, 0x000001AA,
+	bReturn = bsp_sdio_sendSpecialCommand(SD_CMD_SEND_IF_COND, 0x000001AA,
 	SD_CRC_CMD_SEND_IF_COND, SD_IN_IDLE_STATE, &ui32TrailingResponse);
-	bsp_sd_deactivate();
-	bsp_sd_sendDummy();
+	bsp_sdio_deactivate();
+	bsp_sdio_sendDummy();
 	if ((false == bReturn) || (0x01AA != (ui32TrailingResponse & 0x0FFF)))
 	{
 		/* No Idle State Response: return response failure
@@ -169,17 +169,17 @@ static bool sd_goIdleState(void)
 	 Wait for no error Response (R1 Format) equal to 0x00 */
 	while (true)
 	{
-		bsp_sd_activate();
-		bsp_sd_sendCommand(SD_CMD_APP_CMD, 0, SD_CRC_NOT_CARE,
+		bsp_sdio_activate();
+		bsp_sdio_sendCommand(SD_CMD_APP_CMD, 0, SD_CRC_NOT_CARE,
 				SD_IN_IDLE_STATE); /* Response 0x01 */
-		bsp_sd_deactivate();
-		bsp_sd_sendDummy();
+		bsp_sdio_deactivate();
+		bsp_sdio_sendDummy();
 
-		bsp_sd_activate();
-		bReturn = bsp_sd_sendCommand(SD_CMD_APP_SEND_OP_COND, 0x40000000,
+		bsp_sdio_activate();
+		bReturn = bsp_sdio_sendCommand(SD_CMD_APP_SEND_OP_COND, 0x40000000,
 		SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR);
-		bsp_sd_deactivate();
-		bsp_sd_sendDummy();
+		bsp_sdio_deactivate();
+		bsp_sdio_sendDummy();
 		if (true == bReturn)
 		{
 			break;
@@ -187,12 +187,12 @@ static bool sd_goIdleState(void)
 	}
 
 	/* Send CMD58 */
-	bsp_sd_activate();
+	bsp_sdio_activate();
 	ui32TrailingResponse = 0;
-	bReturn = bsp_sd_sendSpecialCommand(SD_CMD_READ_OCR, 0, SD_CRC_NOT_CARE,
+	bReturn = bsp_sdio_sendSpecialCommand(SD_CMD_READ_OCR, 0, SD_CRC_NOT_CARE,
 			SD_RESPONSE_NO_ERROR, &ui32TrailingResponse);
-	bsp_sd_deactivate();
-	bsp_sd_sendDummy();
+	bsp_sdio_deactivate();
+	bsp_sdio_sendDummy();
 	if (false == bReturn)
 	{
 		/* Error occur. Return response failure. Should not be here */
@@ -203,11 +203,11 @@ static bool sd_goIdleState(void)
 	if (0 == (ui32TrailingResponse & 0x40000000))
 	{
 		/* SD Ver.2 Byte address - Force block size to 512 bytes to work with FAT file system */
-		bsp_sd_activate();
-		bReturn = bsp_sd_sendCommand(SD_CMD_SET_BLOCKLEN, SD_BLOCK_SIZE,
+		bsp_sdio_activate();
+		bReturn = bsp_sdio_sendCommand(SD_CMD_SET_BLOCKLEN, SD_BLOCK_SIZE,
 		SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR);
-		bsp_sd_deactivate();
-		bsp_sd_sendDummy();
+		bsp_sdio_deactivate();
+		bsp_sdio_sendDummy();
 		if (false == bReturn)
 		{
 			/* Error occur. Return response failure. Should not be here */
@@ -234,27 +234,27 @@ static bool sd_getCSDRegister(sd_csd_t* pCsd)
 
 	/* Send CMD9 (CSD register) or CMD10(CSD register) and
 	 * Wait for response in the R1 format (0x00 is no errors) */
-	bsp_sd_activate();
-	if (bsp_sd_sendCommand(SD_CMD_SEND_CSD, 0, SD_CRC_NOT_CARE,
+	bsp_sdio_activate();
+	if (bsp_sdio_sendCommand(SD_CMD_SEND_CSD, 0, SD_CRC_NOT_CARE,
 			SD_RESPONSE_NO_ERROR))
 	{
-		if (bsp_sd_waitResponse(SD_START_DATA_SINGLE_BLOCK_READ))
+		if (bsp_sdio_waitResponse(SD_START_DATA_SINGLE_BLOCK_READ))
 		{
 			/* Store CSD register value on CSD_Tab */
-			bsp_sd_readData(pui8CsdResponseArray,
+			bsp_sdio_readData(pui8CsdResponseArray,
 			SD_NUMBER_OF_CSD_RESPONSE_BYTE);
 
 			/* Get CRC bytes (not really needed by us, but required by SD) */
-			bsp_sd_sendDummy();
-			bsp_sd_sendDummy();
+			bsp_sdio_sendDummy();
+			bsp_sdio_sendDummy();
 
 			bReturn = true;
 		}
 	}
-	bsp_sd_deactivate();
+	bsp_sdio_deactivate();
 
 	/* Send dummy byte: 8 Clock pulses of delay */
-	bsp_sd_sendDummy();
+	bsp_sdio_sendDummy();
 
 	if (true == bReturn)
 	{
@@ -353,27 +353,27 @@ static bool sd_getCIDRegister(sd_cid_t* pCid)
 	uint8_t pui8CidResponseArray[SD_NUMBER_OF_CID_RESPONSE_BYTE];
 
 	/* Send CMD10 (CID register) and Wait for response in the R1 format (0x00 is no errors) */
-	bsp_sd_activate();
-	if (bsp_sd_sendCommand(SD_CMD_SEND_CID, 0, SD_CRC_NOT_CARE,
+	bsp_sdio_activate();
+	if (bsp_sdio_sendCommand(SD_CMD_SEND_CID, 0, SD_CRC_NOT_CARE,
 			SD_RESPONSE_NO_ERROR))
 	{
-		if (bsp_sd_waitResponse(SD_START_DATA_SINGLE_BLOCK_READ))
+		if (bsp_sdio_waitResponse(SD_START_DATA_SINGLE_BLOCK_READ))
 		{
 			/* Store CID register value on CID_Tab */
-			bsp_sd_readData(pui8CidResponseArray,
+			bsp_sdio_readData(pui8CidResponseArray,
 			SD_NUMBER_OF_CSD_RESPONSE_BYTE);
 
 			/* Get CRC bytes (not really needed by us, but required by SD) */
-			bsp_sd_sendDummy();
-			bsp_sd_sendDummy();
+			bsp_sdio_sendDummy();
+			bsp_sdio_sendDummy();
 
 			bReturn = true;
 		}
 	}
-	bsp_sd_deactivate();
+	bsp_sdio_deactivate();
 
 	/* Send dummy byte: 8 Clock pulses of delay */
-	bsp_sd_sendDummy();
+	bsp_sdio_sendDummy();
 
 	if (true == bReturn)
 	{
@@ -446,7 +446,7 @@ static sd_response_t sd_getDataResponse(void)
 	while (ui32Timeout--)
 	{
 		/* Read response */
-		bsp_sd_readData(&sdResponse, 1);
+		bsp_sdio_readData(&sdResponse, 1);
 
 		/* Mask unused bits */
 		sdResponse &= 0x1F;
@@ -477,7 +477,7 @@ static sd_response_t sd_getDataResponse(void)
 	/* Wait for null data */
 	do
 	{
-		bsp_sd_readData(&sdResponse, 1);
+		bsp_sdio_readData(&sdResponse, 1);
 	} while (0 == sdResponse);
 
 	return sdResponeReturnvalue;
@@ -493,10 +493,10 @@ static sd_response_t sd_getDataResponse(void)
 bool sd_init(void)
 {
 	/* Configure IO functionalities for SD pin */
-	bsp_sd_init();
+	bsp_sdio_init();
 
 	/* Check SD card  pin */
-	if (bsp_sd_isDetected())
+	if (bsp_sdio_isDetected())
 	{
 		g_sdStatus = SD_PRESENT;
 	}
@@ -564,48 +564,48 @@ bool sd_readBlocks(uint32_t* pui32Data, uint64_t ui64ReadAddr,
 
 	/* Send CMD16 (SD_CMD_SET_BLOCKLEN) to set the size of the block and
 	 Check if the SD acknowledged the set block length command: R1 response (0x00: no errors) */
-	bsp_sd_activate();
-	bReturn = bsp_sd_sendCommand(SD_CMD_SET_BLOCKLEN, (uint32_t) ui16BlockSize,
+	bsp_sdio_activate();
+	bReturn = bsp_sdio_sendCommand(SD_CMD_SET_BLOCKLEN, (uint32_t) ui16BlockSize,
 	SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR);
 	if (false == bReturn)
 	{
-		bsp_sd_deactivate();
-		bsp_sd_sendDummy();
+		bsp_sdio_deactivate();
+		bsp_sdio_sendDummy();
 		return false;
 	}
 
 	/* Data transfer */
 	while (ui32NumberOfBlocks--)
 	{
-		bsp_sd_deactivate();
+		bsp_sdio_deactivate();
 		/* Send dummy byte: 8 Clock pulses of delay */
-		bsp_sd_sendDummy();
+		bsp_sdio_sendDummy();
 
 		/* Send CMD17 (SD_CMD_READ_SINGLE_BLOCK) to read one block */
 		/* Check if the SD acknowledged the read block command: R1 response (0x00: no errors) */
-		bsp_sd_activate();
-		bReturn = bsp_sd_sendCommand(SD_CMD_READ_SINGLE_BLOCK,
+		bsp_sdio_activate();
+		bReturn = bsp_sdio_sendCommand(SD_CMD_READ_SINGLE_BLOCK,
 				ui64ReadAddr + ui32Offset,
 				SD_CRC_NOT_CARE, SD_RESPONSE_NO_ERROR);
 		if (false == bReturn)
 		{
-			bsp_sd_deactivate();
-			bsp_sd_sendDummy();
+			bsp_sdio_deactivate();
+			bsp_sdio_sendDummy();
 			return false;
 		}
 
 		/* Now look for the data token to signify the start of the data */
-		if (bsp_sd_waitResponse(SD_START_DATA_SINGLE_BLOCK_READ))
+		if (bsp_sdio_waitResponse(SD_START_DATA_SINGLE_BLOCK_READ))
 		{
 			/* Read the SD block data : read NumByteToRead data */
-			bsp_sd_readData((uint8_t *) (pui8Data + ui32Offset), ui16BlockSize);
+			bsp_sdio_readData((uint8_t *) (pui8Data + ui32Offset), ui16BlockSize);
 
 			/* Set next read address*/
 			ui32Offset += ui16BlockSize;
 
 			/* get CRC bytes (not really needed by us, but required by SD) */
-			bsp_sd_sendDummy();
-			bsp_sd_sendDummy();
+			bsp_sdio_sendDummy();
+			bsp_sdio_sendDummy();
 
 			/* Set response value to success */
 			bReturn = true;
@@ -617,9 +617,9 @@ bool sd_readBlocks(uint32_t* pui32Data, uint64_t ui64ReadAddr,
 		}
 	}
 
-	bsp_sd_deactivate();
+	bsp_sdio_deactivate();
 	/* Send dummy byte: 8 Clock pulses of delay */
-	bsp_sd_sendDummy();
+	bsp_sdio_sendDummy();
 
 	return bReturn;
 }
@@ -644,35 +644,35 @@ bool sd_writeBlocks(uint32_t* pui32Data, uint64_t ui64WriteAddr,
 	uint8_t ui8StartData = SD_START_DATA_SINGLE_BLOCK_WRITE;
 
 	/* Data transfer */
-	bsp_sd_activate();
+	bsp_sdio_activate();
 	while (ui32NumberOfBlocks--)
 	{
 		/* Send CMD24 (SD_CMD_WRITE_SINGLE_BLOCK) to write blocks  and
 		 Check if the SD acknowledged the write block command: R1 response (0x00: no errors) */
-		if (!bsp_sd_sendCommand(SD_CMD_WRITE_SINGLE_BLOCK,
+		if (!bsp_sdio_sendCommand(SD_CMD_WRITE_SINGLE_BLOCK,
 				(uint32_t) (ui64WriteAddr + ui32Offset), SD_CRC_NOT_CARE,
 				SD_RESPONSE_NO_ERROR))
 		{
-			bsp_sd_deactivate();
-			bsp_sd_sendDummy();
+			bsp_sdio_deactivate();
+			bsp_sdio_sendDummy();
 			return false;
 		}
 
 		/* Send dummy byte */
-		bsp_sd_sendDummy();
+		bsp_sdio_sendDummy();
 
 		/* Send the data token to signify the start of the data */
-		bsp_sd_sendData(&ui8StartData, 1);
+		bsp_sdio_sendData(&ui8StartData, 1);
 
 		/* Write the block data to SD : write count data by block */
-		bsp_sd_sendData((uint8_t *) (pui8Data + ui32Offset), ui16BlockSize);
+		bsp_sdio_sendData((uint8_t *) (pui8Data + ui32Offset), ui16BlockSize);
 
 		/* Set next write address */
 		ui32Offset += ui16BlockSize;
 
 		/* Put CRC bytes (not really needed by us, but required by SD) */
 		uint8_t pui8CRCResponse[2];
-		bsp_sd_readData(pui8CRCResponse, 2);
+		bsp_sdio_readData(pui8CRCResponse, 2);
 
 		/* Read data response */
 		if (SD_DATA_OK == sd_getDataResponse())
@@ -686,10 +686,10 @@ bool sd_writeBlocks(uint32_t* pui32Data, uint64_t ui64WriteAddr,
 			bReturn = false;
 		}
 	}
-	bsp_sd_deactivate();
+	bsp_sdio_deactivate();
 
 	/* Send dummy byte: 8 Clock pulses of delay to initiate internal write */
-	bsp_sd_sendDummy();
+	bsp_sdio_sendDummy();
 
 	return bReturn;
 }

@@ -43,14 +43,14 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-DSTATUS sd_diskio_initialize(BYTE lun);
-DSTATUS sd_diskio_status(BYTE lun);
-DRESULT sd_diskio_read(BYTE lun, BYTE *buff, DWORD sector, UINT count);
+DSTATUS diskio_sd_initialize(BYTE lun);
+DSTATUS diskio_sd_status(BYTE lun);
+DRESULT diskio_sd_read(BYTE lun, BYTE *buff, DWORD sector, UINT count);
 #if _USE_WRITE == 1
-DRESULT sd_diskio_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count);
+DRESULT diskio_sd_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count);
 #endif /* _USE_WRITE == 1 */
 #if _USE_IOCTL == 1
-DRESULT sd_diskio_ioctl(BYTE lun, BYTE cmd, void *buff);
+DRESULT diskio_sd_ioctl(BYTE lun, BYTE cmd, void *buff);
 #endif  /* _USE_IOCTL == 1 */
 
 /**@}LIB_FATFS_DISKIO_SD*/

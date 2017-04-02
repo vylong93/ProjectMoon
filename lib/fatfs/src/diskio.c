@@ -102,14 +102,14 @@ static void mapDiskIODriverOfSD(generic_diskio_driver_t **ppDiskDriver);
  */
 void mapDiskIODriverOfSD(generic_diskio_driver_t **ppDiskDriver)
 {
-	g_sdDiskIODriver.disk_initialize = sd_diskio_initialize;
-	g_sdDiskIODriver.disk_status = sd_diskio_status;
-	g_sdDiskIODriver.disk_read = sd_diskio_read;
+	g_sdDiskIODriver.disk_initialize = diskio_sd_initialize;
+	g_sdDiskIODriver.disk_status = diskio_sd_status;
+	g_sdDiskIODriver.disk_read = diskio_sd_read;
 #if _USE_WRITE == 1
-	g_sdDiskIODriver.disk_write = sd_diskio_write;
+	g_sdDiskIODriver.disk_write = diskio_sd_write;
 #endif /* _USE_WRITE == 1 */
 #if _USE_IOCTL == 1
-	g_sdDiskIODriver.disk_ioctl = sd_diskio_ioctl;
+	g_sdDiskIODriver.disk_ioctl = diskio_sd_ioctl;
 #endif /* _USE_IOCTL == 1 */
 
 	*ppDiskDriver = &g_sdDiskIODriver;

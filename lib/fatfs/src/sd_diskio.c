@@ -56,7 +56,7 @@ static volatile DSTATUS g_diskStatus = STA_NOINIT; /*!< SD disk status */
  * 		@arg RES_OK: succeeded
  * 		@arg STA_NOINIT: failed
  */
-DSTATUS sd_diskio_initialize(BYTE lun)
+DSTATUS diskio_sd_initialize(BYTE lun)
 {
 	UNUSED(lun);
 	g_diskStatus = STA_NOINIT;
@@ -75,7 +75,7 @@ DSTATUS sd_diskio_initialize(BYTE lun)
  * 		@arg RES_OK: succeeded
  * 		@arg STA_NOINIT: failed
  */
-DSTATUS sd_diskio_status(BYTE lun)
+DSTATUS diskio_sd_status(BYTE lun)
 {
 	UNUSED(lun);
 	g_diskStatus = STA_NOINIT;
@@ -96,7 +96,7 @@ DSTATUS sd_diskio_status(BYTE lun)
  * 		@arg RES_OK: succeeded
  * 		@arg RES_ERROR: failed
  */
-DRESULT sd_diskio_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
+DRESULT diskio_sd_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
 {
 	UNUSED(lun);
 	if (!sd_readBlocks((uint32_t*) buff, (uint64_t) (sector * SD_BLOCK_SIZE),
@@ -118,7 +118,7 @@ DRESULT sd_diskio_read(BYTE lun, BYTE *buff, DWORD sector, UINT count)
  * 		@arg RES_OK: succeeded
  * 		@arg RES_ERROR: failed
  */
-DRESULT sd_diskio_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
+DRESULT diskio_sd_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
 {
 	UNUSED(lun);
 	if (!sd_writeBlocks((uint32_t*) buff, (uint64_t) (sector * SD_BLOCK_SIZE),
@@ -140,7 +140,7 @@ DRESULT sd_diskio_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
  * 		@arg RES_OK: succeeded
  * 		@arg RES_ERROR: failed
  */
-DRESULT sd_diskio_ioctl(BYTE lun, BYTE cmd, void *buff)
+DRESULT diskio_sd_ioctl(BYTE lun, BYTE cmd, void *buff)
 {
 	UNUSED(lun);
 	DRESULT diskResult = RES_ERROR;

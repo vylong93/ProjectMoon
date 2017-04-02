@@ -71,6 +71,7 @@
 		/** @defgroup BSP_DEVICE_LED LED */
 		/** @defgroup BSP_DEVICE_LCD LCD */
 		/** @defgroup BSP_DEVICE_SDIO SD I/O */
+		/** @defgroup BSP_DEVICE_ACODEC Audio CODEC I/O */
 	/**@}BSP_DEVICE*/
 /**@}BSP*/
 

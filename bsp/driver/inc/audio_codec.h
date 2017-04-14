@@ -62,9 +62,9 @@ void acodec_setVolume(uint8_t ui8Volume);
 void acodec_setBassEnhancement(bool bEnable);
 void acodec_setTrebleControl(bool bEnable);
 void acodec_endFilePadding(void);
-void acodec_readMetadata(audio_format_t *pAudioFormat,
-		uint16_t *pui16SampleRate, bool *pbStereo,
-		uint16_t *pui16DecodingTimeInSecond);
+void acodec_getFormat(audio_format_t *pAudioFormat);
+void acodec_getSamplerate(uint16_t *pui16SampleRate, bool *pbStereo);
+void acodec_getDecodingTime(uint16_t *pui16DecodingTimeInSecond);
 
 void acodec_initRecordAPCM(bool bFastSampleRate);
 void acodec_deInitRecordAPCM(void);

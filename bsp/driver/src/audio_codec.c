@@ -276,22 +276,15 @@ void acodec_endFilePadding(void)
 }
 
 /**
- * @brief  Get the audio playing meta data including audio format, sample rate, stereo/mono bit, decoding time
+ * @brief  Get the current processing audio format in the VS1003 device.
  * @param  pAudioFormat: Data pointer to audio format:
  * 			@arg afRiff: RIFF
  * 			@arg afMp3: MP3
  * 			@arg afMidi: MIDI
  * 			@arg afUnknown: Unknown
- * @param  pui16SampleRate: Data pointer to sample rate in Hz unit.
- * @param  pbStereo: Data pointer to Stereo/Mono flag
- * 			@arg true: Stereo
- * 			@arg false: Mono
- * @param  pui16DecodingTimeInSecond: Data pointer to decoding time in second unit.
  * @retval None
  */
-void acodec_readMetadata(audio_format_t *pAudioFormat,
-		uint16_t *pui16SampleRate,
-		bool *pbStereo, uint16_t *pui16DecodingTimeInSecond)
+void acodec_getFormat(audio_format_t *pAudioFormat)
 {
 	uint16_t ui16ReadValue;
 	bsp_acodec_readRegsiter(SCI_HDAT1, &ui16ReadValue);
@@ -312,13 +305,31 @@ void acodec_readMetadata(audio_format_t *pAudioFormat,
 	{
 		*pAudioFormat = afUnknown;
 	}
+}
 
+/**
+ * @brief  Get the current processing audio sample rate and stereo/mono mode in the VS1003 device.
+ * @param  pui16SampleRate: Data pointer to sample rate in Hz unit.
+ * @param  pbStereo: Data pointer to Stereo/Mono flag
+ * 			@arg true: Stereo
+ * 			@arg false: Mono
+ * @retval None
+ */
+void acodec_getSamplerate(uint16_t *pui16SampleRate, bool *pbStereo)
+{
 	/* Get sample rate and Stereo/Mono flag */
 	bsp_acodec_readRegsiter(SCI_AUDATA, pui16SampleRate);
 	*pbStereo = (*pui16SampleRate & 0x0001) ? (true) : (false);
 	*pui16SampleRate &= 0xFFFE;
+}
 
-	/* Get decoding time */
+/**
+ * @brief  Get the current decoding time in the VS1003 device.
+ * @param  pui16DecodingTimeInSecond: Data pointer to decoding time in second unit.
+ * @retval None
+ */
+void acodec_getDecodingTime(uint16_t *pui16DecodingTimeInSecond)
+{
 	bsp_acodec_readRegsiter(SCI_DECODE_TIME, pui16DecodingTimeInSecond);
 }
 

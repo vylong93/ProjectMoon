@@ -457,6 +457,51 @@ bool bsp_acodec_sendData(const uint8_t *pui8Buffer, uint32_t ui32Size)
 	return true;
 }
 
+/**
+ * @brief  Send a bunk of repeated data byte to VS1003 device.
+ * @param  ui8DataByte: Transmit repeated data value.
+ * @param  ui32Size: Transmit data size in byte.
+ * @retval bool: Status of transmission
+ *			@arg true: succeeded
+ *			@arg false: failed
+ */
+bool bsp_acodec_sendDataRepeatedly(uint8_t ui8DataByte, uint32_t ui32Size)
+{
+	VS10xx_AWAIT_DATA_REQUEST();
+
+	/* SDI select low */
+	VS10xx_SDI_ACTIVATE();
+
+	uint32_t ui32ChunkLength;
+	while (ui32Size)
+	{
+		ui32ChunkLength =
+				(ui32Size < VS10xx_CHUNK_SIZE) ?
+						(ui32Size) : (VS10xx_CHUNK_SIZE);
+
+		/* Sync every VS1003_CHUNK_SIZE */
+		VS10xx_AWAIT_DATA_REQUEST();
+
+		/* Transfer data */
+		HAL_StatusTypeDef status = HAL_SPI_Transmit(&spihandle_vs10xx,
+				&ui8DataByte, ui32ChunkLength, SPI2x_TIMEOUT_MAX);
+		/* Check the communication status */
+		if (HAL_OK != status)
+		{
+			/* Execute user timeout callback */
+			SPI2x_Error();
+			VS10xx_SCI_DEACTIVATE();
+			return false;
+		}
+
+		ui32Size -= ui32ChunkLength;
+	}
+
+	/* SDI select high */
+	VS10xx_SDI_DEACTIVATE();
+	return true;
+}
+
 /**@}BSP_DEVICE_ACODEC_PRIVATE*/
 /**@}BSP_DEVICE_ACODEC*/
 /********************** (TM) PnL - Programming and Leverage ****END OF FILE****/

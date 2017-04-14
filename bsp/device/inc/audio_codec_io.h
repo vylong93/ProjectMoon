@@ -42,6 +42,8 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define bsp_acodec_delay_ms(x) bsp_delay_ms(x) /*!< Wrapper BSP API */
+
 /* Exported functions --------------------------------------------------------*/
 bool bsp_acodec_init(void);
 void bsp_acodec_reset(void);

@@ -63,6 +63,7 @@
 	 */
 		/** @defgroup BSP_DRV_DISP Display */
 		/** @defgroup BSP_DRV_SD SD */
+		/** @defgroup BSP_DRV_ACODEC Audio CODEC */
 	/**@}BSP_DRV*/
 
 	/** @defgroup BSP_DEVICE Device-Peripheral

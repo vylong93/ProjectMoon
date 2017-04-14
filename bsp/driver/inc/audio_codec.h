@@ -40,9 +40,35 @@
 #include "audio_codec_io.h"
 
 /* Exported types ------------------------------------------------------------*/
+/**
+ * @typedef audio_format_t
+ * This type define the audio format supported by the VS1003 device.
+ */
+typedef enum
+{
+	afUnknown = 0, /*!< Unknown audio format */
+	afRiff, /*!< RIFF audio format */
+	afMp3, /*!< MP3 audio format */
+	afMidi, /*!< MIDI audio format */
+} audio_format_t;
+
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
+bool acodec_init(void);
+void acodec_reset(void);
+void acodec_shutdown(void);
+void acodec_setVolume(uint8_t ui8Volume);
+void acodec_setBassEnhancement(bool bEnable);
+void acodec_setTrebleControl(bool bEnable);
+void acodec_endFilePadding(void);
+void acodec_readMetadata(audio_format_t *pAudioFormat,
+		uint16_t *pui16SampleRate, bool *pbStereo,
+		uint16_t *pui16DecodingTimeInSecond);
+
+void acodec_initRecordAPCM(bool bFastSampleRate);
+void acodec_deInitRecordAPCM(void);
+void acodec_readRecordBlock(uint8_t *pui8OutputBuffer);
 
 /**@}BSP_DRV_ACODEC*/
 #endif /* AUDIO_CODEC_H_ */

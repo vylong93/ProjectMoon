@@ -42,7 +42,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 #define pgmReadByte(addr) (*(const unsigned char *)(addr)) /*!< Return byte data in the char pointer */
-#define NUMBER_OF_CHARACTER	(8) /*!< Number of character supported in print number function. Avoid to use dynamic memory to increase performance. */
+#define NUMBER_OF_CHARACTER	(10) /*!< Number of character supported in print number function. Avoid to use dynamic memory to increase performance. */
 
 /* Private variables ---------------------------------------------------------*/
 int32_t g_i32CursorX = 0;

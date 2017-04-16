@@ -521,7 +521,15 @@ unmount:
  */
 void test_Audio(void)
 {
+	/* Mount FS */
+	if (f_mount(&g_fatfsSDCard, (TCHAR const*) g_pcFsMountPoint, 0) != FR_OK)
+	{
+		text_putString("Can not mount file system!\n", FAST);
+		return;
+	}
+
 	/* Audio CODEC driver testing */
+	acodec_setVolume(0x24);
 	int i;
 	for (i = 0; i < 3; i++)
 	{
@@ -529,14 +537,23 @@ void test_Audio(void)
 		acodec_sendData(pcHelloMP3, sizeof(pcHelloMP3));
 		text_putString("Hello! ", FAST);
 		acodec_endFilePadding();
+		acodec_delay_ms(1000);
 	}
 
 	/* Audio library testing */
-	audio_playFileBlocking("MUSIC/NhuNgayHomQua.mp3");
-	acodec_endFilePadding();
-
 	audio_playFileBlocking("MUSIC/Soft-Ambient-3.mp3");
 	acodec_endFilePadding();
+	acodec_delay_ms(1000);
+
+	audio_playFileBlocking("MUSIC/NhuNgayHomQua.mp3");
+	acodec_endFilePadding();
+	acodec_delay_ms(1000);
+
+	/* Unmount FS */
+	if (f_mount(NULL, (TCHAR const*) g_pcFsMountPoint, 0) != FR_OK)
+	{
+		text_putString("Can not unmount file system!\n", FAST);
+	}
 }
 
 #endif
@@ -560,6 +577,11 @@ int main(void)
 	bsp_led_init(LED_RED);
 
 	if (!graphic_init())
+	{
+		goto error;
+	}
+
+	if (!audio_init())
 	{
 		goto error;
 	}

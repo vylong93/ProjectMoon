@@ -295,6 +295,17 @@ void text_printString(const char *pcString)
 }
 
 /**
+ * @brief  Print a string to the display at current cursor position with newline.
+ * @param  pcString: Pointer to a character array in ASCII code without newline character.
+ * @retval None
+ */
+void text_printLine(const char *pcString)
+{
+	text_printString(pcString);
+	text_write('\n');
+}
+
+/**
  * @brief  Print a number in ASCII format to the display at current cursor position.
  * @param  ui32Value: The target integer value need to be printed.
  * @retval None
@@ -340,6 +351,22 @@ void text_putString(const char *pcString, text_speed_t speed)
 		graphic_render();
 		graphic_delay_ms(speed);
 	}
+}
+
+/**
+ * @brief  Print character by character of a string at current cursor position with newline at the end.
+ * @param  pcString: Pointer to a character array in ASCII code.
+ * @param  speed: Output text speed specification.
+ *          This parameter can be one of the following values:
+ *			@arg FAST
+ *			@arg NORMAL
+ *			@arg SLOW
+ * @retval None
+ */
+void text_putLine(const char *pcString, text_speed_t speed)
+{
+	text_putString(pcString, speed);
+	text_write('\n');
 }
 
 /**

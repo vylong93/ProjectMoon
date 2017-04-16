@@ -71,8 +71,10 @@ void text_setTextColor(pixel_color_t colorForeground,
 		pixel_color_t colorBackground);
 void text_setWrapText(bool bWrapText);
 void text_printString(const char *pcString);
+void text_printLine(const char *pcString);
 void text_printNumber(uint32_t ui32Value);
 void text_putString(const char *pcString, text_speed_t speed);
+void text_putLine(const char *pcString, text_speed_t speed);
 
 void text_showTrademarkAnimation(void);
 

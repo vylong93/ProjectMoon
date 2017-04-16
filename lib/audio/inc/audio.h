@@ -40,11 +40,23 @@
 #include "audio_codec.h"
 
 /* Exported types ------------------------------------------------------------*/
+/**
+ * @typedef record_rate_t
+ * This type define the target sample rate for recording.
+ */
+typedef enum
+{
+	REC_8KHz = 0, /*!< Sample Rate, 0x3e80 = 16.0kHz, Average Bytes Per Second, 0x1fae for 16.0kHz */
+	REC_16KHz = 1, /*!< Sample Rate, 0x1f40 = 8.0kHz, Average Bytes Per Second, 0x0fd7 for 8.0kHz */
+} record_rate_t;
+
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 bool audio_init(void);
 bool audio_playFileBlocking(const char *pcFileName);
+bool audio_recordFileBlocking(const char *pcFileName, uint32_t ui32PeriodSecond,
+		record_rate_t recordRate);
 
 /**@}LIB_AUDIO*/
 #endif /* AUDIO_H_ */

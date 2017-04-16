@@ -169,12 +169,12 @@ bool audio_playFileBlocking(const char *pcFileName)
 #ifdef REPORT_ON_SCREEN
 	uint32_t ui32CurrentPos = 0;
 	uint32_t ui32NextReportPos = 0;
-#endif
 
 	graphic_clearRenderBuffer();
 	text_setCursor(0, 0);
 	text_setWrapText(false);
 	text_putLine(pcFileName, FAST);
+#endif
 
 	FIL file;
 	if (f_open(&file, pcFileName, FA_READ) != FR_OK)

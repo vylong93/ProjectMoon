@@ -54,6 +54,7 @@ typedef enum
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define	acodec_delay_ms(x)		bsp_acodec_delay_ms(x) /*!< Wrapper Audio CODEC IO API */
 #define acodec_isDeviceBusy()	bsp_acodec_isDeviceBusy() /*!< API wrapper: check if current device is busy or not */
 #define acodec_sendData(pui8Buffer, ui32Size)	bsp_acodec_sendData(pui8Buffer, ui32Size) /*!< API wrapper: send a bunk of data to device */
 

@@ -43,6 +43,7 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
+bool audio_init(void);
 bool audio_playFileBlocking(const char *pcFileName);
 
 /**@}LIB_AUDIO*/

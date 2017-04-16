@@ -142,6 +142,22 @@ static void audio_renderStatus(uint32_t ui32CurrentPos,
 
 /* Exported functions prototype ----------------------------------------------*/
 /**
+ * @brief  Initialize the audio CODEC driver.
+ * @retval bool: Status of initialization
+ *			@arg true: succeeded
+ *			@arg false: failed
+ */
+bool audio_init(void)
+{
+	/* Enable the audio CODEC driver */
+	if (!acodec_init())
+	{
+		return false;
+	}
+	return true;
+}
+
+/**
  * @brief  Play the audio file in file system. Current supported *.mp3 and *.wav.
  * @param  pcFileName: string of the audio file to play.
  * @retval bool: process status

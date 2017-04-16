@@ -38,6 +38,8 @@
 /** @defgroup LIB Library
  * @{
  */
+	/** @defgroup LIB_AUDIO Audio */
+
 	/** @defgroup LIB_GFX Graphic
 	 * @{
 	 */

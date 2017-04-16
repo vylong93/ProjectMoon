@@ -52,6 +52,10 @@ static bool g_bNeedData = true;
 /* Private functions declaration ---------------------------------------------*/
 static bool audio_readSongData(FIL *pFile, uint8_t *pui8DestBuffer,
 		uint32_t ui32ReadSize);
+#ifdef REPORT_ON_SCREEN
+static void audio_renderStatus(uint32_t ui32CurrentPos,
+		uint32_t *pui32NextReportPos);
+#endif
 
 /* Private function prototypes -----------------------------------------------*/
 /**
@@ -76,6 +80,66 @@ static bool audio_readSongData(FIL *pFile, uint8_t *pui8DestBuffer,
 	return true;
 }
 
+#ifdef REPORT_ON_SCREEN
+/**
+ * @brief  Render current audio format, sample rate, channel, decoded time, processed data
+ * @param  ui32CurrentPos: current processed data position in byte unit.
+ * @param  pui32NextReportPos: next processing data position storage pointer.
+ * @retval None
+ */
+static void audio_renderStatus(uint32_t ui32CurrentPos,
+		uint32_t *pui32NextReportPos)
+{
+#define REPORT_INTERVAL 		(4096)
+#define REPORT_INTERVAL_MIDI	(512)
+	const char *psNameTable[] =
+	{ "unknown", "RIFF", "MP3", "MIDI", };
+	uint16_t ui16DecodedTime = 0;
+	uint16_t ui16SampleRate = 0;
+	bool bIsStereoMode = false;
+	audio_format_t audioFormat = afUnknown;
+
+	if (ui32CurrentPos >= *pui32NextReportPos)
+	{
+		/* Update report on screen
+		 2nd line: Audio format
+		 3rd line: sample rate - mono/stereo
+		 4th line: decode time
+		 */
+		acodec_getFormat(&audioFormat);
+		acodec_getSamplerate(&ui16SampleRate, &bIsStereoMode);
+		acodec_getDecodingTime(&ui16DecodedTime);
+
+		text_setCursor(0, 8);
+		text_printString("Format: ");
+		text_printString(psNameTable[audioFormat]);
+		text_printString("                   \n");
+
+		text_printNumber(ui16SampleRate);
+		text_printString("Hz - ");
+		text_printString((bIsStereoMode) ? "stereo\n" : "mono\n");
+
+		int ss = ui16DecodedTime % 60;
+		int mm = ui16DecodedTime / 60;
+		text_printNumber(mm / 10);
+		text_printNumber(mm % 10);
+		text_printString(":");
+		text_printNumber(ss / 10);
+		text_printNumber(ss % 10);
+		text_printString(" ");
+
+		text_printNumber(ui32CurrentPos / 1024);
+		text_printString("KB");
+		text_printString("             \n");
+
+		graphic_render();
+		*pui32NextReportPos +=
+				(audioFormat == afMidi || audioFormat == afUnknown) ?
+						REPORT_INTERVAL_MIDI : REPORT_INTERVAL;
+	}
+}
+#endif
+
 /* Exported functions prototype ----------------------------------------------*/
 /**
  * @brief  Play the audio file in file system. Current supported *.mp3 and *.wav.
@@ -87,16 +151,8 @@ static bool audio_readSongData(FIL *pFile, uint8_t *pui8DestBuffer,
 bool audio_playFileBlocking(const char *pcFileName)
 {
 #ifdef REPORT_ON_SCREEN
-#define REPORT_INTERVAL 		(4096)
-#define REPORT_INTERVAL_MIDI	(512)
-	const char *psNameTable[] =
-	{ "unknown", "RIFF", "MP3", "MIDI", };
 	uint32_t ui32CurrentPos = 0;
 	uint32_t ui32NextReportPos = 0;
-	uint16_t ui16DecodedTime = 0;
-	uint16_t ui16SampleRate = 0;
-	bool bIsStereoMode = false;
-	audio_format_t audioFormat = afUnknown;
 #endif
 
 	graphic_clearRenderBuffer();
@@ -131,55 +187,17 @@ bool audio_playFileBlocking(const char *pcFileName)
 					break;
 				}
 				g_bNeedData = false;
+#ifdef REPORT_ON_SCREEN
+				ui32CurrentPos += AUDIO_BUFFER_SIZE;
+				audio_renderStatus(ui32CurrentPos, &ui32NextReportPos);
+#endif
 			}
-
 			/* Test to see just how much we can do before the audio starts to glitch */
 //			bsp_acodec_delay_ms(150); /* audible glitches */
 //			bsp_acodec_delay_ms(135); /* audible glitches */
 //			bsp_acodec_delay_ms(120); /* barely audible glitches */
 //			bsp_acodec_delay_ms(100); /* sound fine ~ 128kbps */
 //			bsp_acodec_delay_ms(20); /* sound fine ~ 320kbps */
-#ifdef REPORT_ON_SCREEN
-			ui32CurrentPos += AUDIO_BUFFER_SIZE;
-			if (ui32CurrentPos >= ui32NextReportPos)
-			{
-				/* Update report on screen
-				 2nd line: Audio format
-				 3rd line: sample rate - mono/stereo
-				 4th line: decode time
-				 */
-				acodec_getFormat(&audioFormat);
-				acodec_getSamplerate(&ui16SampleRate, &bIsStereoMode);
-				acodec_getDecodingTime(&ui16DecodedTime);
-
-				text_setCursor(0, 8);
-				text_printString("Format: ");
-				text_printString(psNameTable[audioFormat]);
-				text_printString("                   \n");
-
-				text_printNumber(ui16SampleRate);
-				text_printString("Hz - ");
-				text_printString((bIsStereoMode) ? "stereo\n" : "mono\n");
-
-				int ss = ui16DecodedTime % 60;
-				int mm = ui16DecodedTime / 60;
-				text_printNumber(mm / 10);
-				text_printNumber(mm % 10);
-				text_printString(":");
-				text_printNumber(ss / 10);
-				text_printNumber(ss % 10);
-				text_printString(" ");
-
-				text_printNumber(ui32CurrentPos / 1024);
-				text_printString("KiB");
-				text_printString("             \n");
-
-				graphic_render();
-				ui32NextReportPos +=
-						(audioFormat == afMidi || audioFormat == afUnknown) ?
-								REPORT_INTERVAL_MIDI : REPORT_INTERVAL;
-			}
-#endif
 		}
 
 		/* This is here in case we haven't had any free time to load new data */
@@ -194,6 +212,10 @@ bool audio_playFileBlocking(const char *pcFileName)
 				break;
 			}
 			g_bNeedData = false;
+#ifdef REPORT_ON_SCREEN
+			ui32CurrentPos += AUDIO_BUFFER_SIZE;
+			audio_renderStatus(ui32CurrentPos, &ui32NextReportPos);
+#endif
 		}
 
 		/* Once DREQ is released (high) we now feed 32 bytes of data to the VS1003 from our SD read buffer */

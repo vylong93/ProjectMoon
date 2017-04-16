@@ -267,6 +267,16 @@ void acodec_setTrebleControl(bool bEnable)
 }
 
 /**
+ * @brief  Send at least 4 zeros between each stream data - 10 for safe and reset decoding time.
+ * @retval None
+ */
+void acodec_initPlaying(void)
+{
+	bsp_acodec_sendDataRepeatedly(0x00, 10);
+	acodec_setDecodingTime(0);
+}
+
+/**
  * @brief  Padding 2048 zeros bytes for EOF. It's recommended for VS1003 device.
  * @retval None
  */

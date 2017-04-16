@@ -54,6 +54,9 @@ typedef enum
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define acodec_isDeviceBusy()	bsp_acodec_isDeviceBusy() /*!< API wrapper: check if current device is busy or not */
+#define acodec_sendData(pui8Buffer, ui32Size)	bsp_acodec_sendData(pui8Buffer, ui32Size) /*!< API wrapper: send a bunk of data to device */
+
 /* Exported functions --------------------------------------------------------*/
 bool acodec_init(void);
 void acodec_reset(void);
@@ -61,6 +64,8 @@ void acodec_shutdown(void);
 void acodec_setVolume(uint8_t ui8Volume);
 void acodec_setBassEnhancement(bool bEnable);
 void acodec_setTrebleControl(bool bEnable);
+
+void acodec_initPlaying(void);
 void acodec_endFilePadding(void);
 void acodec_getFormat(audio_format_t *pAudioFormat);
 void acodec_getSamplerate(uint16_t *pui16SampleRate, bool *pbStereo);

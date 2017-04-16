@@ -204,7 +204,7 @@ bool audio_playFileBlocking(const char *pcFileName)
 #endif
 
 	FIL file;
-	if (f_open(&file, pcFileName, FA_READ) != FR_OK)
+	if (FR_OK != f_open(&file, pcFileName, FA_READ))
 	{
 		return false;
 	}

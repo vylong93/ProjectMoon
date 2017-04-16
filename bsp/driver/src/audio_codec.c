@@ -246,7 +246,7 @@ void acodec_setBassEnhancement(bool bEnable)
 
 /**
  * @brief  Setting the Treble Control of the VS1003 device.
- * @param  bEnableTreble:
+ * @param  bEnable:
  * 			@arg true: 10.5dB treble enhancement at and above 10kHz
  * 			@arg false: disable Treble Control
  * @retval None

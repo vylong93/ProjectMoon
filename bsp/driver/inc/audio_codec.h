@@ -73,8 +73,9 @@ void acodec_getSamplerate(uint16_t *pui16SampleRate, bool *pbStereo);
 void acodec_getDecodingTime(uint16_t *pui16DecodingTimeInSecond);
 
 void acodec_initRecordAPCM(bool bFastSampleRate);
+void acodec_syncToIncomingAudioFrame(void);
 void acodec_deInitRecordAPCM(void);
-void acodec_readRecordBlock(uint8_t *pui8OutputBuffer);
+void acodec_readRecordBlock(uint8_t **ppui8OutputBuffer);
 
 /**@}BSP_DRV_ACODEC*/
 #endif /* AUDIO_CODEC_H_ */

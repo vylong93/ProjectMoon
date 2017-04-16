@@ -396,6 +396,20 @@ void acodec_initRecordAPCM(bool bFastSampleRate)
 }
 
 /**
+ * @brief  Sync to in coming audio frame, lots of data in buffer, wait until buffer level restarts from 0.
+ * @retval None
+ */
+void acodec_syncToIncomingAudioFrame(void)
+{
+	uint16_t ui16ReadValue;
+	do
+	{
+		bsp_acodec_readRegsiter(SCI_RECWORDS, &ui16ReadValue);
+	}
+	while (ui16ReadValue >> 8);
+}
+
+/**
  * @brief  De-activate ADPCM recording mode and recover last playing volume and bass-treble configuration.
  * @retval None
  */
@@ -420,9 +434,9 @@ void acodec_deInitRecordAPCM(void)
  * @param  pui8OutputBuffer: Output data storage pointer.
  * @retval None
  */
-void acodec_readRecordBlock(uint8_t *pui8OutputBuffer)
+void acodec_readRecordBlock(uint8_t **ppui8OutputBuffer)
 {
-	uint8_t *pui8Buffer = pui8OutputBuffer;
+	uint8_t *pui8Buffer = *ppui8OutputBuffer;
 	uint16_t ui16ReadValue;
 
 	/* Wait until 256 bytes available or buffer overflow */
@@ -439,6 +453,7 @@ void acodec_readRecordBlock(uint8_t *pui8OutputBuffer)
 		*pui8Buffer++ = ((ui16ReadValue >> 8) & 0xff);
 		*pui8Buffer++ = (ui16ReadValue & 0xff);
 	}
+	*ppui8OutputBuffer = pui8Buffer;
 }
 
 /**@}BBSP_DRV_ACODEC_PRIVATE*/

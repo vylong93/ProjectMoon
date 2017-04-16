@@ -52,7 +52,7 @@ static uint16_t g_ui16PreviousPlayingVolume = 0x0C0C;
 static uint16_t g_ui16PreviousBassTrebleSetting = 0x0000;
 
 /* Private functions declaration ---------------------------------------------*/
-void acodec_setDecodingTime(uint16_t ui16TimeInSecond);
+static void acodec_setDecodingTime(uint16_t ui16TimeInSecond);
 
 /* Private function prototypes -----------------------------------------------*/
 /**
@@ -61,7 +61,7 @@ void acodec_setDecodingTime(uint16_t ui16TimeInSecond);
  * @note   Need to write twice to change the value.
  * @retval None
  */
-void acodec_setDecodingTime(uint16_t ui16TimeInSecond)
+static void acodec_setDecodingTime(uint16_t ui16TimeInSecond)
 {
 	bsp_acodec_writeRegsiter(SCI_DECODE_TIME, ui16TimeInSecond);
 	bsp_acodec_writeRegsiter(SCI_DECODE_TIME, ui16TimeInSecond);

@@ -58,6 +58,7 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.638195131" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.559909844" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/app/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/audio/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/graphic/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/fatfs/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/bsp/inc}&quot;"/>
@@ -78,6 +79,7 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.938837695" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1547002019" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/app/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/audio/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/graphic/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/fatfs/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/bsp/inc}&quot;"/>
@@ -98,6 +100,7 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.1580047047" name="Cross ARM C++ Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.include.paths.690320686" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/app/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/audio/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/graphic/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/fatfs/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/bsp/inc}&quot;"/>
@@ -234,6 +237,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/bsp/driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/fatfs/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/graphic/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/audio/inc}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.1171695236" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="OS_USE_TRACE_SEMIHOSTING_DEBUG"/>
@@ -256,6 +260,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/bsp/driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/fatfs/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/graphic/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/audio/inc}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.856705961" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="OS_USE_TRACE_SEMIHOSTING_DEBUG"/>
@@ -278,6 +283,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/bsp/driver/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/fatfs/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/graphic/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ProjectMoon/lib/audio/inc}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.defs.349308432" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="OS_USE_TRACE_SEMIHOSTING_DEBUG"/>

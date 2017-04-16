@@ -556,6 +556,52 @@ void test_Audio(void)
 	}
 }
 
+/**
+ * @brief  Test record functions of Audio library APIs.
+ * @note   Expectation:
+ * 			@arg Record in 8KHz in 10 second and playback.
+ * 			@arg Record in 16KHz in 10 second and playback.
+ * @retval None
+ */
+void test_AudioRecord(void)
+{
+	/* Mount FS */
+	if (f_mount(&g_fatfsSDCard, (TCHAR const*) g_pcFsMountPoint, 0) != FR_OK)
+	{
+		text_putString("Can not mount file system!\n", FAST);
+		return;
+	}
+
+	graphic_clearRenderBuffer();
+	text_setCursor(0, 0);
+
+	FRESULT res = f_mkdir("RECORD");
+	if ((res == FR_OK) || (res == FR_EXIST))
+	{
+		/* Record in 8KHz */
+		audio_recordFileBlocking("RECORD/record8kHZ.wav", 10, REC_8KHz);
+		audio_playFileBlocking("RECORD/record8kHZ.wav");
+		acodec_endFilePadding();
+		acodec_delay_ms(1000);
+
+		/* Record in 16KHz */
+		audio_recordFileBlocking("RECORD/record16kHZ.wav", 10, REC_16KHz);
+		audio_playFileBlocking("RECORD/record16kHZ.wav");
+		acodec_endFilePadding();
+		acodec_delay_ms(1000);
+	}
+	else
+	{
+		text_putLine("mkdir failed", FAST);
+	}
+
+	/* Unmount FS */
+	if (f_mount(NULL, (TCHAR const*) g_pcFsMountPoint, 0) != FR_OK)
+	{
+		text_putString("Can not unmount file system!\n", FAST);
+	}
+}
+
 #endif
 /* Private functions ---------------------------------------------------------*/
 
@@ -592,6 +638,7 @@ int main(void)
 	test_TextLibrary();
 	test_FatFileSystem();
 	test_Audio();
+	test_AudioRecord();
 #endif
 
 	while (true)

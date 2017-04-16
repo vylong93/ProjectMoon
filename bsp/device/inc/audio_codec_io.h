@@ -47,6 +47,7 @@
 /* Exported functions --------------------------------------------------------*/
 bool bsp_acodec_init(void);
 void bsp_acodec_reset(void);
+bool bsp_acodec_isDeviceBusy(void);
 bool bsp_acodec_writeRegsiter(uint8_t ui8Address, uint16_t ui16Value);
 bool bsp_acodec_readRegsiter(uint8_t ui8Address, uint16_t *pui16Value);
 bool bsp_acodec_sendData(const uint8_t *pui8Buffer, uint32_t ui32Size);

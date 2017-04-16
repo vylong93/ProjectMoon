@@ -318,6 +318,22 @@ void bsp_acodec_reset(void)
 }
 
 /**
+ * @brief  Check if the data request pin is low state (busy).
+ * 			The DREQ pin/signal is used to signal if VS1003's FIFO is capable of receiving data.
+ * 			If DREQ is high, VS1003 can take at least 32 bytes of SDI data or one SCI command.
+ * 			When these criteria are not met, DREQ is turned low, and the sender should stop transferring new data.
+ * @retval bool: Busy status of the FIFO of the device
+ *			@arg true: busy
+ *			@arg false: available for transmission
+ */
+bool bsp_acodec_isDeviceBusy(void)
+{
+	return (GPIO_PIN_RESET
+			== HAL_GPIO_ReadPin(VS10xx_DREQ_GPIO_PORT, VS10xx_DREQ_PIN)) ?
+			(true) : (false);
+}
+
+/**
  * @brief  Write to VS1003's register.
  * @param  ui8Address: Register's address.
  * @param  ui16Value: Target register's value.

@@ -68,15 +68,15 @@
 /**@}BSP_SPI_PERIPHERALS*/
 
 /* SD Control Interface pins */
-#define SD_CSn_PIN                               GPIO_PIN_8        /* PA.08*/
-#define SD_CSn_GPIO_PORT                         GPIOA
-#define SD_CSn_GPIO_CLK_ENABLE()                 __HAL_RCC_GPIOA_CLK_ENABLE()
-#define SD_CSn_GPIO_CLK_DISABLE()                __HAL_RCC_GPIOA_CLK_DISABLE()
+#define SD_CSn_PIN                               GPIO_PIN_12        /* PB.12*/
+#define SD_CSn_GPIO_PORT                         GPIOB
+#define SD_CSn_GPIO_CLK_ENABLE()                 __HAL_RCC_GPIOB_CLK_ENABLE()
+#define SD_CSn_GPIO_CLK_DISABLE()                __HAL_RCC_GPIOB_CLK_DISABLE()
 #define SD_CSn_ACTIVE()       					HAL_GPIO_WritePin(SD_CSn_GPIO_PORT, SD_CSn_PIN, GPIO_PIN_RESET)
 #define SD_CSn_DEACTIVE()      					HAL_GPIO_WritePin(SD_CSn_GPIO_PORT, SD_CSn_PIN, GPIO_PIN_SET)
 
 /* SD Detect Interface pins */
-#define SD_DETECT_PIN                           GPIO_PIN_9 /* PA.09 */
+#define SD_DETECT_PIN                           GPIO_PIN_8 /* PA.08 */
 #define SD_DETECT_GPIO_PORT                     GPIOA
 #define SD_DETECT_GPIO_CLK_ENABLE()             __HAL_RCC_GPIOA_CLK_ENABLE()
 #define SD_DETECT_GPIO_CLK_DISABLE()            __HAL_RCC_GPIOA_CLK_DISABLE()

@@ -77,6 +77,8 @@
 		/** @defgroup BSP_DEVICE_ACODEC Audio CODEC I/O */
 		/** @defgroup BSP_DEVICE_BUTTON Button */
 	/**@}BSP_DEVICE*/
+
+	/** @defgroup BSP_INT_PRIORITY Interrup priority */
 /**@}BSP*/
 
 /**

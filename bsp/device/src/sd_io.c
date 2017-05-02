@@ -85,7 +85,7 @@
 /** @addtogroup BSP_INT_PRIORITY
  * @{
  */
-#define SD_DETECT_EXTI_IRQPriority	(15)
+#define SD_DETECT_EXTI_IRQ_PRIORIY	(15)
 /**@}BSP_INT_PRIORITY*/
 
 /* Constant value for the SD device */
@@ -218,7 +218,7 @@ bool bsp_sdio_init(void)
 	HAL_GPIO_Init(SD_DETECT_GPIO_PORT, &GPIO_InitStruct);
 
 	/* Enable and set SD EXTI Interrupt to the lowest priority */
-	HAL_NVIC_SetPriority(SD_DETECT_EXTI_IRQn, SD_DETECT_EXTI_IRQPriority, 0 /* UNUSED */);
+	HAL_NVIC_SetPriority(SD_DETECT_EXTI_IRQn, SD_DETECT_EXTI_IRQ_PRIORIY, 0 /* UNUSED */);
 	HAL_NVIC_EnableIRQ(SD_DETECT_EXTI_IRQn);
 
 	/* Put the SD device into SPI mode */

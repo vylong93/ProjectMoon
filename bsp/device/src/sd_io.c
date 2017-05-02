@@ -82,6 +82,12 @@
 #define SD_DETECT_GPIO_CLK_DISABLE()            __HAL_RCC_GPIOA_CLK_DISABLE()
 #define SD_DETECT_EXTI_IRQn                     EXTI0_IRQn
 
+/** @addtogroup BSP_INT_PRIORITY
+ * @{
+ */
+#define SD_DETECT_EXTI_IRQPriority	(15)
+/**@}BSP_INT_PRIORITY*/
+
 /* Constant value for the SD device */
 #define SD_COMMAND_PACKET_SIZE		(6) /*!< SPI command packet size for the SD device: 1 byte CMD, 4 byte ARG, 1 byte CRC */
 #define SD_COMMAND_PREFIX			(0x40) /*!< SPI command prefix: 0b01xx.xxxx */
@@ -212,7 +218,7 @@ bool bsp_sdio_init(void)
 	HAL_GPIO_Init(SD_DETECT_GPIO_PORT, &GPIO_InitStruct);
 
 	/* Enable and set SD EXTI Interrupt to the lowest priority */
-	HAL_NVIC_SetPriority(SD_DETECT_EXTI_IRQn, 0x0F, 0);
+	HAL_NVIC_SetPriority(SD_DETECT_EXTI_IRQn, SD_DETECT_EXTI_IRQPriority, 0 /* UNUSED */);
 	HAL_NVIC_EnableIRQ(SD_DETECT_EXTI_IRQn);
 
 	/* Put the SD device into SPI mode */

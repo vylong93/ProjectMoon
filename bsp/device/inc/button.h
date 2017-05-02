@@ -40,9 +40,21 @@
 #include "stm32f1xx_bsp.h"
 
 /* Exported types ------------------------------------------------------------*/
+/**
+ * @struct _button_callback_t
+ * This type define the button callback structure.
+ */
+typedef struct _button_callback_t
+{
+	void (*action)(void); /*!< button callback */
+} button_callback_t;
+
 /* Exported constants --------------------------------------------------------*/
+#define BUTTONn		(9)	/*!< Number of supported button on board */
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
+bool button_configIRQHandler(button_callback_t *pbuttonCallbackArray);
 
 /**@}BSP_DEVICE_BUTTON*/
 #endif /* BUTTON_H_ */

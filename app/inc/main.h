@@ -113,6 +113,7 @@
 #include "ff.h"				/* FatFS APIs */
 #include "audio_codec.h"	/* BSP_DRV_ACODEC APIs */
 #include "audio.h"			/* LIB_AUDIO APIs */
+#include "button.h"			/* BSP_DEVICE_BUTTON APIs */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

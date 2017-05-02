@@ -602,6 +602,63 @@ void test_AudioRecord(void)
 	}
 }
 
+static volatile int32_t g_i32ButtonPressed = -1;
+
+void _test_buttonRecStop(void) { text_putString("R", FAST); g_i32ButtonPressed = 2; }
+void _test_buttonVolMinus(void) { text_putString("-", FAST); g_i32ButtonPressed = 3; }
+void _test_buttonVolPlus(void) { text_putString("+", FAST); g_i32ButtonPressed = 4; }
+void _test_buttonBass(void) { text_putString(".", FAST); g_i32ButtonPressed = 5; }
+void _test_buttonNext(void) { text_putString(">", FAST); g_i32ButtonPressed = 1; }
+void _test_buttonPrevious(void) { text_putString("<", FAST); g_i32ButtonPressed = 6; }
+void _test_buttonPlayPause(void) { text_putString("P", FAST); g_i32ButtonPressed = 0; }
+void _test_buttonZap(void) { text_putString("z", FAST); g_i32ButtonPressed = 8; }
+void _test_buttonHome(void) { text_putString("h", FAST); g_i32ButtonPressed = 7; }
+
+/**
+ * @brief  Test button driver APIs.
+ * @note   Expectation:
+ *      @arg Pressed each button show up the corresponding number on LCD.
+ * @retval None
+ */
+void test_ButtonDriver(void)
+{
+	const char *pcButtonName[] = /* Must be same order with the function mapping */
+	{ "PLAY", "NEXT", "RECORD", "VOL-", "VOL+", "BASS", "PREVIOUS", "HOME", "ZAP" };
+
+	/* Function mapping */
+	button_callback_t pButtonCallbackArray[BUTTONn] =
+	{
+	{ _test_buttonPlayPause }, /* Button 0 - PB0 */
+	{ _test_buttonNext }, /* Button 1 - PA1 */
+	{ _test_buttonRecStop }, /* Button 2 - PB3 */
+	{ _test_buttonVolMinus }, /* Button 3 - PB4 */
+	{ _test_buttonVolPlus }, /* Button 4 - PB5 */
+	{ _test_buttonBass }, /* Button 5 - PB9 */
+	{ _test_buttonPrevious }, /* Button 6 - PB10 */
+	{ _test_buttonHome }, /* Button 7 - PB11 */
+	{ _test_buttonZap } /* Button 8 - PA15 */
+	};
+
+	button_configIRQHandler(pButtonCallbackArray);
+
+	text_setTextSize(1);
+	text_setWrapText(true);
+
+	int32_t g_i32ExpectedButtonPressed = 0;
+	for (; g_i32ExpectedButtonPressed < BUTTONn; g_i32ExpectedButtonPressed++)
+	{
+		graphic_clearRenderBuffer();
+		text_setCursor(0, 0);
+		text_printLine("Please press button:");
+		text_putString(pcButtonName[g_i32ExpectedButtonPressed], FAST);
+		text_printString(": ");
+		while (g_i32ButtonPressed != g_i32ExpectedButtonPressed);
+		text_printString("\n        GOOD");
+		graphic_render();
+		bsp_delay_ms(200);
+	}
+}
+
 #endif
 /* Private functions ---------------------------------------------------------*/
 
@@ -636,6 +693,7 @@ int main(void)
 	test_DisplayDriver();
 	test_GraphicLibrary();
 	test_TextLibrary();
+	test_ButtonDriver();
 	test_FatFileSystem();
 	test_Audio();
 	test_AudioRecord();

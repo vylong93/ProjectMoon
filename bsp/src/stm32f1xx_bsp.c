@@ -124,6 +124,9 @@ bool bsp_init(void)
 	/* Configure the system clock to 64 MHz */
 	SystemClock_Config();
 
+	/* Ensure to use all bits for preemption priority and no bit for sub-priority */
+	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+
 	return true;
 }
 

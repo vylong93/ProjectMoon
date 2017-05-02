@@ -75,6 +75,7 @@
 		/** @defgroup BSP_DEVICE_LCD LCD */
 		/** @defgroup BSP_DEVICE_SDIO SD I/O */
 		/** @defgroup BSP_DEVICE_ACODEC Audio CODEC I/O */
+		/** @defgroup BSP_DEVICE_BUTTON Button */
 	/**@}BSP_DEVICE*/
 /**@}BSP*/
 

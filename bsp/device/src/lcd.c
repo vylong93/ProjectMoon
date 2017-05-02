@@ -70,6 +70,14 @@
 #define I2Cx_DMA_RX_IRQn                DMA1_Channel7_IRQn
 #define I2Cx_DMA_TX_IRQHandler          DMA1_Channel6_IRQHandler
 #define I2Cx_DMA_RX_IRQHandler          DMA1_Channel7_IRQHandler
+
+/** @addtogroup BSP_INT_PRIORITY
+ * @{
+ */
+#define I2Cx_DMA_TX_IRQPriority			(1)
+#define I2Cx_DMA_RX_IRQPriority			(0)
+/**@}BSP_INT_PRIORITY*/
+
 /**@}BSP-LCD-PERIPHERALS*/
 
 /* Definition for LCD reset Pin */
@@ -167,11 +175,11 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 
 	/*##-4- Configure the NVIC for DMA #########################################*/
 	/* NVIC configuration for DMA transfer complete interrupt (I2Cx_TX) */
-	HAL_NVIC_SetPriority(I2Cx_DMA_TX_IRQn, 0, 1);
+	HAL_NVIC_SetPriority(I2Cx_DMA_TX_IRQn, I2Cx_DMA_TX_IRQPriority, 0 /* UNUSED */);
 	HAL_NVIC_EnableIRQ(I2Cx_DMA_TX_IRQn);
 
 	/* NVIC configuration for DMA transfer complete interrupt (I2Cx_RX) */
-	HAL_NVIC_SetPriority(I2Cx_DMA_RX_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(I2Cx_DMA_RX_IRQn, I2Cx_DMA_RX_IRQPriority, 0 /* UNUSED */);
 	HAL_NVIC_EnableIRQ(I2Cx_DMA_RX_IRQn);
 }
 

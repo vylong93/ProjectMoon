@@ -431,7 +431,7 @@ void acodec_deInitRecordAPCM(void)
 
 /**
  * @brief  Read record data in 256 bytes / block.
- * @param  pui8OutputBuffer: Output data storage pointer.
+ * @param  ppui8OutputBuffer: Output data storage pointer.
  * @retval None
  */
 void acodec_readRecordBlock(uint8_t **ppui8OutputBuffer)

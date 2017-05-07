@@ -58,6 +58,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 /** @addtogroup STM32F1xx_HAL_Driver
   * @{
   */
@@ -2208,4 +2211,5 @@ static HAL_StatusTypeDef USB_CoreReset(USB_OTG_GlobalTypeDef *USBx)
 /**
   * @}
   */
+#pragma GCC diagnostic pop
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

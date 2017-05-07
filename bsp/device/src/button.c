@@ -164,7 +164,6 @@ void EXTI1_IRQHandler(void)
 
 /**
  * @brief  This function handles external line 3 interrupt request.
- * @param  None
  * @retval None
  */
 void EXTI3_IRQHandler(void)
@@ -182,7 +181,6 @@ void EXTI3_IRQHandler(void)
 
 /**
  * @brief  This function handles external line 4 interrupt request.
- * @param  None
  * @retval None
  */
 void EXTI4_IRQHandler(void)
@@ -200,7 +198,6 @@ void EXTI4_IRQHandler(void)
 
 /**
  * @brief  This function handles external line 5-9 interrupt request.
- * @param  None
  * @retval None
  */
 void EXTI9_5_IRQHandler(void)
@@ -226,7 +223,6 @@ void EXTI9_5_IRQHandler(void)
 
 /**
  * @brief  This function handles external line 10_15 interrupt request.
- * @param  None
  * @retval None
  */
 void EXTI15_10_IRQHandler(void)

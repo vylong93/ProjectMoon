@@ -890,6 +890,8 @@ EXCLUDE_SYMLINKS       = NO
 # exclude all test directories for example use the pattern */test/*
 
 EXCLUDE_PATTERNS       = */system/*
+EXCLUDE_PATTERNS       += */lib/usb/Core/*
+EXCLUDE_PATTERNS       += */lib/usb/Class/*
 EXCLUDE_PATTERNS       += */Debug/*
 EXCLUDE_PATTERNS       += */published/*
 

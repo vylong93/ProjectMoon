@@ -55,6 +55,8 @@
 			/** @defgroup LIB_FATFS_DISKIO_SD SD Disk I/O */
 		/**@}LIB_FATFS_DISKIO*/
 	/**@}LIB_FATFS*/
+
+	/** @defgroup LIB_USBD USB Mass Storage Device */
 /**@}LIB*/
 
 /** @defgroup BSP Board Support Package

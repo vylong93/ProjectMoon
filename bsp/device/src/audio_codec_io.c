@@ -47,8 +47,8 @@
  */
 typedef enum
 {
-	CLOCK_SLOW = SPI_BAUDRATEPRESCALER_64, /*!< 1MHz */
-	CLOCK_FAST = SPI_BAUDRATEPRESCALER_16 /*!< 4MHz */
+	CLOCK_SLOW = SPI_BAUDRATEPRESCALER_32, /*!< 48 MHz / 32 = 1.5 MHz */
+	CLOCK_FAST = SPI_BAUDRATEPRESCALER_16 /*!< 48 MHz / 16 = 3.0 MHz */
 } spi_clockspeed_t;
 /**@}BSP_SPI1_PERIPHERALS*/
 
@@ -163,9 +163,11 @@ static bool SPI2x_Init(spi_clockspeed_t clockSpeed)
 	HAL_SPI_DeInit(&spihandle_vs10xx);
 
 	/* SPI baudrate is set to 1 MHz or 4MHz depend on the input argument,
-	 to verify these constraints:
+	 to verify these constraints: (
 	 - VS1003 SPI interface max baudrate is CLKI/7 for SCI read and CLKI/4 for SCI and SDI write
-	 - CLKI = 12.288 MHz (XTAL) x Clock Multiplier (1.0x -> 4.5x) SC_MULT bits in SCI_CLOCKF reg
+	 - CLKI = 12.288 MHz (XTAL) x Clock Multiplier (1.0x -> 4.5x) SC_MULT bits in SCI_CLOCKF reg.
+	 -- If CLKI = 12.288 * 3.0 = 36.864 MHz -> Maximum READ speed: 5.266MHz and maximum WRITE speed: 9.216MHz
+	 --- CLOCK_FAST = 4.5MHz < 5.266MHz < 9.216MHz is acceptable value.
 	 */
 	spihandle_vs10xx.Init.BaudRatePrescaler = clockSpeed;
 	spihandle_vs10xx.Init.Direction = SPI_DIRECTION_2LINES;

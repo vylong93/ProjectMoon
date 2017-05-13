@@ -676,8 +676,12 @@ int main(void)
 		goto error;
 	}
 
-	/* Enable the LED0 */
+	/* Enable the LED0 and LED1 */
 	bsp_led_init(LED_RED);
+	bsp_led_init(LED_RED1);
+
+	/* Enable Mass Storage Device Mode through USB */
+	usbd_startMassStorageDeviceMode();
 
 	if (!graphic_init())
 	{

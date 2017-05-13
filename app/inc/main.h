@@ -116,6 +116,7 @@
 #include "audio_codec.h"	/* BSP_DRV_ACODEC APIs */
 #include "audio.h"			/* LIB_AUDIO APIs */
 #include "button.h"			/* BSP_DEVICE_BUTTON APIs */
+#include "usbd.h"			/* LIB_USBD API */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

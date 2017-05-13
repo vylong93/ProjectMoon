@@ -41,10 +41,10 @@
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
-#define LEDn                             1	/*!< Number of supported LED on board */
+#define LEDn                             2	/*!< Number of supported LED on board */
 
-#define LEDx_GPIO_CLK_ENABLE(__INDEX__)   do { if((__INDEX__) == 0) LED0_GPIO_CLK_ENABLE();} while(0)
-#define LEDx_GPIO_CLK_DISABLE(__INDEX__)  (((__INDEX__) == 0) ? LED0_GPIO_CLK_DISABLE() : 0)
+#define LEDx_GPIO_CLK_ENABLE(__INDEX__)   do { if((__INDEX__) == 0) LED0_GPIO_CLK_ENABLE(); else if ((__INDEX__) == 1) LED1_GPIO_CLK_ENABLE();} while(0)
+#define LEDx_GPIO_CLK_DISABLE(__INDEX__)  (((__INDEX__) == 0) ? LED0_GPIO_CLK_DISABLE() : (((__INDEX__) == 1) ? LED1_GPIO_CLK_DISABLE : 0))
 
 /** @defgroup BSP-LED0 LED0-RED pin constant
  * @{
@@ -57,10 +57,22 @@
  * @} BSP-LED0
  */
 
+/** @defgroup BSP-LED1 LED1-RED pin constant
+ * @{
+ */
+#define LED1_PIN                         GPIO_PIN_9
+#define LED1_GPIO_PORT                   GPIOA
+#define LED1_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOA_CLK_ENABLE()
+#define LED1_GPIO_CLK_DISABLE()          __HAL_RCC_GPIOA_CLK_DISABLE()
+/**
+ * @} BSP-LED1
+ */
+
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-GPIO_TypeDef* LED_PORT[LEDn] = { LED0_GPIO_PORT };	/*!< LED's port array */
-const uint16_t LED_PIN[LEDn] = { LED0_PIN }; /*!< LED's pin array */
+GPIO_TypeDef* LED_PORT[LEDn] = { LED0_GPIO_PORT, LED1_GPIO_PORT };	/*!< LED's port array */
+const uint16_t LED_PIN[LEDn] = { LED0_PIN, LED1_PIN }; /*!< LED's pin array */
 
 /* Private functions declaration ---------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/

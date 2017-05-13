@@ -48,7 +48,9 @@
 typedef enum
 {
 	LED0 = 0,		/*!< Enum value LED0. */
-	LED_RED = LED0	/*!< Enum value LED_RED. */
+	LED1 = 1,		/*!< Enum value LED1. */
+	LED_RED = LED0,	/*!< Enum value LED_RED. */
+	LED_RED1 = LED1	/*!< Enum value LED_RED1. */
 } Led_TypeDef;
 
 /* Exported constants --------------------------------------------------------*/

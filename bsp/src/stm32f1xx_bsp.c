@@ -47,12 +47,12 @@ void SystemClock_Config(void);
  * @brief  System Clock Configuration.
  *         The system Clock is configured as follow:
  *         @arg System Clock source            = PLL (HSI)
- *         @arg SYSCLK(Hz)                     = 64000000
- *         @arg HCLK(Hz)                       = 64000000
+ *         @arg SYSCLK(Hz)                     = 48000000
+ *         @arg HCLK(Hz)                       = 48000000
  *         @arg AHB Prescaler                  = 1
  *         @arg APB1 Prescaler                 = 2
  *         @arg APB2 Prescaler                 = 1
- *         @arg PLLMUL                         = 16
+ *         @arg PLLMUL                         = 6
  *         @arg Flash Latency(WS)              = 2
  * @retval None
  */
@@ -62,35 +62,45 @@ void SystemClock_Config(void)
 	{ 0 };
 	RCC_OscInitTypeDef oscinitstruct =
 	{ 0 };
+	RCC_PeriphCLKInitTypeDef periphinitstruct =
+	{ 0 };
 
 	/* Configure PLL ------------------------------------------------------*/
-	/* PLL configuration: PLLCLK = (HSI / 2) * PLLMUL = (8 / 2) * 16 = 64 MHz */
-	/* PREDIV1 configuration: PREDIV1CLK = PLLCLK / HSEPredivValue = 64 / 1 = 64 MHz */
-	/* Enable HSI and activate PLL with HSi_DIV2 as source */
-	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-	oscinitstruct.HSEState = RCC_HSE_OFF;
+	/* PREDIV1 configuration: PREDIV1CLK = HSE / HSEPredivValue = 8 / 1 = 8 MHz */
+	/* PLL configuration: PLLCLK = PREDIV1CLK * PLLMUL = 8 * 6 = 48 MHz */
+	/* Enable HSE and activate PLL with HSE as source */
+	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	oscinitstruct.HSIState = RCC_HSI_OFF;
 	oscinitstruct.LSEState = RCC_LSE_OFF;
-	oscinitstruct.HSIState = RCC_HSI_ON;
-	oscinitstruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+	oscinitstruct.HSEState = RCC_HSE_ON;
 	oscinitstruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
 	oscinitstruct.PLL.PLLState = RCC_PLL_ON;
-	oscinitstruct.PLL.PLLSource = RCC_PLLSOURCE_HSI_DIV2;
-	oscinitstruct.PLL.PLLMUL = RCC_PLL_MUL16;
+	oscinitstruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	oscinitstruct.PLL.PLLMUL = RCC_PLL_MUL6;
 	if (HAL_OK != HAL_RCC_OscConfig(&oscinitstruct))
 	{
 		/* Initialization Error */
 		while (true);
 	}
 
-	/* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
-	 clocks dividers */
+	/* Select PLL as system clock source
+	 * and configure the HCLK, PCLK1 and PCLK2 clocks dividers */
 	clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK
 			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
-	clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-	clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1;
-	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2;
+	clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK; /* SYSCLK = PLLCLK = 48 MHz */
+	clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1; /* HCLK = SYSCLK / 1 = 48 MHz  */
+	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2; /* PCLK1 = HCLK / 2 = 24 MHz */
+	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1; /* PCLK2 = HCLK / 1 = 48 MHz */
 	if (HAL_OK != HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2))
+	{
+		/* Initialization Error */
+		while (true);
+	}
+
+	/* Configure USB Clock = PLLCLK / 1 = 48 / 1 = 48 MHz ----------------*/
+	periphinitstruct.PeriphClockSelection = RCC_PERIPHCLK_USB;
+	periphinitstruct.UsbClockSelection = RCC_USBCLKSOURCE_PLL;
+	if (HAL_OK != HAL_RCCEx_PeriphCLKConfig(&periphinitstruct))
 	{
 		/* Initialization Error */
 		while (true);
@@ -121,7 +131,7 @@ bool bsp_init(void)
 	 */
 	HAL_Init();
 
-	/* Configure the system clock to 64 MHz */
+	/* Configure the system clock to 48 MHz */
 	SystemClock_Config();
 
 	/* Ensure to use all bits for preemption priority and no bit for sub-priority */

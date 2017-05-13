@@ -170,13 +170,13 @@ static void SPI_Error(void)
  */
 bool bsp_sdio_init(void)
 {
-	/* SPI baudrate is set to 8 MHz maximum (PCLK2/SPI_BaudRatePrescaler = 64/8 = 8 MHz)
+	/* SPI baudrate is set to 18 MHz maximum (PCLK1 / SPI_BaudRatePrescaler = 24 / 2 = 12 MHz)
 	 to verify these constraints:
 	 - SD card SPI interface max baudrate is 25MHz for write/read
-	 - PCLK2 max frequency is 32 MHz
+	 - PCLK1 max frequency is 36 MHz
 	 */
 	spihandle_sd.Instance = SPIx;
-	spihandle_sd.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+	spihandle_sd.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
 	spihandle_sd.Init.Direction = SPI_DIRECTION_2LINES;
 	spihandle_sd.Init.CLKPhase = SPI_PHASE_1EDGE;
 	spihandle_sd.Init.CLKPolarity = SPI_POLARITY_LOW;

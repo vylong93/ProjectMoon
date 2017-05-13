@@ -66,6 +66,16 @@ typedef enum
 	SD_DATA_OTHER_ERROR = (0xFF)
 } sd_response_t;
 
+/**
+ * @typedef sd_software_status_t
+ * This type define the SD mode.
+ */
+typedef enum
+{
+	SD_NOT_IN_SPI_IDLE = 0, /*!< SD not in SPI mode */
+	SD_IN_SPI_IDLE = 1 /*!< SD already in SPI mode */
+} sd_software_status_t;
+
 /* Private define ------------------------------------------------------------*/
 /**
  * @brief  SD Commands: CMDxx = CMD-number | 0x40
@@ -120,6 +130,7 @@ typedef enum
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 sd_hardware_status_t g_sdStatus = SD_NOT_PRESENT;
+sd_software_status_t g_sdSoftareStatus = SD_NOT_IN_SPI_IDLE;
 
 /* Private functions declaration ---------------------------------------------*/
 static bool sd_goIdleState(void);
@@ -492,22 +503,39 @@ static sd_response_t sd_getDataResponse(void)
  */
 bool sd_init(void)
 {
-	/* Configure IO functionalities for SD pin */
-	bsp_sdio_init();
-
-	/* Check SD card  pin */
-	if (bsp_sdio_isDetected())
+	if (SD_IN_SPI_IDLE == g_sdSoftareStatus)
 	{
-		g_sdStatus = SD_PRESENT;
+		return true;
 	}
 	else
 	{
-		g_sdStatus = SD_NOT_PRESENT;
-		return false;
-	}
+		/* Configure IO functionalities for SD pin */
+		bsp_sdio_init();
 
-	/* SD initialized and set to SPI mode properly */
-	return (sd_goIdleState());
+		/* Check SD card  pin */
+		if (bsp_sdio_isDetected())
+		{
+			g_sdStatus = SD_PRESENT;
+		}
+		else
+		{
+			g_sdStatus = SD_NOT_PRESENT;
+			g_sdSoftareStatus = SD_NOT_IN_SPI_IDLE;
+			return false;
+		}
+
+		/* SD initialized and set to SPI mode properly */
+		if (sd_goIdleState())
+		{
+			g_sdSoftareStatus = SD_IN_SPI_IDLE;
+			return true;
+		}
+		else
+		{
+			g_sdSoftareStatus = SD_NOT_IN_SPI_IDLE;
+			return false;
+		}
+	}
 }
 
 /**

@@ -31,6 +31,9 @@
 #include "usbd_msc_scsi.h"
 #include "usbd_ioreq.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 /** @addtogroup STM32_USB_DEVICE_LIBRARY
   * @{
   */
@@ -404,4 +407,5 @@ void  MSC_BOT_CplClrFeature (USBD_HandleTypeDef  *pdev, uint8_t epnum)
   * @}
   */ 
 
+#pragma GCC diagnostic pop
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

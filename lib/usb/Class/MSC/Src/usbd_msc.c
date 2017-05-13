@@ -43,6 +43,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_msc.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 /** @addtogroup STM32_USB_DEVICE_LIBRARY
   * @{
@@ -606,4 +608,5 @@ uint8_t  USBD_MSC_RegisterStorage  (USBD_HandleTypeDef   *pdev,
   * @}
   */ 
 
+#pragma GCC diagnostic pop
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -28,6 +28,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_core.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 /** @addtogroup STM32_USBD_DEVICE_LIBRARY
 * @{
 */
@@ -561,5 +564,6 @@ USBD_StatusTypeDef USBD_LL_DevDisconnected(USBD_HandleTypeDef  *pdev)
 * @}
 */ 
 
+#pragma GCC diagnostic pop
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

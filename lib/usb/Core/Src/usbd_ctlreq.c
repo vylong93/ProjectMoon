@@ -29,6 +29,8 @@
 #include "usbd_ctlreq.h"
 #include "usbd_ioreq.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 /** @addtogroup STM32_USBD_STATE_DEVICE_LIBRARY
   * @{
@@ -779,4 +781,5 @@ static uint8_t USBD_GetLen(uint8_t *buf)
   * @}
   */ 
 
+#pragma GCC diagnostic pop
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -3,7 +3,7 @@
  * @file        usbd.h
  * @author      Long Dang
  * @version     V0.1
- * @date        02-April-2017
+ * @date        07-May-2017
  * @copyright   LGPLv3
  * @brief       This is the header of the USB Mass Storage Device module.
  ****************************************************************************
@@ -43,6 +43,7 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
+void usbd_startMassStorageDeviceMode(void);
 
 /**@}LIB_USBD*/
 #endif /* USBD_H_ */

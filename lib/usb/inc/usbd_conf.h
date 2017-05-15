@@ -45,6 +45,13 @@ extern "C"
 #include "stm32f1xx_hal.h"
 #include "usbd_def.h"
 
+/** @addtogroup BSP_INT_PRIORITY
+ * @{
+ */
+#define USB_RX_IRQ_PRIORITY                 (10)
+/**@}BSP_INT_PRIORITY*/
+
+
 /** @addtogroup USBD_OTG_DRIVER
  * @{
  */

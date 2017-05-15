@@ -74,8 +74,8 @@
 /** @addtogroup BSP_INT_PRIORITY
  * @{
  */
-#define I2Cx_DMA_TX_IRQ_PRIORITY		(1)
-#define I2Cx_DMA_RX_IRQ_PRIORITY		(0)
+#define I2Cx_DMA_TX_IRQ_PRIORITY		(2)
+#define I2Cx_DMA_RX_IRQ_PRIORITY		(1)
 /**@}BSP_INT_PRIORITY*/
 
 /**@}BSP-LCD-PERIPHERALS*/

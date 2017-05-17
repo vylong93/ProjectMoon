@@ -513,6 +513,87 @@ unmount:
 }
 
 /**
+ * @brief  Benchmark SDIO with FatFS
+ * @note   Expectation: Write and Read speed in KB/s
+ * @retval None
+ */
+void test_BenchmarkReadWriteFile(void)
+{
+#define LOOP_TIMES	(3)
+#define WRITE_TIMES (10240) /* WRITE_TIME x 512 = 5MB */
+#define DUMMY_DATA_BLOCK_SIZE	(512)
+	static uint8_t pui8DummyDataBlock[DUMMY_DATA_BLOCK_SIZE];
+	pui8DummyDataBlock[0] = '1';
+	pui8DummyDataBlock[256] = '2';
+	pui8DummyDataBlock[511] = '3';
+
+	uint32_t ui32Tickstop;
+	uint32_t ui32Tickstart;
+	uint32_t ui32TimeInMs;
+
+	/* Clear screen  */
+	graphic_clearRenderBuffer();
+	graphic_render();
+	text_setWrapText(false);
+	text_setCursor(0, 0);
+	text_setTextSize(1);
+
+	/* Mount */
+	if (f_mount(&g_fatfsSDCard, (TCHAR const*) g_pcFsMountPoint, 0) != FR_OK)
+	{
+		text_putString("mount failed\n", FAST);
+		return;
+	}
+
+	/* Create and Open a new text file object with write access */
+	FIL file;
+	const char *pcFileName = "W-DUM";
+	text_putString("Benchmark: WRITE\n", FAST);
+	if(f_open(&file, (TCHAR *)pcFileName, FA_CREATE_ALWAYS | FA_WRITE) != FR_OK)
+	{
+		text_putString("open failed!!!\n", FAST);
+		goto unmount;
+	}
+
+	/* Stress write */
+	FRESULT res;
+	uint32_t byteswritten;
+	int iTestTimes = LOOP_TIMES;
+	int iWriteTimes;
+	for (; iTestTimes > 0; iTestTimes--)
+	{
+		iWriteTimes = WRITE_TIMES;
+		ui32Tickstart = HAL_GetTick();
+		for (; iWriteTimes > 0; iWriteTimes--)
+		{
+			res = f_write(&file, pui8DummyDataBlock, DUMMY_DATA_BLOCK_SIZE, (void *)&byteswritten);
+			if((byteswritten == 0) || (res != FR_OK))
+			{
+				break;
+			}
+		}
+		ui32Tickstop = HAL_GetTick();
+		ui32TimeInMs = ui32Tickstop - ui32Tickstart;
+		text_printNumber(iTestTimes);
+		text_printString(":");
+		text_printNumber((uint32_t)(((WRITE_TIMES * 512 * 125 /*1000*/) / (128/*1024*/ * ui32TimeInMs))));
+		text_printString("KB/s\n");
+		graphic_render();
+	}
+
+	/* Close file */
+	if (f_close(&file) != FR_OK )
+	{
+		text_putString("close failed\n", FAST);
+		goto unmount;
+	}
+
+unmount:
+	/* Unmount */
+	f_mount(NULL, (TCHAR const*) g_pcFsMountPoint, 0);
+}
+
+/**
  * @brief  Test the Audio CODEC driver and Audio library APIs.
  * @note   Expectation:
  * 			@arg Speak Hello three times and print on LCD every time it speak.
@@ -701,6 +782,7 @@ int main(void)
 	test_FatFileSystem();
 	test_Audio();
 	test_AudioRecord();
+	test_BenchmarkReadWriteFile();
 #endif
 
 	while (true)

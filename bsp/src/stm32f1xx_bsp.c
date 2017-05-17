@@ -67,7 +67,7 @@ void SystemClock_Config(void)
 
 	/* Configure PLL ------------------------------------------------------*/
 	/* PREDIV1 configuration: PREDIV1CLK = HSE / HSEPredivValue = 8 / 1 = 8 MHz */
-	/* PLL configuration: PLLCLK = PREDIV1CLK * PLLMUL = 8 * 6 = 48 MHz */
+	/* PLL configuration: PLLCLK = PREDIV1CLK * PLLMUL = 8 * 9 = 72 MHz */
 	/* Enable HSE and activate PLL with HSE as source */
 	oscinitstruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
 	oscinitstruct.HSIState = RCC_HSI_OFF;
@@ -76,7 +76,7 @@ void SystemClock_Config(void)
 	oscinitstruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
 	oscinitstruct.PLL.PLLState = RCC_PLL_ON;
 	oscinitstruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-	oscinitstruct.PLL.PLLMUL = RCC_PLL_MUL6;
+	oscinitstruct.PLL.PLLMUL = RCC_PLL_MUL9;
 	if (HAL_OK != HAL_RCC_OscConfig(&oscinitstruct))
 	{
 		/* Initialization Error */
@@ -87,19 +87,19 @@ void SystemClock_Config(void)
 	 * and configure the HCLK, PCLK1 and PCLK2 clocks dividers */
 	clkinitstruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK
 			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
-	clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK; /* SYSCLK = PLLCLK = 48 MHz */
-	clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1; /* HCLK = SYSCLK / 1 = 48 MHz  */
-	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2; /* PCLK1 = HCLK / 2 = 24 MHz */
-	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1; /* PCLK2 = HCLK / 1 = 48 MHz */
+	clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK; /* SYSCLK = PLLCLK = 72 MHz */
+	clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1; /* HCLK = SYSCLK / 1 = 72 MHz  */
+	clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2; /* PCLK1 = HCLK / 2 = 36 MHz */
+	clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1; /* PCLK2 = HCLK / 1 = 72 MHz */
 	if (HAL_OK != HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2))
 	{
 		/* Initialization Error */
 		while (true);
 	}
 
-	/* Configure USB Clock = PLLCLK / 1 = 48 / 1 = 48 MHz ----------------*/
+	/* Configure USB Clock = PLLCLK / 1 = 72 / 1.5 = 48 MHz ----------------*/
 	periphinitstruct.PeriphClockSelection = RCC_PERIPHCLK_USB;
-	periphinitstruct.UsbClockSelection = RCC_USBCLKSOURCE_PLL;
+	periphinitstruct.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
 	if (HAL_OK != HAL_RCCEx_PeriphCLKConfig(&periphinitstruct))
 	{
 		/* Initialization Error */

@@ -39,6 +39,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define USE_SPI_DMA
 /* Private macro -------------------------------------------------------------*/
 
 /** @defgroup BSP_SPI_PERIPHERALS SPI2 Hardware communication interface
@@ -47,6 +48,8 @@
 /* Definition for SPIx clock resources */
 #define SPIx                               SPI2
 #define SPIx_CLK_ENABLE()                  __HAL_RCC_SPI2_CLK_ENABLE()
+#define SPIx_CLK_DISABLE()                 __HAL_RCC_SPI2_CLK_DISABLE()
+#define SPIx_DMA_CLK_ENABLE()              __HAL_RCC_DMA1_CLK_ENABLE()
 
 #define SPIx_SCK_GPIO_PORT                 GPIOB             /* PB.13 */
 #define SPIx_SCK_PIN                       GPIO_PIN_13
@@ -58,6 +61,23 @@
 #define SPIx_MISO_MOSI_GPIO_CLK_DISABLE()  __HAL_RCC_GPIOB_CLK_DISABLE()
 #define SPIx_MISO_PIN                      GPIO_PIN_14       /* PB.14 */
 #define SPIx_MOSI_PIN                      GPIO_PIN_15       /* PB.15 */
+
+/* Definition for SPIx's DMA */
+#define SPIx_DMA_INSTANCE_TX               DMA1_Channel5
+#define SPIx_DMA_INSTANCE_RX               DMA1_Channel4
+
+/* Definition for SPIx's NVIC */
+#define SPIx_DMA_TX_IRQn                   DMA1_Channel5_IRQn
+#define SPIx_DMA_RX_IRQn                   DMA1_Channel4_IRQn
+#define SPIx_DMA_TX_IRQHandler             DMA1_Channel5_IRQHandler
+#define SPIx_DMA_RX_IRQHandler             DMA1_Channel4_IRQHandler
+
+/** @addtogroup BSP_INT_PRIORITY
+ * @{
+ */
+#define SPIx_DMA_TX_IRQ_PRIORITY		  (2)
+#define SPIx_DMA_RX_IRQ_PRIORITY		  (1)
+/**@}BSP_INT_PRIORITY*/
 
 /* Maximum Timeout values for flags waiting loops. These timeouts are not based
  on accurate values, they just guarantee that the application will not remain
@@ -119,6 +139,8 @@ static void SPI_MspInit(SPI_HandleTypeDef *hspi)
 	UNUSED(hspi);
 	GPIO_InitTypeDef GPIO_InitStruct =
 	{ 0 };
+	static DMA_HandleTypeDef spihdma_tx;
+	static DMA_HandleTypeDef spihdma_rx;
 
 	/*** Configure the GPIOs ***/
 	/* Enable GPIO clock */
@@ -145,6 +167,55 @@ static void SPI_MspInit(SPI_HandleTypeDef *hspi)
 	/* Enable SPI clock */
 	SPIx_CLK_ENABLE()
 	;
+	/* Enable DMAx clock */
+	SPIx_DMA_CLK_ENABLE()
+	;
+
+	/*##-3- Configure the DMA ##################################################*/
+	/* Configure the DMA handler for Transmission process */
+	spihdma_tx.Instance = SPIx_DMA_INSTANCE_TX;
+	spihdma_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+	spihdma_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+	spihdma_tx.Init.MemInc = DMA_MINC_ENABLE;
+	spihdma_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+	spihdma_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+	spihdma_tx.Init.Mode = DMA_NORMAL;
+	spihdma_tx.Init.Priority = DMA_PRIORITY_LOW;
+
+	if (HAL_OK != HAL_DMA_Init(&spihdma_tx))
+	{
+		while (true);
+	}
+
+	/* Associate the initialized DMA handle to the the SPI handle */
+	__HAL_LINKDMA(hspi, hdmatx, spihdma_tx);
+
+	/* Configure the DMA handler for Transmission process */
+	spihdma_rx.Instance = SPIx_DMA_INSTANCE_RX;
+	spihdma_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+	spihdma_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+	spihdma_rx.Init.MemInc = DMA_MINC_ENABLE;
+	spihdma_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+	spihdma_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+	spihdma_rx.Init.Mode = DMA_NORMAL;
+	spihdma_rx.Init.Priority = DMA_PRIORITY_LOW;
+
+	if (HAL_OK != HAL_DMA_Init(&spihdma_rx))
+	{
+		while (true);
+	}
+
+	/* Associate the initialized DMA handle to the the SPI handle */
+	__HAL_LINKDMA(hspi, hdmarx, spihdma_rx);
+
+	/*##-4- Configure the NVIC for DMA #########################################*/
+	/* NVIC configuration for DMA transfer complete interrupt (SPI2_TX) */
+	HAL_NVIC_SetPriority(SPIx_DMA_TX_IRQn, SPIx_DMA_TX_IRQ_PRIORITY, 0 /* UNUSED */);
+	HAL_NVIC_EnableIRQ(SPIx_DMA_TX_IRQn);
+
+	/* NVIC configuration for DMA transfer complete interrupt (SPI2_RX) */
+	HAL_NVIC_SetPriority(SPIx_DMA_RX_IRQn, SPIx_DMA_RX_IRQ_PRIORITY, 0 /* UNUSED */);
+	HAL_NVIC_EnableIRQ(SPIx_DMA_RX_IRQn);
 }
 
 /**
@@ -160,6 +231,24 @@ static void SPI_Error(void)
 	bsp_sdio_init();
 }
 /**@}BSP_SPI_PERIPHERALS*/
+
+/**
+ * @brief  This function handles DMA Rx interrupt request.
+ * @retval None
+ */
+void SPIx_DMA_RX_IRQHandler(void)
+{
+	HAL_DMA_IRQHandler(spihandle_sd.hdmarx);
+}
+
+/**
+ * @brief  This function handles DMA Tx interrupt request.
+ * @retval None
+ */
+void SPIx_DMA_TX_IRQHandler(void)
+{
+	HAL_DMA_IRQHandler(spihandle_sd.hdmatx);
+}
 
 /* Exported functions prototype ----------------------------------------------*/
 /**
@@ -260,6 +349,26 @@ bool bsp_sdio_isDetected(void)
  */
 bool bsp_sdio_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
 {
+#ifdef USE_SPI_DMA
+	/*  Before starting a new communication transfer, you need to check the current
+	 state of the peripheral; if it's busy you need to wait for the end of current
+	 transfer before starting a new one. */
+	/* FIXME: For simplicity reasons, this example is just waiting till the end of the
+	 transfer, but application may perform other tasks while transfer operation
+	 is ongoing. */
+	while (HAL_OK
+			!= HAL_SPI_Transmit_DMA(&spihandle_sd, pui8Buffer, ui16Size))
+	{
+		/* When Acknowledge failure occurs (Slave don't acknowledge its address)
+		 Master restarts communication. Transmission aborted when Timeout error occurs.*/
+		if (HAL_SPI_ERROR_DMA == HAL_SPI_GetError(&spihandle_sd))
+		{
+			/* Execute user timeout callback */
+			SPI_Error();
+			return false;
+		}
+	}
+#else
 	HAL_StatusTypeDef status = HAL_SPI_Transmit(&spihandle_sd, pui8Buffer,
 			ui16Size, SPIx_TIMEOUT_MAX);
 
@@ -270,6 +379,7 @@ bool bsp_sdio_sendData(uint8_t * pui8Buffer, uint16_t ui16Size)
 		SPI_Error();
 		return false;
 	}
+#endif
 	return true;
 }
 
@@ -294,6 +404,30 @@ bool bsp_sdio_readData(uint8_t * pui8Buffer, uint16_t ui16Size)
 	uint32_t ui32DataCounter = 0;
 	while (ui16Size--)
 	{
+#ifdef USE_SPI_DMA
+		/*  Before starting a new communication transfer, you need to check the current
+		 state of the peripheral; if it's busy you need to wait for the end of current
+		 transfer before starting a new one. */
+		/* FIXME: For simplicity reasons, this example is just waiting till the end of the
+		 transfer, but application may perform other tasks while transfer operation
+		 is ongoing. */
+		/* Read single byte at a time */
+		while (HAL_OK
+				!= HAL_SPI_TransmitReceive_DMA(&spihandle_sd,
+						(uint8_t*) &ui32TransmisionDummyValue,
+						(uint8_t*) (pui8Buffer + ui32DataCounter), 1))
+		{
+			/* When Acknowledge failure occurs (Slave don't acknowledge its address)
+			 Master restarts communication. Transmission aborted when Timeout error occurs.*/
+			if (HAL_SPI_ERROR_DMA == HAL_SPI_GetError(&spihandle_sd))
+			{
+				/* Execute user timeout callback */
+				SPI_Error();
+				return false;
+			}
+		}
+		++ui32DataCounter;
+#else
 		/* Read single byte at a time */
 		status = HAL_SPI_TransmitReceive(&spihandle_sd, (uint8_t*) &ui32TransmisionDummyValue,
 				(uint8_t*) (pui8Buffer + ui32DataCounter), 1, SPIx_TIMEOUT_MAX);
@@ -305,6 +439,7 @@ bool bsp_sdio_readData(uint8_t * pui8Buffer, uint16_t ui16Size)
 			SPI_Error();
 			return false;
 		}
+#endif
 	}
 	return true;
 }
